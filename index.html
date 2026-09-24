@@ -181,8 +181,6 @@
                 inset 0 -3px 6px rgba(0,0,0,0.15);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: default;
-            -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-saturate)) var(--lg-filter);
-            backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-saturate)) var(--lg-filter);
         }
         /* z: -2 — refraction sprite (displaced background copy). Hidden when backdrop-filter with SVG URL is supported */
         .liquid-glass__refraction {
@@ -651,30 +649,29 @@
     <script src="/liquid-glass-real.js" defer></script>
     <svg class="svg-filters" xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0">
         <defs>
-            <filter id="liquid-glass-filter" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
-                <feTurbulence type="fractalNoise" baseFrequency="0.003 0.003" numOctaves="2" seed="42" result="noise">
+            <filter id="liquid-glass-filter" x="-100%" y="-100%" width="300%" height="300%" color-interpolation-filters="sRGB">
+                <feTurbulence type="fractalNoise" baseFrequency="0.012 0.008" numOctaves="2" seed="42" result="noise">
                     <animate attributeName="seed" from="42" to="87" dur="10s" repeatCount="indefinite"/>
                 </feTurbulence>
                 <feDisplacementMap in="SourceGraphic" in2="noise" scale="55" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
-                <feGaussianBlur in="displaced" stdDeviation="0.4" result="blurred"/>
-                <feColorMatrix in="blurred" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.85 0" result="clean"/>
-                <feComposite in="clean" in2="SourceGraphic" operator="in"/>
+                <feGaussianBlur in="displaced" stdDeviation="0.6" result="blurred"/>
+                <feColorMatrix in="blurred" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.82 0" result="clean"/>
             </filter>
             <filter id="liquid-glass-heavy" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
-                <feTurbulence type="fractalNoise" baseFrequency="0.004 0.004" numOctaves="2" seed="55" result="noise">
+                <feTurbulence type="fractalNoise" baseFrequency="0.015 0.01" numOctaves="2" seed="55" result="noise">
                     <animate attributeName="seed" from="55" to="99" dur="8s" repeatCount="indefinite"/>
                 </feTurbulence>
                 <feDisplacementMap in="SourceGraphic" in2="noise" scale="65" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
-                <feGaussianBlur in="displaced" stdDeviation="0.5" result="blurred"/>
-                <feColorMatrix in="blurred" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.85 0" result="clean"/>
+                <feGaussianBlur in="displaced" stdDeviation="0.7" result="blurred"/>
+                <feColorMatrix in="blurred" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.8 0" result="clean"/>
                 <feComposite in="clean" in2="SourceGraphic" operator="in"/>
             </filter>
             <filter id="liquid-glass-light" x="-30%" y="-30%" width="160%" height="160%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.005 0.005" numOctaves="1" seed="71" result="noise">
+                <feTurbulence type="fractalNoise" baseFrequency="0.02 0.015" numOctaves="1" seed="71" result="noise">
                     <animate attributeName="seed" from="71" to="123" dur="6s" repeatCount="indefinite"/>
                 </feTurbulence>
                 <feDisplacementMap in="SourceGraphic" in2="noise" scale="30" xChannelSelector="R" yChannelSelector="B" result="displaced"/>
-                <feGaussianBlur in="displaced" stdDeviation="0.3"/>
+                <feGaussianBlur in="displaced" stdDeviation="0.4"/>
             </filter>
         </defs>
     </svg>
