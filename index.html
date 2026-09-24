@@ -36,7 +36,7 @@
             content: '';
             position: fixed;
             inset: 0;
-            z-index: -2;
+            z-index: -4;
             background:
                 radial-gradient(ellipse 60% 50% at 20% 80%, rgba(255,255,255,0.04) 0%, transparent 70%),
                 radial-gradient(ellipse 50% 60% at 80% 20%, rgba(255,255,255,0.03) 0%, transparent 60%),
@@ -48,7 +48,7 @@
             content: '';
             position: fixed;
             inset: 0;
-            z-index: -1;
+            z-index: -3;
             background-image:
                 repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.008) 2px, rgba(255,255,255,0.008) 4px),
                 repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.008) 2px, rgba(255,255,255,0.008) 4px);
@@ -77,20 +77,24 @@
             content: '';
             position: absolute;
             inset: 0;
+            z-index: -1;
             background-image:
                 repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.018) 40px, rgba(255,255,255,0.018) 41px),
                 repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,255,255,0.018) 40px, rgba(255,255,255,0.018) 41px);
-            opacity: 0.7;
+            opacity: 0.5;
             mix-blend-mode: overlay;
             pointer-events: none;
         }
         .bg-scene::after {
             content: '';
             position: absolute;
-            top: 5%; right: 5%; width: 55%; height: 70%;
-            background: radial-gradient(ellipse at center, rgba(255,160,80,0.06) 0%, transparent 65%);
-            border-radius: 50%;
-            filter: blur(100px);
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 90% 60% at 80% 20%, rgba(255,140,100,0.08) 0%, transparent 55%),
+                radial-gradient(ellipse 60% 80% at 15% 85%, rgba(86,167,255,0.07) 0%, transparent 55%),
+                radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 55%);
+            filter: blur(80px);
             pointer-events: none;
             animation: bgPulse 18s ease-in-out infinite alternate;
         }
@@ -221,7 +225,7 @@
             mix-blend-mode: screen;
             pointer-events: none;
         }
-        .liquid-glass:hover {
+        .liquid-glass:hover, .liquid-glass:focus-visible {
             transform: translateY(-5px);
             box-shadow:
                 0 40px 100px rgba(0,0,0,0.8),
@@ -648,31 +652,29 @@
     <svg class="svg-filters" xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0">
         <defs>
             <filter id="liquid-glass-filter" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
-                <feTurbulence type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="3" seed="4" result="noise">
-                    <animate attributeName="seed" from="4" to="11" dur="7s" repeatCount="indefinite"/>
-                    <animate attributeName="baseFrequency" values="0.008 0.008;0.014 0.006;0.008 0.008" dur="13s" repeatCount="indefinite"/>
+                <feTurbulence type="fractalNoise" baseFrequency="0.003 0.003" numOctaves="2" seed="42" result="noise">
+                    <animate attributeName="seed" from="42" to="87" dur="10s" repeatCount="indefinite"/>
                 </feTurbulence>
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="45" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
-                <feGaussianBlur in="displaced" stdDeviation="0.5" result="blurred"/>
-                <feColorMatrix in="blurred" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" result="clean"/>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="55" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+                <feGaussianBlur in="displaced" stdDeviation="0.4" result="blurred"/>
+                <feColorMatrix in="blurred" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.85 0" result="clean"/>
                 <feComposite in="clean" in2="SourceGraphic" operator="in"/>
             </filter>
             <filter id="liquid-glass-heavy" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
-                <feTurbulence type="fractalNoise" baseFrequency="0.012 0.012" numOctaves="4" seed="8" result="noise">
-                    <animate attributeName="seed" from="8" to="17" dur="6s" repeatCount="indefinite"/>
-                    <animate attributeName="baseFrequency" values="0.012 0.012;0.020 0.010;0.012 0.012" dur="10s" repeatCount="indefinite"/>
+                <feTurbulence type="fractalNoise" baseFrequency="0.004 0.004" numOctaves="2" seed="55" result="noise">
+                    <animate attributeName="seed" from="55" to="99" dur="8s" repeatCount="indefinite"/>
                 </feTurbulence>
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="55" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
-                <feGaussianBlur in="displaced" stdDeviation="0.7" result="blurred"/>
-                <feColorMatrix in="blurred" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" result="clean"/>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="65" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+                <feGaussianBlur in="displaced" stdDeviation="0.5" result="blurred"/>
+                <feColorMatrix in="blurred" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.85 0" result="clean"/>
                 <feComposite in="clean" in2="SourceGraphic" operator="in"/>
             </filter>
             <filter id="liquid-glass-light" x="-30%" y="-30%" width="160%" height="160%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.015 0.015" numOctaves="3" seed="6" result="noise">
-                    <animate attributeName="seed" from="6" to="13" dur="5s" repeatCount="indefinite"/>
+                <feTurbulence type="fractalNoise" baseFrequency="0.005 0.005" numOctaves="1" seed="71" result="noise">
+                    <animate attributeName="seed" from="71" to="123" dur="6s" repeatCount="indefinite"/>
                 </feTurbulence>
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="25" xChannelSelector="R" yChannelSelector="B" result="displaced"/>
-                <feGaussianBlur in="displaced" stdDeviation="0.4"/>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="30" xChannelSelector="R" yChannelSelector="B" result="displaced"/>
+                <feGaussianBlur in="displaced" stdDeviation="0.3"/>
             </filter>
         </defs>
     </svg>

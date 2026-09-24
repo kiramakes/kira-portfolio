@@ -39,13 +39,18 @@
         const ctx = c.getContext('2d');
         const img = ctx.createImageData(w, h);
         const d = img.data;
-        // Initialize with neutral 128 (no displacement)
+        // Neutral 128 = no displacement
         for (let i = 0; i < d.length; i += 4) {
             d[i] = 128; d[i+1] = 128; d[i+2] = 0; d[i+3] = 255;
         }
         const r = radius, rSq = r * r, r1Sq = (r + 1) ** 2;
         const rBSq = Math.max(r - bezelWidth, 0) ** 2;
         const wB = w - r * 2, hB = h - r * 2, S = profile.length;
+        // Scale factor: map profile values to full 0-255 range for visible displacement.
+        // feDisplacementMap interprets scale * (pixel - 128) / 128.
+        // We want edge displacement of ~scale pixels, so we need pixel values ~128 ± scale*128/maxDisp
+        // For scale=80, maxDisp=150: edge pixel deviation = 80*128/150 ≈ 68, so pixel ≈ 128±68 = 60 or 196
+        const pixelScale = (scale || 80) * 128 / (maxDisp || 1);
         for (let y1 = 0; y1 < h; y1++) {
             for (let x1 = 0; x1 < w; x1++) {
                 const x = x1 < r ? x1 - r : x1 >= w - r ? x1 - r - wB : 0;
@@ -59,10 +64,17 @@
                 const cos = x / dist, sin = y / dist;
                 const bi = Math.min(((fromSide / bezelWidth) * S) | 0, S - 1);
                 const disp = profile[bi] || 0;
-                const dX = (-cos * disp) / maxDisp, dY = (-sin * disp) / maxDisp;
+                // dX/dY in pixels (actual displacement this pixel should represent)
+                const dX = (-cos * disp) * op;
+                const dY = (-sin * disp) * op;
+                // Store as pixel value: 128 + (displacement / maxPossibleDisp) * 127
+                // maxPossibleDisp = maxDisp * op (the max displacement at this opacity)
+                const maxPossible = maxDisp * op;
+                const rVal = 128 + (dX / maxPossible) * 110 * op;
+                const gVal = 128 + (dY / maxPossible) * 110 * op;
                 const idx = (y1 * w + x1) * 4;
-                d[idx] = (128 + dX * 127 * op + 0.5) | 0;
-                d[idx+1] = (128 + dY * 127 * op + 0.5) | 0;
+                d[idx] = Math.max(18, Math.min(238, rVal));
+                d[idx+1] = Math.max(18, Math.min(238, gVal));
             }
         }
         ctx.putImageData(img, 0, 0);
@@ -147,33 +159,38 @@
     }
 
     function processElement(el) {
-        const w = el.offsetWidth, h = el.offsetHeight;
-        if (w < 2 || h < 2) return;
+        try {
+            const w = el.offsetWidth, h = el.offsetHeight;
+            if (w < 2 || h < 2) return;
 
-        const radius = parseFloat(getComputedStyle(el).borderRadius) || 20;
-        const glassThick = 60;
-        const bezelW = Math.min(50, radius - 1, Math.min(w, h) / 2 - 1);
-        const ior = 2.5;
-        const blurAmt = 0.4;
-        const specOpacity = 0.6;
-        const specSat = 4;
+            const radius = parseFloat(getComputedStyle(el).borderRadius) || 20;
+            const glassThick = 60;
+            const bezelW = Math.min(50, radius - 1, Math.min(w, h) / 2 - 1);
+            const ior = 2.5;
+            const blurAmt = 0.4;
+            const specOpacity = 0.6;
+            const specSat = 4;
 
-        const heightFn = SURFACE_FNS.convex_squircle;
-        const profile = calculateRefractionProfile(glassThick, bezelW, heightFn, ior, 128);
-        const maxDisp = Math.max(...Array.from(profile).map(Math.abs)) || 1;
-        const scale = Math.min(maxDisp * 1.2, 80);
+            const heightFn = SURFACE_FNS.convex_squircle;
+            const profile = calculateRefractionProfile(glassThick, bezelW, heightFn, ior, 128);
+            const maxDisp = Math.max(...Array.from(profile).map(Math.abs)) || 1;
+            const scale = Math.min(maxDisp * 1.2, 80);
 
-        const dispUrl = generateDisplacementMap(w, h, radius, bezelW, profile, maxDisp);
-        const specUrl = generateSpecularMap(w, h, radius, bezelW * 2.5);
+            const dispUrl = generateDisplacementMap(w, h, radius, bezelW, profile, maxDisp);
+            const specUrl = generateSpecularMap(w, h, radius, bezelW * 2.5);
 
-        const filterId = 'lg-filter-' + el.dataset.lgId;
-        // Remove old filter if present
-        const oldFilter = getSvgDefs().querySelector('#' + filterId);
-        if (oldFilter) oldFilter.remove();
-        buildFilter(filterId, dispUrl, specUrl, blurAmt, specSat, specOpacity, scale);
+            const filterId = 'lg-filter-' + el.dataset.lgId;
+            // Remove old filter if present
+            const oldFilter = getSvgDefs().querySelector('#' + filterId);
+            if (oldFilter) oldFilter.remove();
+            buildFilter(filterId, dispUrl, specUrl, blurAmt, specSat, specOpacity, scale);
 
-        el.style.backdropFilter = `url(#${filterId}) blur(2px) saturate(140%)`;
-        el.style.webkitBackdropFilter = `url(#${filterId}) blur(2px) saturate(140%)`;
+            el.style.backdropFilter = `url(#${filterId}) blur(2px) saturate(140%)`;
+            el.style.webkitBackdropFilter = `url(#${filterId}) blur(2px) saturate(140%)`;
+        } catch (e) {
+            // Silently fail — CSS fallback provides the visual effect
+            if (window.__lgDebug) console.warn('LG processElement error:', e);
+        }
     }
 
     // Initialize
@@ -183,14 +200,21 @@
     });
 
     let processed = new Set();
+    let pending = false;
     function processAll() {
-        document.querySelectorAll('.liquid-glass, .lg-btn, .service-item, .project-card, .stat-card, .work-item, .contact-section, .skill-item').forEach(el => {
+        pending = false;
+        const elements = document.querySelectorAll('.liquid-glass, .lg-btn, .service-item, .project-card, .stat-card, .work-item, .contact-section, .skill-item');
+        for (const el of elements) {
             if (!el.dataset.lgId) el.dataset.lgId = ++idCounter;
             const key = el.dataset.lgId;
-            if (processed.has(key) && el.offsetWidth > 0) return;
+            // Re-process if size changed or never processed
+            const currentSize = el.offsetWidth * el.offsetHeight;
+            const prevSize = el.dataset.lgSize ? parseInt(el.dataset.lgSize) : 0;
+            el.dataset.lgSize = currentSize;
+            if (prevSize > 0 && prevSize === currentSize && el.offsetWidth > 0) continue;
             processed.add(key);
             processElement(el);
-        });
+        }
     }
 
     // Run after layout
