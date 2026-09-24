@@ -15,15 +15,15 @@
             --lg-filter: url("#liquid-glass-filter");
             --lg-filter-heavy: url("#liquid-glass-heavy");
             --lg-filter-light: url("#liquid-glass-light");
-            --lg-blur: 14px;
-            --lg-saturate: 220%;
-            --lg-opacity: 0.5;
-            --lg-radius: 20px;
-            --lg-border-opacity: 0.5;
+            --lg-blur: 18px;
+            --lg-saturate: 280%;
+            --lg-opacity: 0.35;
+            --lg-radius: 28px;
+            --lg-border-opacity: 0.6;
             --lg-tint: 255 255 255;
-            --lg-shadow: 0 24px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1);
-            --lg-edge-red: rgba(255,86,116,0.5);
-            --lg-edge-cyan: rgba(54,226,255,0.45);
+            --lg-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.15), inset 0 0 0 1px rgba(255,255,255,0.05);
+            --lg-edge-red: rgba(255,86,116,0.7);
+            --lg-edge-cyan: rgba(54,226,255,0.65);
             --lg-scene-background: radial-gradient(ellipse 80% 60% at 15% 85%, rgba(255,255,255,0.06) 0%, transparent 65%), radial-gradient(ellipse 60% 70% at 85% 15%, rgba(255,255,255,0.04) 0%, transparent 60%), radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255,255,255,0.015) 0%, transparent 55%), linear-gradient(180deg, #0d0d0d 0%, #0a0a0a 40%, #080808 100%);
             --bg: #0a0a0a;
             --text: #f0f0f0;
@@ -60,27 +60,57 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
 
-        /* ── Background scene (Apple-style: rich backdrop for glass to distort) ── */
+        /* ── Background scene (Apple-style: rich backdrop for glass to refract) ── */
         .bg-scene {
             position: fixed;
             inset: 0;
             z-index: -3;
             background:
-                radial-gradient(ellipse 80% 60% at 15% 85%, rgba(255,255,255,0.06) 0%, transparent 65%),
-                radial-gradient(ellipse 60% 70% at 85% 15%, rgba(255,255,255,0.04) 0%, transparent 60%),
-                radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255,255,255,0.015) 0%, transparent 55%),
+                radial-gradient(ellipse 80% 60% at 15% 85%, rgba(255,180,100,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 70% at 85% 15%, rgba(100,200,255,0.10) 0%, transparent 55%),
+                radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255,120,180,0.07) 0%, transparent 50%),
+                radial-gradient(ellipse 40% 40% at 30% 30%, rgba(255,255,200,0.05) 0%, transparent 50%),
                 linear-gradient(180deg, #0d0d0d 0%, #0a0a0a 40%, #080808 100%);
+            pointer-events: none;
+        }
+        .bg-scene::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.018) 40px, rgba(255,255,255,0.018) 41px),
+                repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,255,255,0.018) 40px, rgba(255,255,255,0.018) 41px);
+            opacity: 0.7;
+            mix-blend-mode: overlay;
             pointer-events: none;
         }
         .bg-scene::after {
             content: '';
             position: absolute;
-            inset: 0;
-            background-image:
-                repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.012) 3px, rgba(255,255,255,0.012) 6px),
-                repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(255,255,255,0.012) 3px, rgba(255,255,255,0.012) 6px);
+            top: 5%; right: 5%; width: 55%; height: 70%;
+            background: radial-gradient(ellipse at center, rgba(255,160,80,0.06) 0%, transparent 65%);
+            border-radius: 50%;
+            filter: blur(100px);
+            pointer-events: none;
+            animation: bgPulse 18s ease-in-out infinite alternate;
+        }
+        @keyframes bgPulse {
+            0%   { transform: translate(0, 0) scale(1); opacity: 0.6; }
+            100% { transform: translate(-40px, 30px) scale(1.2); opacity: 1; }
+        }
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
             opacity: 0.5;
-            mix-blend-mode: overlay;
+        }
+        .bg-orb-1 { top: 10%; left: 5%; width: 400px; height: 400px; background: rgba(255,140,80,0.12); animation: orbFloat 14s ease-in-out infinite alternate; }
+        .bg-orb-2 { bottom: 10%; right: 5%; width: 350px; height: 350px; background: rgba(80,180,255,0.10); animation: orbFloat 17s ease-in-out infinite alternate-reverse; }
+        .bg-orb-3 { top: 40%; left: 60%; width: 300px; height: 300px; background: rgba(200,100,255,0.08); animation: orbFloat 20s ease-in-out infinite alternate; }
+        @keyframes orbFloat {
+            0%   { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(30px, -40px) scale(1.15); }
         }
 
         body {
@@ -103,12 +133,19 @@
             border-radius: var(--lg-radius);
             background: linear-gradient(
                 var(--lg-sheen-angle),
-                rgba(255,255,255,0.1),
-                rgba(255,255,255,0.02) 40%,
-                rgba(255,255,255,0.06)
+                rgba(255,255,255,0.15),
+                rgba(255,255,255,0.03) 40%,
+                rgba(255,255,255,0.08)
             );
             border: 1px solid rgba(255,255,255,var(--lg-border-opacity));
-            box-shadow: var(--lg-shadow), inset 0 1px 0 rgba(255,255,255,0.42);
+            box-shadow:
+                0 30px 80px rgba(0,0,0,0.7),
+                0 0 0 1px rgba(255,255,255,0.15),
+                inset 0 0 0 1px rgba(255,255,255,0.05),
+                inset 1px 0 rgba(255,86,116,0.25),
+                inset -1px 0 rgba(54,226,255,0.2),
+                inset 0 1px rgba(255,255,255,0.35),
+                inset 0 -3px 6px rgba(0,0,0,0.15);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: default;
             -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-saturate)) var(--lg-filter);
@@ -156,53 +193,79 @@
             pointer-events: none;
         }
         .liquid-glass:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.12), inset 0 1px 0 rgba(255,255,255,0.5);
-            --lg-opacity: 0.7;
+            transform: translateY(-4px) scale(1.01);
+            box-shadow:
+                0 40px 100px rgba(0,0,0,0.8),
+                0 0 0 1px rgba(255,255,255,0.2),
+                inset 0 0 0 1px rgba(255,255,255,0.08),
+                inset 1px 0 rgba(255,86,116,0.35),
+                inset -1px 0 rgba(54,226,255,0.3),
+                inset 0 1px rgba(255,255,255,0.5),
+                inset 0 -4px 8px rgba(0,0,0,0.12);
+            --lg-opacity: 0.55;
         }
 
         .lg-btn {
             position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
-            padding: 0.9rem 2rem; border-radius: 14px; font-family: inherit; font-size: 0.95rem; font-weight: 600;
+            padding: 0.9rem 2rem; border-radius: 16px; font-family: inherit; font-size: 0.95rem; font-weight: 600;
             letter-spacing: -0.01em; color: var(--text); overflow: hidden;
-            background: linear-gradient(var(--lg-sheen-angle), rgba(255,255,255,0.12), rgba(255,255,255,0.03) 45%, rgba(255,255,255,0.07));
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06), inset 1px 0 rgba(255,86,116,0.2), inset -1px 0 rgba(54,226,255,0.15), inset 0 1px rgba(255,255,255,0.3);
+            background: linear-gradient(var(--lg-sheen-angle), rgba(255,255,255,0.15), rgba(255,255,255,0.04) 45%, rgba(255,255,255,0.09));
+            border: 1px solid rgba(255,255,255,0.25);
+            box-shadow:
+                0 4px 16px rgba(0,0,0,0.4),
+                0 0 0 1px rgba(255,255,255,0.1),
+                inset 0 0 0 1px rgba(255,255,255,0.05),
+                inset 1px 0 rgba(255,86,116,0.2),
+                inset -1px 0 rgba(54,226,255,0.15),
+                inset 0 1px rgba(255,255,255,0.4);
             cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;
             isolation: isolate;
-        }
-        .lg-btn::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            border-radius: inherit;
-            backdrop-filter: var(--lg-filter) blur(5px) saturate(140%);
-            -webkit-backdrop-filter: var(--lg-filter) blur(5px) saturate(140%);
-            pointer-events: none;
+            -webkit-backdrop-filter: blur(8px) saturate(160%) var(--lg-filter-light);
+            backdrop-filter: blur(8px) saturate(160%) var(--lg-filter-light);
         }
         .lg-btn::before {
             content: '';
             position: absolute;
             inset: 0;
             border-radius: inherit;
-            background: rgba(255,255,255,0.04);
-            z-index: 0;
+            background: rgba(255,255,255,0.06);
+            z-index: -1;
             pointer-events: none;
             animation: glass-sheen 5s ease-in-out infinite;
         }
+        .lg-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            box-shadow:
+                inset 1.5px 0 rgba(255,86,116,0.3),
+                inset -1.5px 0 rgba(54,226,255,0.25),
+                inset 0 1px rgba(255,255,255,0.55),
+                inset 0 -1px 0 rgba(255,255,255,0.15);
+            mix-blend-mode: screen;
+            z-index: 2;
+            pointer-events: none;
+            animation: glass-edge-shimmer 3s ease-in-out infinite alternate;
+        }
         .lg-btn .btn-shimmer {
             position: absolute; top: -50%; left: -60%; width: 40%; height: 200%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
             transform: rotate(25deg); animation: shimmer 5s infinite linear; pointer-events: none;
         }
         .lg-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 32px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.1), inset 1px 0 rgba(255,86,116,0.3), inset -1px 0 rgba(54,226,255,0.25), inset 0 1px rgba(255,255,255,0.35);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow:
+                0 10px 32px rgba(0,0,0,0.5),
+                0 0 24px rgba(255,255,255,0.08),
+                0 0 0 1px rgba(255,255,255,0.15),
+                inset 0 0 0 1px rgba(255,255,255,0.08),
+                inset 0 1px 0 rgba(255,255,255,0.45),
+                inset 0 -1px 0 rgba(255,255,255,0.12);
             --lg-sheen-angle: 180deg;
         }
         .lg-btn:active { transform: translateY(0px) scale(0.98); }
-        @keyframes shimmer { 0%,100% { left: -60%; } 50% { left: 130%; } }
+        @keyframes glass-edge-shimmer { 0% { opacity: 0.3; } 100% { opacity: 0.7; } }
 
         nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 100;
@@ -533,42 +596,61 @@
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+        /* ── Keyframes ── */
+        @keyframes glass-sheen {
+            0%   { --lg-sheen-angle: 135deg; }
+            50%  { --lg-sheen-angle: 225deg; }
+            100% { --lg-sheen-angle: 135deg; }
+        }
+        @keyframes shimmer { 0%,100% { left: -60%; } 50% { left: 130%; } }
+
+        /* ── Hide refraction sprite when backdrop-filter with SVG URL is supported ── */
+        @supports (backdrop-filter: url("#liquid-glass-filter")) or (-webkit-backdrop-filter: url("#liquid-glass-filter")) {
+            .liquid-glass:not(.liquid-glass--simple) .liquid-glass__refraction {
+                display: none;
+            }
+        }
     </style>
     <script src="/liquid-glass-real.js" defer></script>
     <svg class="svg-filters" xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0">
         <defs>
             <filter id="liquid-glass-filter" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
-                <feTurbulence type="fractalNoise" baseFrequency="0.012 0.012" numOctaves="3" seed="4" result="noise">
+                <feTurbulence type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="3" seed="4" result="noise">
                     <animate attributeName="seed" from="4" to="11" dur="7s" repeatCount="indefinite"/>
-                    <animate attributeName="baseFrequency" values="0.012 0.012;0.018 0.008;0.012 0.012" dur="13s" repeatCount="indefinite"/>
+                    <animate attributeName="baseFrequency" values="0.008 0.008;0.014 0.006;0.008 0.008" dur="13s" repeatCount="indefinite"/>
                 </feTurbulence>
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="25" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="45" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
                 <feGaussianBlur in="displaced" stdDeviation="0.5" result="blurred"/>
                 <feColorMatrix in="blurred" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" result="clean"/>
                 <feComposite in="clean" in2="SourceGraphic" operator="in"/>
             </filter>
             <filter id="liquid-glass-heavy" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
-                <feTurbulence type="fractalNoise" baseFrequency="0.016 0.016" numOctaves="4" seed="8" result="noise">
+                <feTurbulence type="fractalNoise" baseFrequency="0.012 0.012" numOctaves="4" seed="8" result="noise">
                     <animate attributeName="seed" from="8" to="17" dur="6s" repeatCount="indefinite"/>
-                    <animate attributeName="baseFrequency" values="0.016 0.016;0.025 0.012;0.016 0.016" dur="10s" repeatCount="indefinite"/>
+                    <animate attributeName="baseFrequency" values="0.012 0.012;0.020 0.010;0.012 0.012" dur="10s" repeatCount="indefinite"/>
                 </feTurbulence>
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="32" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="55" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
                 <feGaussianBlur in="displaced" stdDeviation="0.7" result="blurred"/>
                 <feColorMatrix in="blurred" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" result="clean"/>
                 <feComposite in="clean" in2="SourceGraphic" operator="in"/>
             </filter>
             <filter id="liquid-glass-light" x="-30%" y="-30%" width="160%" height="160%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.022 0.022" numOctaves="3" seed="6" result="noise">
+                <feTurbulence type="fractalNoise" baseFrequency="0.015 0.015" numOctaves="3" seed="6" result="noise">
                     <animate attributeName="seed" from="6" to="13" dur="5s" repeatCount="indefinite"/>
                 </feTurbulence>
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="12" xChannelSelector="R" yChannelSelector="B" result="displaced"/>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="25" xChannelSelector="R" yChannelSelector="B" result="displaced"/>
                 <feGaussianBlur in="displaced" stdDeviation="0.4"/>
             </filter>
         </defs>
     </svg>
 </head>
 <body>
-<div class="bg-scene"></div>
+<div class="bg-scene">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+</div>
 <div class="scroll-progress" id="scrollProgress"></div>
 
 <nav>
