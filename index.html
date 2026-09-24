@@ -7,6 +7,36 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+        <defs>
+            <filter id="liquid-glass" x="-10%" y="-10%" width="120%" height="120%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.015 0.015" numOctaves="3" seed="2" result="noise">
+                    <animate attributeName="seed" from="2" to="8" dur="8s" repeatCount="indefinite"/>
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+                <feGaussianBlur in="displaced" stdDeviation="0.4" result="blurred"/>
+                <feColorMatrix in="blurred" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" result="clean"/>
+                <feComposite in="clean" in2="SourceGraphic" operator="in"/>
+            </filter>
+            <filter id="liquid-glass-heavy" x="-15%" y="-15%" width="130%" height="130%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.02 0.02" numOctaves="4" seed="5" result="noise">
+                    <animate attributeName="seed" from="5" to="12" dur="6s" repeatCount="indefinite"/>
+                    <animate attributeName="baseFrequency" values="0.02 0.02;0.025 0.018;0.02 0.02" dur="10s" repeatCount="indefinite"/>
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="14" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+                <feGaussianBlur in="displaced" stdDeviation="0.6" result="blurred"/>
+                <feColorMatrix in="blurred" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" result="clean"/>
+                <feComposite in="clean" in2="SourceGraphic" operator="in"/>
+            </filter>
+            <filter id="liquid-glass-light" x="-5%" y="-5%" width="110%" height="110%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.025 0.025" numOctaves="2" seed="3" result="noise">
+                    <animate attributeName="seed" from="3" to="6" dur="5s" repeatCount="indefinite"/>
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="B" result="displaced"/>
+                <feGaussianBlur in="displaced" stdDeviation="0.3"/>
+            </filter>
+        </defs>
+    </svg>
     <style>
         /* ── Reset & Base ── */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,25 +54,53 @@
         a { color: inherit; text-decoration: none; }
         img { max-width: 100%; display: block; }
 
-        /* ── Liquid Glass Card ── */
+        /* ── Liquid Glass Card (real refraction via SVG filter) ── */
         .liquid-glass {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(18px) saturate(200%);
+            -webkit-backdrop-filter: blur(18px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.6);
             border-radius: 20px;
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.9),
-                inset 0 -1px 0 rgba(255, 255, 255, 0.15),
-                0 8px 32px rgba(0, 0, 0, 0.04);
-        }
-        .liquid-glass:hover {
-            background: rgba(255, 255, 255, 0.8);
-            border-color: rgba(255, 255, 255, 0.7);
             box-shadow:
                 inset 0 1px 0 rgba(255, 255, 255, 0.95),
                 inset 0 -1px 0 rgba(255, 255, 255, 0.2),
-                0 12px 40px rgba(0, 0, 0, 0.06);
+                0 4px 24px rgba(0, 0, 0, 0.03),
+                0 1px 2px rgba(255, 255, 255, 0.5) inset;
+            position: relative;
+            overflow: hidden;
+        }
+        .liquid-glass::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg,
+                transparent 0%,
+                rgba(255,255,255,0.85) 20%,
+                rgba(255,255,255,0.95) 50%,
+                rgba(255,255,255,0.85) 80%,
+                transparent 100%);
+            pointer-events: none;
+        }
+        .liquid-glass::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(120% 80% at 30% 20%,
+                rgba(255,255,255,0.35) 0%,
+                transparent 60%);
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        .liquid-glass:hover {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: rgba(255, 255, 255, 0.85);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.25),
+                0 8px 32px rgba(0, 0, 0, 0.04),
+                0 1px 2px rgba(255, 255, 255, 0.7) inset;
             transform: translateY(-2px);
         }
 
@@ -56,9 +114,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(250, 250, 250, 0.8);
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            background: rgba(250, 250, 250, 0.78);
+            backdrop-filter: blur(28px) saturate(200%);
+            -webkit-backdrop-filter: blur(28px) saturate(200%);
             border-bottom: 1px solid rgba(0, 0, 0, 0.04);
         }
         nav .logo {
@@ -129,7 +187,6 @@
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent);
         }
-
         .hero-label {
             font-size: 0.72rem;
             font-weight: 600;
@@ -147,9 +204,7 @@
             margin-bottom: 1.75rem;
             max-width: 900px;
         }
-        .hero h1 .accent {
-            color: #4f46e5;
-        }
+        .hero h1 .accent { color: #4f46e5; }
         .hero-sub {
             font-size: 1.2rem;
             color: #555;
@@ -257,28 +312,51 @@
             align-items: center;
             gap: 0.85rem;
             padding: 1.75rem 1rem;
-            background: rgba(255, 255, 255, 0.55);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 0, 0, 0.04);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
             border-radius: 18px;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.85),
+                0 2px 8px rgba(0, 0, 0, 0.02);
             transition: all 0.25s ease;
             cursor: default;
+            overflow: hidden;
+        }
+        .skill-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+            pointer-events: none;
         }
         .skill-item:hover {
             background: #fff;
-            border-color: rgba(79, 70, 229, 0.12);
+            border-color: rgba(79, 70, 229, 0.2);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                0 8px 24px rgba(0, 0, 0, 0.04);
             transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.05);
         }
         .skill-item .icon {
             width: 48px; height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(79, 70, 229, 0.08);
+            background: rgba(79, 70, 229, 0.1);
             border-radius: 14px;
-            border: 1px solid rgba(79, 70, 229, 0.06);
+            border: 1px solid rgba(79, 70, 229, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .skill-item .icon::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(80% 60% at 30% 20%, rgba(255,255,255,0.4), transparent 70%);
+            pointer-events: none;
         }
         .skill-item .icon svg {
             width: 24px; height: 24px;
@@ -287,6 +365,8 @@
             fill: none;
             stroke-linecap: round;
             stroke-linejoin: round;
+            position: relative;
+            z-index: 1;
         }
         .skill-item h3 {
             font-size: 0.88rem;
@@ -314,17 +394,31 @@
             align-items: flex-start;
             gap: 1.25rem;
             padding: 1.5rem;
-            background: rgba(255, 255, 255, 0.55);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 0, 0, 0.04);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
             border-radius: 16px;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.85),
+                0 2px 8px rgba(0, 0, 0, 0.02);
             transition: all 0.25s ease;
+            overflow: hidden;
+        }
+        .service-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+            pointer-events: none;
         }
         .service-item:hover {
             background: #fff;
-            border-color: rgba(79, 70, 229, 0.1);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            border-color: rgba(79, 70, 229, 0.15);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                0 6px 20px rgba(0, 0, 0, 0.04);
             transform: translateY(-2px);
         }
         .service-item .icon {
@@ -337,6 +431,15 @@
             justify-content: center;
             font-size: 1.2rem;
             flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .service-item .icon::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(70% 60% at 30% 20%, rgba(255,255,255,0.15), transparent 70%);
+            pointer-events: none;
         }
         .service-item h4 {
             font-size: 1rem;
@@ -347,7 +450,7 @@
         }
         .service-item p {
             font-size: 0.85rem;
-            color: #666;
+            color: #555;
             line-height: 1.5;
         }
 
@@ -358,20 +461,45 @@
             gap: 1.25rem;
         }
         .project-card {
-            background: rgba(255, 255, 255, 0.55);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 0, 0, 0.04);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(14px) saturate(190%);
+            -webkit-backdrop-filter: blur(14px) saturate(190%);
+            border: 1px solid rgba(255, 255, 255, 0.55);
             border-radius: 20px;
             overflow: hidden;
             transition: all 0.3s ease;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                0 2px 12px rgba(0, 0, 0, 0.02);
+            position: relative;
+        }
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            pointer-events: none;
+        }
+        .project-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(140% 90% at 25% 15%, rgba(255,255,255,0.3), transparent 65%);
+            pointer-events: none;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
         }
         .project-card:hover {
-            background: #fff;
-            border-color: rgba(0, 0, 0, 0.08);
-            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
+            background: rgba(255, 255, 255, 0.92);
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                0 16px 40px rgba(0, 0, 0, 0.05);
             transform: translateY(-3px);
         }
+        .project-card:hover::after { opacity: 0.7; }
         .project-card .preview {
             width: 100%;
             height: 200px;
@@ -385,7 +513,8 @@
         .project-card .preview .badge {
             position: absolute;
             top: 14px; left: 14px;
-            background: #1a1a1a;
+            background: rgba(26, 26, 26, 0.85);
+            backdrop-filter: blur(8px);
             color: #fff;
             padding: 0.25rem 0.75rem;
             border-radius: 6px;
@@ -393,6 +522,7 @@
             font-weight: 600;
             letter-spacing: 0.5px;
             text-transform: uppercase;
+            border: 1px solid rgba(255,255,255,0.15);
         }
         .project-card .preview .live-badge {
             position: absolute;
@@ -402,10 +532,11 @@
             display: flex;
             align-items: center;
             gap: 0.35rem;
-            background: rgba(255,255,255,0.6);
+            background: rgba(255,255,255,0.65);
+            backdrop-filter: blur(8px);
             padding: 0.2rem 0.5rem;
             border-radius: 4px;
-            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.3);
         }
         .project-card .preview .live-badge::before {
             content: '';
@@ -446,8 +577,8 @@
         }
         .project-card .body .tags span {
             padding: 0.18rem 0.6rem;
-            background: rgba(79, 70, 229, 0.05);
-            border: 1px solid rgba(79, 70, 229, 0.08);
+            background: rgba(79, 70, 229, 0.06);
+            border: 1px solid rgba(79, 70, 229, 0.1);
             border-radius: 4px;
             font-size: 0.68rem;
             color: #4f46e5;
@@ -488,26 +619,39 @@
             font-weight: 600;
         }
         .about-text .btn { margin-top: 0.75rem; }
-
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 0.75rem;
         }
         .stat-card {
-            background: rgba(255, 255, 255, 0.55);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 0, 0, 0.04);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
             border-radius: 16px;
             padding: 1.75rem;
             text-align: center;
             transition: all 0.25s ease;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.85),
+                0 2px 8px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+            pointer-events: none;
         }
         .stat-card:hover {
             background: #fff;
-            border-color: rgba(79, 70, 229, 0.1);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            border-color: rgba(79, 70, 229, 0.15);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                0 6px 20px rgba(0, 0, 0, 0.04);
             transform: translateY(-2px);
         }
         .stat-card .number {
@@ -526,13 +670,35 @@
 
         /* ── Contact ── */
         .contact-section {
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border: 1px solid rgba(0, 0, 0, 0.04);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px) saturate(190%);
+            -webkit-backdrop-filter: blur(16px) saturate(190%);
+            border: 1px solid rgba(255, 255, 255, 0.55);
             border-radius: 24px;
             padding: 2.5rem;
             text-align: center;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                0 4px 20px rgba(0, 0, 0, 0.02);
+            position: relative;
+            overflow: hidden;
+        }
+        .contact-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent);
+            pointer-events: none;
+        }
+        .contact-section::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(120% 80% at 30% 20%, rgba(255,255,255,0.3), transparent 65%);
+            pointer-events: none;
+            opacity: 0.5;
         }
         .contact-section h2 {
             font-size: 1.8rem;
@@ -540,10 +706,14 @@
             color: #1a1a1a;
             margin-bottom: 0.5rem;
             letter-spacing: -0.5px;
+            position: relative;
+            z-index: 1;
         }
         .contact-section p {
             color: #555;
             margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
         }
         .contact-links {
             display: flex;
@@ -557,7 +727,7 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.7rem 1.4rem;
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.6);
             border: 1px solid rgba(0, 0, 0, 0.05);
             border-radius: 100px;
             font-weight: 500;
@@ -565,6 +735,8 @@
             color: #333;
             transition: all 0.2s ease;
             backdrop-filter: blur(4px);
+            position: relative;
+            z-index: 1;
         }
         .contact-link:hover {
             background: #1a1a1a;
@@ -575,6 +747,8 @@
             max-width: 500px;
             margin: 0 auto;
             text-align: left;
+            position: relative;
+            z-index: 1;
         }
         .contact-form input,
         .contact-form textarea {
@@ -585,15 +759,13 @@
             font-family: inherit;
             font-size: 0.9rem;
             margin-bottom: 0.75rem;
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.55);
             color: #1a1a1a;
             transition: all 0.2s ease;
             backdrop-filter: blur(4px);
         }
         .contact-form input::placeholder,
-        .contact-form textarea::placeholder {
-            color: #bbb;
-        }
+        .contact-form textarea::placeholder { color: #bbb; }
         .contact-form input:focus,
         .contact-form textarea:focus {
             outline: none;
