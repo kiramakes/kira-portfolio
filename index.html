@@ -12,13 +12,18 @@
   <link rel="stylesheet" href="site/components.css">
   <link rel="stylesheet" href="site/lenis.css">
   <style>
+    /* ═══════════════════════════════════════════
+       ROOT VARIABLES
+       ═══════════════════════════════════════════ */
     :root {
-      --light-silver: #e2e1e1;
-      --ink-black: #080912;
-      --dark-blue: #2a4093;
-      --astronaut: #273879;
+      --light-silver: #f5f5f2;
+      --body-font: 'Cormorant Garamond', Georgia, serif;
+      --ink-black: #1d1d1b;
+      --dark-blue: #2d4a77;
+      --astronaut: #293d75;
       --white: white;
       --black: black;
+      --bold: 70;
       --gap-xxs: .5em; --gap-xs: .75em; --gap-s: 1em; --gap-r: 2em;
       --gap-l: 3em; --gap-xl: 5em;
       --border-radius-s: .25em; --border-radius: .5em; --border-radius-l: 1em;
@@ -34,354 +39,275 @@
     html { scroll-behavior: initial; }
     html, body { -webkit-font-smoothing: antialiased; }
     body {
-      background-color: var(--ink-black);
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      color: var(--light-silver);
+      background-color: var(--light-silver);
+      font-family: var(--body-font);
+      color: var(--ink-black);
       line-height: 1.5;
       font-size: var(--size-font);
       overflow-x: hidden;
+      margin: 0;
     }
     a { color: inherit; text-decoration: none; }
     img { pointer-events: auto; object-fit: cover; width: 100%; height: 100%; display: inline-block; max-width: 100%; }
     button { all: unset; cursor: pointer; }
     button:focus-visible { outline: revert; }
     svg { pointer-events: none; max-width: none; height: auto; }
-    ::selection { background-color: var(--white); color: var(--dark-blue); }
-    ::-moz-selection { background-color: var(--white); color: var(--dark-blue); }
+    ::selection { background-color: var(--black); color: var(--white); }
+    ::-moz-selection { background-color: var(--black); color: var(--white); }
     ::-webkit-scrollbar { display: none; }
     body { -ms-overflow-style: none; }
     html { scrollbar-width: none; }
     .main-wrapper { width: 100%; max-width: var(--size-container); margin: 0 auto; overflow: clip; }
 
+    /* Progressive blur */
+    .progressive-blur { position: fixed; top: 0; left: 0; right: 0; height: 0; z-index: 99; pointer-events: none; overflow: hidden; }
+    .progressive-blur__main, .progressive-blur__blur { position: absolute; top: 0; left: 0; right: 0; height: 100vh; will-change: transform, filter; }
+    .progressive-blur__blur { filter: blur(20px); -webkit-filter: blur(20px); }
+
     /* Header */
-    .header {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      padding: 1.25rem var(--gap-l);
-      display: flex; align-items: center; justify-content: space-between;
-      transition: background-color 0.4s ease, backdrop-filter 0.4s ease;
-    }
-    .header.scrolled {
-      background-color: rgba(8,9,18,0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
-    .navbar-inner {
-      display: flex; align-items: center; justify-content: space-between;
-      width: 100%; max-width: 1440px; margin: 0 auto; gap: var(--gap-l);
-    }
-    .brand { display: flex; align-items: center; }
-    .brand svg { width: 140px; height: auto; display: block; }
+    .header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.5rem var(--gap-l); display: flex; align-items: center; justify-content: space-between; transition: background-color 0.4s ease, color 0.4s ease, backdrop-filter 0.4s ease; }
+    .header[data-theme-nav="dark"] { background-color: rgba(29,29,27,0.88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: var(--light-silver); }
+    .header[data-theme-nav="light"] { background-color: transparent; color: var(--ink-black); }
+    .navbar-wrapper { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 1440px; margin: 0 auto; gap: var(--gap-l); }
+    .brand { cursor: default; pointer-events: none; transition: transform 0.4s cubic-bezier(0.22,1,0.36,1); }
+    .brand[data-logo-scroll="true"] { transform: scale(0.88); }
+    .brand svg { width: 180px; height: auto; display: block; }
     .nav-buttons { display: flex; align-items: center; gap: var(--gap-s); }
 
     /* Button 007 */
     .button-007 {
-      --button-007-color: var(--white);
-      --button-007-color-background: var(--ink-black);
+      --button-007-color: var(--ink-black);
+      --button-007-color-background: var(--light-silver);
       --button-007-hover-color: var(--white);
       --button-007-hover-color-background: var(--dark-blue);
       --button-007-border-radius: 2.5em;
-      --button-007-padding: 0.7em 1em;
+      --button-007-padding: 0.75em 1em;
       display: inline-grid; position: relative;
       -webkit-tap-highlight-color: transparent;
       transition: scale 0.15s cubic-bezier(0.4,0,0.2,1);
-      color: var(--button-007-color); background: transparent; text-decoration: none;
+      color: var(--button-007-color); background-color: transparent; text-decoration: none;
     }
     .button-007:active { scale: 0.955 0.925; }
-    .button-007__inner {
-      pointer-events: none; position: relative; display: grid; place-items: center;
-      border-radius: var(--button-007-border-radius); overflow: clip; grid-area: 1/1;
-    }
-    .button-007__bg {
-      pointer-events: none; background: var(--button-007-color-background);
-      border-radius: var(--button-007-border-radius); grid-area: 1/1;
-      place-self: center; width: calc(100% - 1px); height: calc(100% - 1px); padding: 0;
-    }
-    .button-007__text {
-      text-transform: uppercase; width: 100%; height: 100%;
-      padding: var(--button-007-padding); display: block;
-      font-family: var(--cta-font); font-size: 0.72rem; font-weight: 700;
-      letter-spacing: 0.08em; grid-area: 1/1;
-    }
-    .button-007__svg {
-      position: absolute; width: 100%; height: auto; aspect-ratio: 2;
-      overflow: visible; flex: none; top: 0; left: 0;
-    }
-    .button-007__svg path { transform-box: fill-box; transform-origin: center; transform: scale(1.25); }
-    .button-007__svg-overlay { position: absolute; width: 100%; height: auto; aspect-ratio: 2; overflow: visible; flex: none; top: 0; left: 0; }
-    .button-007__svg-overlay path { transform-box: fill-box; transform-origin: center; transform: scale(1.25); }
-    .button-007__svg-object { width: 100%; }
+    .button-007__inner { pointer-events: none; position: relative; display: grid; place-items: center; border-radius: var(--button-007-border-radius); overflow: clip; grid-area: 1/1; }
+    .button-007__bg { pointer-events: none; background-color: var(--button-007-color-background); border-radius: var(--button-007-border-radius); grid-area: 1/1; place-self: center; width: calc(100% - 1px); height: calc(100% - 1px); padding: 0; transition: transform 0.4s cubic-bezier(0.32,0.72,0,1), background-color 0.3s ease; }
+    .button-007__text { text-transform: uppercase; width: 100%; height: 100%; padding: var(--button-007-padding); display: block; font-family: var(--cta-font); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; grid-area: 1/1; }
+    .button-007__svg { position: absolute; width: 100%; height: auto; aspect-ratio: 2; overflow: visible; flex: none; top: 0; left: 0; }
+    .button-007__svg path, .button-007__svg-overlay path { transform-box: fill-box; transform-origin: center; transform: scale(1.25); }
     .button-007__svg-inner { display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; }
     .button-007__svg-text-wrap { width: 100%; height: auto; padding: var(--button-007-padding); display: flex; justify-content: center; align-items: center; }
-    .button-007__svg-text { text-transform: uppercase; white-space: nowrap; line-height: inherit; font-family: var(--cta-font); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; }
+    .button-007__svg-text { text-transform: uppercase; white-space: nowrap; line-height: inherit; font-family: var(--cta-font); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; }
 
     /* Hero */
-    .hero { position: relative; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-    .hero-bg { position: absolute; inset: 0; }
-    .hero-bg img {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%,-50%);
-      min-width: 100%; min-height: 100%;
-      object-fit: cover;
-      filter: brightness(0.65) saturate(1.05);
-      will-change: transform;
-    }
-    .hero-overlay {
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 50% 40%, transparent 25%, rgba(8,9,18,0.7) 70%, var(--ink-black) 100%);
-    }
-    .hero-content { position: relative; z-index: 2; text-align: center; padding: 0 var(--gap-s); }
-    .partner-wrap {
-      display: flex; align-items: center; justify-content: center; gap: var(--gap-xs);
-      margin-bottom: var(--gap-s);
-      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em;
-      text-transform: uppercase; color: var(--light-silver); opacity: 0;
-    }
+    .hero { position: relative; height: 100vh; display: flex; align-items: flex-end; justify-content: center; overflow: hidden; background-color: var(--ink-black); }
+    .hero-bg-wrap { position: absolute; inset: 0; overflow: hidden; will-change: transform; }
+    .hero-bg-wrap img { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); min-width: 100%; min-height: 100%; object-fit: cover; will-change: transform; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(29,29,27,0.2) 0%, rgba(29,29,27,0.6) 40%, var(--ink-black) 100%); }
+    .hero-content { position: relative; z-index: 2; text-align: center; padding: 0 var(--gap-s) var(--gap-xl); width: 100%; }
+    .partner-wrap { display: flex; align-items: center; justify-content: center; gap: var(--gap-xs); margin-bottom: var(--gap-s); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--light-silver); opacity: 0; }
     .partner-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--light-silver); opacity: 0.5; }
-    .locate-wrap {
-      display: flex; align-items: center; justify-content: center; gap: var(--gap-s);
-      margin-bottom: var(--gap-l); opacity: 0;
-    }
-    .locate-wrap .hero-label {
-      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.05em;
-      color: var(--light-silver); opacity: 0.75;
-    }
+    .locate-wrap { display: flex; align-items: center; justify-content: center; gap: var(--gap-r); margin-bottom: var(--gap-xl); opacity: 0; }
+    .locate-wrap .hero-label { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.05em; color: var(--light-silver); opacity: 0.75; }
     .locate-wrap .block-span { display: block; font-size: 0.85rem; font-family: var(--cta-font); letter-spacing: 0; opacity: 0.9; }
     .language-switch { position: relative; display: inline-block; }
-    .language-switch__tooltip {
-      position: absolute; bottom: 100%; left: 50%;
-      transform: translateX(-50%) translateY(-8px);
-      padding: 5px 10px; background: var(--ink-black); border-radius: var(--border-radius-s);
-      white-space: nowrap; opacity: 0; pointer-events: none;
-      transition: opacity 0.2s ease, transform 0.2s ease;
-    }
+    .language-switch__tooltip { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-8px); padding: 6px 12px; background: var(--ink-black); border-radius: var(--border-radius-s); white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s ease, transform 0.2s ease; }
     .language-switch:hover .language-switch__tooltip { opacity: 1; transform: translateX(-50%) translateY(-12px); }
     .language-switch__tooltip-inner { display: flex; align-items: center; justify-content: center; }
-    .language-switch__tooltip-text { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--light-silver); }
+    .language-switch__tooltip-text { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--light-silver); }
     .language-switch__tooltip-tip { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); width: 0; height: 0; }
     .rotating-globe { display: inline-block; }
-    .globe { position: relative; width: 18px; height: 18px; }
-    .globe .circle { position: absolute; border-radius: 50%; border: 1.5px solid var(--light-silver); opacity: 0.25; }
+    .globe { position: relative; width: 20px; height: 20px; }
+    .globe .circle { position: absolute; border-radius: 50%; border: 1.5px solid var(--light-silver); opacity: 0.3; }
     .globe .circle:nth-child(1) { width: 100%; height: 100%; top: 0; left: 0; }
-    .globe .circle:nth-child(2) { width: 60%; height: 60%; top: 20%; left: 20%; animation: globe 8s linear infinite; }
+    .globe .circle:nth-child(2) { width: 60%; height: 60%; top: 20%; left: 20%; opacity: 0.2; animation: globe 8s linear infinite; }
     .globe .circle-hor { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 100%; height: 100%; border-radius: 50%; border-top: 1.5px solid var(--light-silver); border-bottom: 1.5px solid var(--light-silver); }
     .globe .circle-hor-middle { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 100%; height: 100%; border-radius: 50%; border-left: 1.5px solid var(--light-silver); border-right: 1.5px solid var(--light-silver); }
+    @keyframes globe { from { transform: translate(-50%,-50%) rotate(0deg); } to { transform: translate(-50%,-50%) rotate(360deg); } }
 
     /* Sections */
     section { padding: var(--gap-xl) var(--gap-l); }
     .section-head { text-align: center; margin-bottom: var(--gap-xl); }
-    .section-head .big-label {
-      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--dark-blue); margin: 0 0 0.75rem;
-    }
-    .section-head h2 {
-      font-size: 3em; font-weight: 700; line-height: 1.1;
-      color: var(--light-silver); margin: 0; letter-spacing: -0.02em;
-    }
-    .section-head .sub {
-      font-size: 1.1em; color: var(--light-silver); opacity: 0.65;
-      margin: 0.75rem auto 0; max-width: 560px; line-height: 1.6;
-    }
+    .section-head .big-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--astronaut); margin: 0 0 0.75rem; }
+    .section-head h2 { font-size: 3em; font-weight: var(--bold); line-height: 1.1; color: var(--ink-black); margin: 1rem 0 0; letter-spacing: -0.02em; }
+    .section-head p { font-size: 1.15em; color: var(--ink-black); opacity: 0.55; margin: 0.75rem auto 0; max-width: 560px; line-height: 1.6; }
+
+    /* Bracket heading */
     .bracket-heading { display: inline-block; position: relative; }
-    .bracket-left, .bracket-right { color: var(--dark-blue); font-weight: 700; }
+    .bracket-left, .bracket-right { color: var(--dark-blue); font-weight: var(--bold); }
 
     /* About */
-    .about { background: var(--ink-black); }
-    .about-head { text-align: center; margin-bottom: var(--gap-xl); }
-    .about-head h1 {
-      font-size: 4em; font-weight: 700; line-height: 1.1;
-      color: var(--light-silver); margin: 0; text-transform: uppercase; letter-spacing: -0.02em;
-    }
-    .about-head p {
-      font-size: 1.2em; color: var(--light-silver); opacity: 0.6;
-      margin: 0.75rem auto 0; max-width: 500px; line-height: 1.6;
-    }
-    .about-body {
-      max-width: 680px; margin: 0 auto; text-align: center;
-    }
+    .about { background-color: var(--light-silver); }
+    .about-content-wrap { max-width: 720px; margin: 0 auto; }
+    .about-header-w { text-align: center; margin-bottom: var(--gap-xl); }
+    .about-header-w .big-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--astronaut); margin: 0 0 0.5rem; }
+    .about-header-w h1 { font-size: 4em; font-weight: var(--bold); line-height: 1.1; color: var(--ink-black); margin: 0; text-transform: uppercase; letter-spacing: -0.02em; }
+    .about-header-w p { font-size: 1.25em; color: var(--ink-black); opacity: 0.55; margin: 0.75rem auto 0; max-width: 500px; line-height: 1.6; }
+    .about-body { text-align: center; }
     .about-body .bracket-heading { font-size: 2.5em; margin-bottom: 1.5rem; }
-    .about-body p {
-      font-size: 1.1em; color: var(--light-silver); opacity: 0.72;
-      line-height: 1.7; margin-bottom: 1.25rem; max-width: 560px; margin-left: auto; margin-right: auto;
-    }
-    .about-body .button-007 { margin-top: 0.5rem; }
+    .about-body p { font-size: 1.15em; color: var(--ink-black); opacity: 0.68; line-height: 1.7; margin-bottom: 1.25rem; max-width: 580px; margin-left: auto; margin-right: auto; }
+    .about-body .button-007 { margin-top: 1rem; }
+
+    /* Scroll draw transition */
+    .scroll-draw-transition { position: relative; overflow: hidden; }
+    .scroll-draw-transition__overlay { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+    .scroll-draw-transition__shape { width: 100%; height: 100%; }
+    .scroll-draw-transition__shape svg { width: 100%; height: 100%; }
 
     /* Services */
-    .services { background: var(--ink-black); }
-    .services-big { font-size: 2.2em; font-weight: 400; color: var(--light-silver); text-align: center; margin: 0 0 0.5rem; line-height: 1.2; }
-    .services-big span { color: var(--dark-blue); font-weight: 700; }
-    .services-head { text-align: center; margin-bottom: var(--gap-xl); }
-    .services-head .section-head h2 { font-size: 3em; }
-    .services-head .section-head h2.txt-color-blue { color: var(--dark-blue); }
-    .services-sticky { max-width: 1100px; margin: 0 auto; }
+    .services { background-color: var(--dark-blue); color: var(--light-silver); }
+    .services-big-txt { font-size: 2.5em; font-weight: 400; color: var(--light-silver); text-align: center; margin: 0 0 0.5rem; line-height: 1.2; }
+    .services-big-txt__span { color: var(--white); font-weight: var(--bold); }
+    .services-header__w { text-align: center; margin-bottom: var(--gap-xl); }
+    .services-header__w .heading-h2 { font-size: 3em; color: var(--light-silver); margin: 0; }
+    .services-wrapper { position: relative; }
+    .services-sticky { max-width: 1200px; margin: 0 auto; }
     .services-list { display: flex; flex-direction: column; }
-    .service-item {
-      display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap-l);
-      padding: var(--gap-l) 0; border-bottom: 1px solid rgba(226,225,225,0.08);
-      align-items: center;
-    }
-    .service-item:first-child { border-top: 1px solid rgba(226,225,225,0.08); }
-    .service-row { display: flex; align-items: flex-start; gap: var(--gap-s); }
-    .service-num { font-size: 1.4rem; font-weight: 700; color: var(--dark-blue); letter-spacing: -0.02em; min-width: 2.8rem; line-height: 1; }
-    .service-title { font-size: 1.6rem; font-weight: 700; color: var(--light-silver); margin: 0; line-height: 1.2; }
+    .service-item { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap-l); padding: var(--gap-l) 0; border-bottom: 1px solid rgba(245,245,242,0.12); align-items: center; }
+    .service-item:first-child { border-top: 1px solid rgba(245,245,242,0.12); }
+    .service-row { display: flex; align-items: baseline; gap: var(--gap-s); }
+    .service-number { font-size: 1.5rem; font-weight: var(--bold); color: var(--white); letter-spacing: -0.02em; min-width: 3rem; }
+    .service-title { font-size: 1.75rem; font-weight: var(--bold); color: var(--light-silver); margin: 0; line-height: 1.2; }
     .service-visual { display: flex; flex-direction: column; gap: var(--gap-s); }
-    .service-desc { color: var(--light-silver); opacity: 0.65; font-size: 0.95rem; line-height: 1.6; max-width: 380px; }
-    .service-image-wrap { border-radius: var(--border-radius-l); overflow: hidden; aspect-ratio: 16/9; background: rgba(255,255,255,0.02); }
+    .service-description { color: var(--light-silver); opacity: 0.7; font-size: 1rem; line-height: 1.6; max-width: 400px; }
+    .service-image-wrap { border-radius: var(--border-radius-l); overflow: hidden; aspect-ratio: 16/9; background: rgba(255,255,255,0.03); }
     .service-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
-    .service-item:hover .service-image { transform: scale(1.04); }
-
-    /* Scroll Draw Transition */
-    .scroll-draw { position: relative; overflow: hidden; }
-    .scroll-draw__overlay { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
-    .scroll-draw__shape { width: 100%; height: 100%; }
+    .service-item:hover .service-image { transform: scale(1.03); }
 
     /* Portfolio */
-    .portfolio { background: var(--ink-black); }
-    .portfolio-head { text-align: center; margin-bottom: var(--gap-xl); }
-    .portfolio-head .section-head h2 { font-size: 3em; }
-    .portfolio-head .sub { font-size: 1.1em; }
-    .portfolio-orbit { position: relative; max-width: 1100px; margin: 0 auto; }
+    .portfolio { background-color: var(--ink-black); color: var(--light-silver); }
+    .portfolio-header-w { text-align: center; margin-bottom: var(--gap-xl); }
+    .portfolio-header__p { font-size: 1.15em; color: var(--light-silver); opacity: 0.65; margin: 0.5rem auto 0; }
+    .portfolio-orbit { position: relative; max-width: 1200px; margin: 0 auto; }
+    .portfolio-orbit__info { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap-l); align-items: start; }
     .portfolio-orbit__info-side { padding-right: var(--gap-l); }
     .portfolio-orbit__count { display: flex; align-items: center; gap: var(--gap-s); margin-bottom: var(--gap-s); }
     .portfolio-orbit__count-col { display: flex; align-items: center; }
-    .portfolio-orbit__count-txt { font-size: 1.8rem; font-weight: 700; color: var(--dark-blue); letter-spacing: -0.02em; }
-    .portfolio-orbit__count-divider { width: 1px; height: 36px; background: rgba(226,225,225,0.15); }
+    .portfolio-orbit__count-txt { font-size: 2rem; font-weight: var(--bold); color: var(--dark-blue); letter-spacing: -0.02em; }
+    .portfolio-orbit__count-divider { width: 1px; height: 40px; background: rgba(245,245,242,0.15); }
     .portfolio-orbit__items { display: flex; flex-direction: column; gap: var(--gap-l); }
-    .portfolio-orbit__item { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .portfolio-orbit__item { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
     .portfolio-orbit__item.active { opacity: 1; transform: translateY(0); }
-    .portfolio-orbit__item h3 { font-size: 1.4rem; font-weight: 700; color: var(--light-silver); margin: 0 0 0.4rem; }
-    .portfolio-orbit__item p { font-size: 0.9rem; color: var(--light-silver); opacity: 0.6; line-height: 1.6; margin: 0; max-width: 380px; }
+    .portfolio-orbit__item h3 { font-size: 1.5rem; font-weight: var(--bold); color: var(--light-silver); margin: 0 0 0.5rem; }
+    .portfolio-orbit__item p { font-size: 0.95rem; color: var(--light-silver); opacity: 0.6; line-height: 1.6; margin: 0; max-width: 400px; }
     .portfolio-orbit__nav { display: flex; justify-content: center; gap: var(--gap-xs); margin-top: var(--gap-l); }
-    .portfolio-orbit__btn {
-      position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
-      color: var(--light-silver); border-radius: 50%;
-      transition: transform 0.475s cubic-bezier(0.625,0.05,0,1), opacity 0.475s cubic-bezier(0.625,0.05,0,1);
-    }
-    .portfolio-orbit__btn:hover { transform: scale(0.85); opacity: 1 !important; background: rgba(255,255,255,0.04); }
+    .portfolio-orbit__btn { position: relative; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; color: var(--light-silver); border-radius: 50%; transition: transform 0.475s cubic-bezier(0.625,0.05,0,1), opacity 0.475s cubic-bezier(0.625,0.05,0,1); }
+    .portfolio-orbit__btn:hover { transform: scale(0.85); opacity: 1 !important; background: rgba(255,255,255,0.05); }
+    .portfolio-orbit__btn-arrow { width: 100%; height: 100%; }
     .portfolio-orbit__btn-overlay { position: absolute; inset: 0; border-radius: 50%; pointer-events: none; }
-    .portfolio-orbit__btn-corner {
-      position: absolute; width: 10px; height: 10px; border-radius: 2px;
-      background: var(--dark-blue); opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease;
-    }
-    .portfolio-orbit__btn-corner.tr { top: 3px; right: 3px; }
-    .portfolio-orbit__btn-corner.bl { bottom: 3px; left: 3px; }
-    .portfolio-orbit__btn-corner.br { bottom: 3px; right: 3px; }
-    .portfolio-orbit__btn:hover .portfolio-orbit__btn-corner { opacity: 0.4; }
-    .portfolio-orbit__btn:hover .portfolio-orbit__btn-corner.tr { transform: scale(1.4); }
-    .portfolio-orbit__collection {
-      position: relative; overflow: hidden;
-      border-radius: var(--border-radius-l);
-      aspect-ratio: 16/9; background: rgba(255,255,255,0.02);
-    }
+    .portfolio-orbit__btn-overlay-corner { position: absolute; width: 12px; height: 12px; border-radius: 2px; background: var(--dark-blue); opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease; }
+    .portfolio-orbit__btn-overlay-corner.top-right { top: 4px; right: 4px; }
+    .portfolio-orbit__btn-overlay-corner.bottom-left { bottom: 4px; left: 4px; }
+    .portfolio-orbit__btn-overlay-corner.bottom-right { bottom: 4px; right: 4px; }
+    .portfolio-orbit__btn:hover .portfolio-orbit__btn-overlay-corner { opacity: 0.4; }
+    .portfolio-orbit__btn:hover .portfolio-orbit__btn-overlay-corner.top-right { transform: scale(1.4); }
+    .portfolio-orbit__collection { position: relative; overflow: hidden; border-radius: var(--border-radius-l); aspect-ratio: 16/9; background: rgba(255,255,255,0.02); }
     .portfolio-orbit__list { position: relative; width: 100%; height: 100%; }
-    .portfolio-orbit__item-card {
-      position: absolute; inset: 0; opacity: 0; transition: opacity 0.6s ease;
-    }
+    .portfolio-orbit__item-card { position: absolute; inset: 0; opacity: 0; transition: opacity 0.6s ease; }
     .portfolio-orbit__item-card.active { opacity: 1; }
-    .portfolio-orbit__card-link { display: block; width: 100%; height: 100%; }
+    .portfolio-orbit__card { display: block; width: 100%; height: 100%; }
     .portfolio-orbit__image-mask { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: var(--border-radius-l); }
     .portfolio-orbit__placeholder { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; filter: brightness(0.75); }
-    .portfolio-orbit__item-card.active .portfolio-orbit__placeholder { transform: scale(1.06); }
+    .portfolio-orbit__item-card.active .portfolio-orbit__placeholder { transform: scale(1.05); }
     .portfolio-orbit__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s ease; }
     .portfolio-orbit__item-card.active .portfolio-orbit__video { opacity: 1; }
     .portfolio-cta { text-align: center; margin-top: var(--gap-xl); }
 
     /* Certifications */
-    .certification { background: var(--ink-black); text-align: center; }
-    .certification .section-head { margin-bottom: var(--gap-l); }
-    .certification .section-head h2 { font-size: 2.8em; }
-    .cert-content { max-width: 580px; margin: 0 auto var(--gap-xl); }
-    .cert-content p { font-size: 1.1em; color: var(--light-silver); opacity: 0.68; line-height: 1.7; margin: 0; }
-    .cert-logos { display: flex; justify-content: center; gap: var(--gap-xl); flex-wrap: wrap; }
-    .cert-logo { width: 180px; max-width: 28vw; color: var(--light-silver); opacity: 0.5; transition: opacity 0.3s ease, transform 0.3s ease; }
-    .cert-logo:hover { opacity: 1; transform: translateY(-3px); }
-    .cert-logo svg { width: 100%; height: auto; display: block; }
+    .certification { background-color: var(--light-silver); }
+    .certification-header-w { text-align: center; margin-bottom: var(--gap-l); }
+    .certified-big-txt { font-size: 3em; font-weight: var(--bold); color: var(--ink-black); margin: 0; text-transform: uppercase; letter-spacing: -0.02em; }
+    .certification-content-w { max-width: 600px; margin: 0 auto var(--gap-xl); }
+    .certification-content-w p { font-size: 1.15em; color: var(--ink-black); opacity: 0.58; line-height: 1.7; margin: 0; }
+    .certifications-logos { display: flex; justify-content: center; gap: var(--gap-xl); flex-wrap: wrap; }
+    .certifications-logo { width: 200px; max-width: 30vw; color: var(--ink-black); opacity: 0.55; transition: opacity 0.3s ease, transform 0.3s ease; }
+    .certifications-logo:hover { opacity: 1; transform: translateY(-4px); }
+    .certifications-logo svg { width: 100%; height: auto; display: block; }
 
     /* Contact */
-    .contact { background: var(--ink-black); text-align: center; position: relative; overflow: hidden; }
-    .contact-sticky { position: relative; max-width: 660px; margin: 0 auto; }
-    .contact-words {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-      font-size: clamp(1.5rem, 3.5vw, 4rem); font-weight: 400; line-height: 1;
-      white-space: nowrap; color: rgba(226,225,225,0.06); opacity: 0;
-      filter: blur(0.65rem); pointer-events: none; user-select: none;
-    }
-    .contact-body { position: relative; z-index: 1; }
-    .contact-heading { font-size: 3em; font-weight: 700; color: var(--light-silver); margin: 0 0 1rem; text-transform: uppercase; letter-spacing: -0.02em; }
-    .contact-text { font-size: 1.1em; color: var(--light-silver); opacity: 0.65; line-height: 1.7; max-width: 480px; margin: 0 auto 2rem; }
+    .contact { background-color: var(--ink-black); color: var(--light-silver); text-align: center; position: relative; overflow: hidden; }
+    .contact-sticky { position: relative; max-width: 700px; margin: 0 auto; }
+    .contact-words { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: clamp(1.5rem, 3.5vw, 4.5rem); font-weight: 400; line-height: 1; white-space: nowrap; color: rgba(245,245,242,0.08); opacity: 0; filter: blur(0.65rem); pointer-events: none; user-select: none; }
+    .contact-content { position: relative; z-index: 1; }
+    .contact-heading { font-size: 3em; font-weight: var(--bold); color: var(--light-silver); margin: 0 0 1rem; text-transform: uppercase; letter-spacing: -0.02em; }
+    .contact-text { font-size: 1.15em; color: var(--light-silver); opacity: 0.65; line-height: 1.6; max-width: 500px; margin: 0 auto 2rem; }
     .button-group { display: flex; justify-content: center; gap: var(--gap-s); flex-wrap: wrap; }
 
     /* Footer */
-    .footer { background: var(--ink-black); padding: var(--gap-l) var(--gap-l); }
-    .footer-inner { max-width: var(--size-container); margin: 0 auto; }
-    .footer-top { position: relative; padding: var(--gap-l) 0; border-top: 1px solid rgba(226,225,225,0.08); }
+    .footer-wrap { background-color: var(--ink-black); padding: var(--gap-l) var(--gap-l); }
+    .footer { max-width: var(--size-container); margin: 0 auto; }
+    .footer-top { position: relative; padding: var(--gap-l) 0; border-top: 1px solid rgba(245,245,242,0.08); }
     .footer-bracket { position: absolute; top: 0; left: 0; width: 50px; height: 1px; background: var(--dark-blue); }
-    .footer-bracket.r { left: auto; right: 0; }
-    .footer-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap-xl); max-width: 1100px; margin: 0 auto; }
+    .footer-bracket.is--2 { left: auto; right: 0; }
+    .footer-content-w { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap-xl); max-width: 1200px; margin: 0 auto; }
     .footer-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dark-blue); margin: 0 0 var(--gap-s); }
     .footer-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--gap-xs); }
     .footer-list li { list-style: none; }
-    .footer-link { font-size: 0.88rem; color: var(--light-silver); opacity: 0.55; transition: opacity 0.3s ease; display: inline-block; position: relative; }
+    .footer-link { font-size: 0.88rem; color: var(--light-silver); opacity: 0.55; transition: opacity 0.3s ease; display: inline-block; }
     .footer-link:hover { opacity: 1; }
-    .footer-link::before {
-      content: ""; position: absolute; left: 0; bottom: -0.0625em;
-      width: 100%; height: 0.0625em; background: currentColor;
-      transform: scaleX(0); transform-origin: right;
-      transition: transform 0.735s cubic-bezier(0.625,0.05,0,1);
-    }
-    .footer-link:hover::before { transform: scaleX(1); transform-origin: left; }
-    .footer-copy { display: flex; justify-content: space-between; align-items: center; padding: var(--gap-s) 0; border-top: 1px solid rgba(226,225,225,0.05); max-width: 1100px; margin: 0 auto; flex-wrap: wrap; gap: var(--gap-s); }
-    .footer-copy-left { display: flex; flex-direction: column; gap: 0.2rem; }
-    .footer-copy-label { font-size: 0.75rem; color: var(--light-silver); opacity: 0.35; margin: 0; }
-    .footer-copy-label strong { font-weight: 600; color: var(--light-silver); opacity: 0.55; }
+    .footer-copy { display: flex; justify-content: space-between; align-items: center; padding: var(--gap-s) 0; border-top: 1px solid rgba(245,245,242,0.05); max-width: 1200px; margin: 0 auto; flex-wrap: wrap; gap: var(--gap-s); }
+    .footer-copy__left { display: flex; flex-direction: column; gap: 0.25rem; }
+    .footer-copy__label { font-size: 0.75rem; color: var(--light-silver); opacity: 0.35; margin: 0; }
+    .footer-copy__label strong { font-weight: 600; color: var(--light-silver); opacity: 0.55; }
     .footer-copy a { display: block; }
 
-    /* Responsive */
+    @keyframes shimmer { from { background-position: 200% 0%; } to { background-position: -200% 0%; } }
+
     @media (max-width: 900px) {
       .service-item { grid-template-columns: 1fr; gap: var(--gap-s); }
       .service-visual { flex-direction: row; align-items: center; gap: var(--gap-l); }
-      .service-desc { max-width: none; flex: 1; }
+      .service-description { max-width: none; flex: 1; }
       .service-image-wrap { flex: 1; aspect-ratio: auto; height: 160px; }
+      .portfolio-orbit__info { grid-template-columns: 1fr; }
       .portfolio-orbit__info-side { padding-right: 0; margin-bottom: var(--gap-l); }
       .portfolio-orbit__info-side .portfolio-orbit__items { flex-direction: row; flex-wrap: wrap; }
       .portfolio-orbit__info-side .portfolio-orbit__item { flex: 1 1 calc(50% - var(--gap-s)); min-width: 200px; }
       .portfolio-orbit__info-side .portfolio-orbit__item p { max-width: none; }
-      .footer-cols { grid-template-columns: 1fr; gap: var(--gap-l); }
+      .footer-content-w { grid-template-columns: 1fr; gap: var(--gap-l); }
+      .about-header-w h1 { font-size: 2.8em; }
+      .section-head h2 { font-size: 2.2em; }
+      .services-header__w .heading-h2 { font-size: 2.2em; }
+      .certified-big-txt { font-size: 2.2em; }
+      .contact-heading { font-size: 2.2em; }
+      .services-big-txt { font-size: 1.8em; }
+      .portfolio-orbit__info-side .portfolio-orbit__item { flex: 1 1 100%; }
+      .portfolio-orbit__collection { aspect-ratio: 4/3; }
     }
     @media (max-width: 600px) {
       :root { --size-container-ideal: 550; --size-container-min: 320px; --size-container-max: 600px; }
       .brand svg { width: 100px; }
       .nav-buttons { gap: var(--gap-xs); }
-      .button-007__text { font-size: 0.65rem; }
+      .button-007__text, .button-007__svg-text { font-size: 0.65rem; }
       section { padding: var(--gap-l) var(--gap-s); }
-      .about-head h1 { font-size: 2.5em; }
-      .section-head h2 { font-size: 2rem; }
-      .services-head .section-head h2 { font-size: 2rem; }
-      .certification .section-head h2 { font-size: 2rem; }
-      .contact-heading { font-size: 2rem; }
-      .services-big { font-size: 1.6em; }
+      .about-header-w h1 { font-size: 2.2em; }
+      .section-head h2 { font-size: 1.8em; }
+      .services-header__w .heading-h2 { font-size: 1.8em; }
+      .certified-big-txt { font-size: 1.8em; }
+      .contact-heading { font-size: 1.8em; }
+      .services-big-txt { font-size: 1.5em; }
       .portfolio-orbit__info-side .portfolio-orbit__item { flex: 1 1 100%; }
       .portfolio-orbit__collection { aspect-ratio: 4/3; }
-    }
-    @keyframes globe {
-      from { transform: translate(-50%,-50%) rotate(0deg); }
-      to { transform: translate(-50%,-50%) rotate(360deg); }
-    }
-    @keyframes shimmer {
-      from { background-position: 200% 0%; }
-      to { background-position: -200% 0%; }
+      .partner-wrap { font-size: 0.6rem; }
+      .locate-wrap .block-span { font-size: 0.75rem; }
     }
   </style>
 </head>
 <body>
-  <div class="global-css w-embed"></div>
-  <div class="animations-css w-embed"></div>
-  <div class="buttons-css w-embed"></div>
 
-  <!-- Page transition -->
+  <!-- ═══ EMBEDDED CSS (Webflow-style placeholders) ═══ -->
+  <div class="global-css w-embed">
+    <style>/* Global styles — inherited from alejandroha.css */</style>
+  </div>
+  <div class="animations-css w-embed">
+    <style>/* Animation styles — GSAP ScrollTrigger/CSS transitions */</style>
+  </div>
+  <div class="buttons-css w-embed">
+    <style>/* Button 007 component styles — see :root above */</style>
+  </div>
+
+  <!-- ═══ PAGE TRANSITION (Barba.js) ═══ -->
   <div class="transition">
     <div class="transition__shape">
       <svg viewBox="0 0 3222 3114" fill="none" preserveAspectRatio="none" class="transition__svg">
-        <path d="M299.654 453.865C505.574 319.225 711.494 184.585 836.054 109.945C960.614 35.305 997.574 24.745 944.014 110.385C890.454 196.025 745.254 378.185 571.454 634.385C397.654 890.585 199.654 1215.3 110.854 1382.58C22.054 1549.86 48.454 1549.86 77.894 1540.62C107.334 1531.38 139.014 1512.9 367.854 1319.9C596.694 1126.9 1021.73 759.945 1255.21 555.065C1488.69 350.185 1517.73 318.505 1527.41 306.145C1537.09 293.785 1526.53 301.705 1346.85 618.625C1167.17 935.545 818.694 1561.22 635.214 1896.74C451.734 2232.26 443.814 2258.66 447.654 2268.3C451.494 2277.94 467.334 2270.02 511.134 2236.9C554.934 2203.78 626.214 2145.7 966.534 1817.46C1306.85 1489.22 1914.05 892.585 2263.81 557.505C2613.57 222.425 2687.49 166.985 2741.41 129.185C2795.33 91.385 2827.01 72.905 2843.33 67.345C2859.65 61.785 2859.65 69.705 2849.09 96.225C2838.53 122.745 2817.41 167.625 2584.77 544.505C2352.13 921.385 1370.37 2165.43 1139.25 2537.83C908.134 2910.23 902.854 2926.07 902.774 2939.51C902.694 2952.95 907.974 2963.51 1255.21 2613.87C1602.45 2264.23 2829.73 1017.54 2903.53 1071.46C2977.33 1125.38 2176.12 2817.04 2128 3037C2079.88 3256.96 2911.24 2018.56 3172 1793" stroke="currentColor" stroke-width="80%" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M299.654 453.865C505.574 319.225 711.494 184.585 836.054 109.945C960.614 35.305 997.574 24.745 944.014 110.385C890.454 196.025 745.254 378.185 571.454 634.385C397.654 890.585 199.654 1215.3 110.854 1382.58C22.054 1549.86 48.454 1549.86 77.894 1540.62C107.334 1531.38 139.014 1512.9 367.854 1319.9C596.694 1126.9 1021.73 759.945 1255.21 555.065C1488.69 350.185 1517.73 318.505 1527.41 306.145C1537.09 293.785 1526.53 301.705 1346.85 618.625C1167.17 935.545 818.694 1561.22 635.214 1896.74C451.734 2232.26 443.814 2258.66 447.654 2268.3C451.494 2277.94 467.334 2270.02 511.134 2236.9C554.934 2203.78 626.214 2145.7 966.534 1817.46C1306.85 1489.22 1914.05 892.585 2263.81 557.505C2613.57 222.425 2687.49 166.985 2741.41 129.185C2795.33 91.385 2827.01 72.905 2843.33 67.345C2859.65 61.785 2859.65 69.705 2849.09 96.225C2838.53 122.745 2817.41 167.625 2584.77 544.505C2352.13 921.385 1370.37 2165.43 1139.25 2537.83C908.134 2910.23 902.854 2926.07 902.774 2939.51C902.694 2952.95 907.974 2963.51 1255.21 2613.87C1602.45 2264.23 2829.73 1017.54 2903.53 1071.46C2977.33 1125.38 2176.12 2817.04 2128 3037C2079.88 3256.96 2911.24 2018.56 3172 1793" stroke="currentColor" stroke-width="80 0%" stroke-linecap="round" stroke-linejoin="round"></path>
       </svg>
     </div>
     <div class="transition__signature">
@@ -396,31 +322,26 @@
     </div>
   </div>
 
+  <!-- ═══ PROGRESSIVE BLUR LAYERS ═══ -->
+  <div class="progressive-blur" id="progressive-blur">
+    <div class="progressive-blur__main" id="pblur-main"></div>
+    <div class="progressive-blur__blur" id="pblur-blur"></div>
+  </div>
+
+  <!-- ═══ MAIN CONTENT ═══ -->
   <main class="main-wrapper">
-    <!-- Header -->
-    <header class="header" id="header">
-      <div class="navbar-inner">
-        <div class="brand">
-          <!-- Rabiu Farouk SVG wordmark -->
-          <svg viewBox="0 0 1376 165" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M107.404 138.328H90.057L87.187 123.847L81.641 110.559H24.086L18.379 123.847L15.509 138.328H0L44.593 33.768L41.046 26.511H60.07L107.372 138.328H107.404ZM77.449 100.755L52.88 42.314L28.149 100.755H77.482H77.449Z" fill="currentColor"></path>
-            <path d="M202.652 124.847L200.62 138.328H125.88L128.233 123.008V41.831L125.88 26.511H143.549L141.356 41.831V128.362H187.143L202.62 124.814L202.652 124.847Z" fill="currentColor"></path>
-            <path d="M308.217 125.169L306.186 138.296H224.223L226.576 122.976V41.831L224.223 26.511H305.541L307.572 39.637L292.096 36.09H239.571V76.179H278.972L292.257 74.502V87.306L278.972 85.628H239.571V128.717H292.773L308.25 125.169H308.217Z" fill="currentColor"></path>
-            <path d="M323.663 131.426V115.268L340.171 128.072C343.202 129.265 346.556 129.942 349.587 129.942C362.871 129.942 370.126 122.363 370.126 107.882V41.831L367.772 26.511H385.442L383.249 41.831L383.088 105.979C383.088 127.04 371.319 139.811 350.586 139.811C341.171 139.811 333.4 137.296 323.663 131.394V131.426Z" fill="currentColor"></path>
-            <path d="M507 138.328H489.653L486.783 123.847L481.237 110.559H423.65L417.943 123.847L415.073 138.328H399.596L444.189 33.768L440.643 26.511H459.666L506.968 138.328H507ZM477.013 100.755L452.444 42.314L427.713 100.755H477.046H477.013Z" fill="currentColor"></path>
-            <path d="M625.657 26.511L623.303 41.831V138.328H605.118L539.115 37.122V123.008L541.308 138.328H525.476L527.83 123.008V41.831L525.476 26.511H546.338L611.986 127.362V41.831L609.793 26.511H625.625H625.657Z" fill="currentColor"></path>
-            <path d="M656.964 123.008V41.831L654.611 26.511H696.012C735.059 26.511 754.76 44.185 754.76 82.242C754.76 120.299 735.059 138.328 696.012 138.328H654.611L656.964 123.008ZM696.495 128.556C725.966 128.556 741.088 114.591 741.088 82.242C741.088 49.894 726.095 36.283 696.657 36.283H669.894V128.556H696.495Z" fill="currentColor"></path>
-            <path d="M875.772 138.328H855.071L850.364 126.201L822.924 91.853H795.84V123.008L798.709 138.328H780.363L782.716 123.008V41.831L780.363 26.511H830.179C856.103 26.511 868.742 38.122 868.742 58.827C868.742 76.179 857.457 87.628 836.757 89.982L875.804 138.296L875.772 138.328ZM826.116 81.92C844.302 81.92 855.587 73.824 855.587 58.86C855.587 43.895 846.656 35.8 828.47 35.8H795.485V81.92H826.116Z" fill="currentColor"></path>
-            <path d="M893.763 82.242C893.763 45.378 916.14 23.479 949.319 23.479C982.498 23.479 1004.87 45.378 1004.87 82.242C1004.87 119.106 982.143 141.521 949.319 141.521C916.495 141.521 893.763 119.138 893.763 82.242ZM991.075 82.242C991.075 50.926 973.728 33.574 949.319 33.574C924.911 33.574 907.563 50.926 907.563 82.242C907.563 113.558 924.749 131.232 949.158 131.232C973.566 131.232 991.075 113.72 991.075 82.242Z" fill="currentColor"></path>
-            <path d="M1079.17 156.679C1085.58 158.13 1091.16 156.679 1097.38 157.389C1098.09 159.549 1097.8 162.065 1098.29 164.807L1070.27 164.968L1070.33 0.065H1097.54C1098 2.774 1098.22 5.096 1097.29 7.095L1079.23 7.482V156.679H1079.17Z" fill="currentColor"></path>
-            <path d="M1120.86 123.169V41.863L1118.5 26.511H1136.2L1134.01 41.863V76.114H1200.43V41.863L1198.24 26.511H1215.94L1213.59 41.863V123.169L1215.94 138.521H1198.24L1200.43 123.169V86.048H1134.01V123.169L1136.2 138.521H1118.5L1120.86 123.169Z" fill="currentColor"></path>
-            <path d="M1342.08 138.521H1324.7L1321.83 124.008L1316.25 110.688H1258.57L1252.83 124.008L1249.96 138.521H1234.45L1279.14 33.768L1275.59 26.511H1294.65L1342.05 138.521H1342.08ZM1312.06 100.884L1287.43 42.347L1262.63 100.884H1312.03H1312.06Z" fill="currentColor"></path>
-            <path d="M1349.5 157.518L1367.07 156.937V7.515L1349.27 6.87C1349.11 4.58 1348.53 1.129 1349.98 0.194L1376.03 0L1375.9 164.839L1349.66 165C1348.75 162.71 1348.91 160.42 1349.53 157.55L1349.5 157.518Z" fill="currentColor"></path>
+
+    <!-- ── HEADER ── -->
+    <header class="header" id="header" data-theme-nav="dark">
+      <div class="navbar-wrapper">
+        <div class="brand" id="brand" data-logo-scroll="false">
+          <svg viewBox="0 0 400 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <text x="10" y="42" font-family="Georgia, serif" font-size="38" font-weight="700" fill="currentColor" letter-spacing="-0.02em">Rabiu Farouk</text>
           </svg>
         </div>
+        </div>
         <div class="nav-buttons">
-          <!-- CTA: Quote -->
-          <a href="https://wa.me/2348123456789" target="_blank" class="button-007 w-inline-block">
+          <a href="https://wa.me/2348123456789" target="_blank" class="button-007 w-inline-block" data-button-007>
             <span class="button-007__inner">
               <span class="button-007__text is--hover">
                 <svg class="button-007__svg" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
@@ -447,9 +368,9 @@
       </div>
     </header>
 
-    <!-- Hero -->
-    <section class="hero" id="hero">
-      <div class="hero-bg">
+    <!-- ── HERO ── -->
+    <section id="hero" class="hero" data-theme-section="dark" data-parallax data-parallax-speed="0.12">
+      <div class="hero-bg-wrap" id="hero-bg">
         <img src="https://picsum.photos/seed/rabiu-portrait/1600/900" alt="Portrait" loading="eager" fetchpriority="high">
       </div>
       <div class="hero-overlay"></div>
@@ -461,7 +382,7 @@
         </div>
         <div class="locate-wrap">
           <div class="hero-label">Nigeria, <span class="block-span">trabajando globalmente.</span></div>
-          <a href="#" class="language-switch">
+          <div class="language-switch">
             <div class="language-switch__tooltip">
               <div class="language-switch__tooltip-inner">
                 <span class="language-switch__tooltip-text">Switch Language</span>
@@ -470,62 +391,62 @@
             </div>
             <div class="rotating-globe">
               <div class="globe">
-                <div class="globe-wrap">
-                  <div class="circle"></div>
-                  <div class="circle"></div>
-                  <div class="circle-hor"></div>
-                  <div class="circle-hor-middle"></div>
-                </div>
+                <div class="circle"></div>
+                <div class="circle"></div>
+                <div class="circle-hor"></div>
+                <div class="circle-hor-middle"></div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── ABOUT ── -->
+    <section id="about" class="about" data-theme-section="light">
+      <div class="about-content-wrap">
+        <div class="about-header-w">
+          <p class="big-label">Sobre mí</p>
+          <h1>Creative Web Development</h1>
+          <p>Sitios modernos, funcionales y a medida con animaciones que marcan la diferencia.</p>
+        </div>
+        <div class="about-body">
+          <div class="bracket-heading" data-bracket-heading>
+            <span data-bracket-left class="bracket-left">[</span>About<span data-bracket-right class="bracket-right">]</span>
+          </div>
+          <p>Soy Rabiu — desarrollador web freelance especializado en crear sitios que no solo se ven bien, sino que se sienten right. Me enfoco en Webflow, Shopify y código personalizado para crear experiencias digitales que reflejen la identidad de cada marca.</p>
+          <p>Cada sitio que construyo es 100% personalizado — sin plantillas genéricas ni soluciones prefabricadas. Trabajo con clientes en todo el mundo, desde startups en etapa temprana hasta marcas establecidas, y le doy a cada detalle el mismo nivel de atención sin importar el tamaño del proyecto.</p>
+          <a href="https://wa.me/2348123456789" target="_blank" class="button-007 w-inline-block" data-button-007>
+            <span class="button-007__inner">
+              <span class="button-007__text is--hover">
+                <svg class="button-007__svg" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+                  <mask id="bm2" maskunits="userSpaceOnUse" style="mask-type:alpha">
+                    <svg viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+                      <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
+                    </svg>
+                  </mask>
+                  <foreignObject width="100%" height="100%" mask="url(#bm2)" class="button-007__svg-object">
+                    <div class="button-007__svg-inner">
+                      <div class="button-007__svg-text-wrap"><span class="button-007__svg-text">Cotiza aquí</span></div>
+                    </div>
+                  </foreignObject>
+                </svg>
+              </span>
+              <svg class="button-007__svg-overlay" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+                <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
+              </svg>
+              <span class="button-007__text is--default">Cotiza aquí</span>
+            </span>
+            <span class="button-007__bg"></span>
           </a>
         </div>
       </div>
     </section>
 
-    <!-- About -->
-    <section id="about" class="about">
-      <div class="about-head">
-        <div class="big-label">Sobre mí</div>
-        <h1>Creative Web Development</h1>
-        <p>Modern, functional, custom-built sites with animations that make a difference.</p>
-      </div>
-      <div class="about-body">
-        <div class="bracket-heading">
-          <span class="bracket-left">[</span>About<span class="bracket-right">]</span>
-        </div>
-        <p>I'm Rabiu — a freelance web developer specializing in building sites that not only look good but feel right. I focus on Webflow, Shopify, and custom code to create digital experiences that reflect each brand's identity.</p>
-        <p>Every site I build is 100% custom — no generic templates, no prefabricated solutions. I work with clients worldwide, from early-stage startups to established brands, and give every detail the same level of attention regardless of project size.</p>
-        <a href="https://wa.me/2348123456789" target="_blank" class="button-007 w-inline-block">
-          <span class="button-007__inner">
-            <span class="button-007__text is--hover">
-              <svg class="button-007__svg" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
-                <mask id="bm2" maskunits="userSpaceOnUse" style="mask-type:alpha">
-                  <svg viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
-                    <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
-                  </svg>
-                </mask>
-                <foreignObject width="100%" height="100%" mask="url(#bm2)" class="button-007__svg-object">
-                  <div class="button-007__svg-inner">
-                    <div class="button-007__svg-text-wrap"><span class="button-007__svg-text">Cotiza aquí</span></div>
-                  </div>
-                </foreignObject>
-              </svg>
-            </span>
-            <svg class="button-007__svg-overlay" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
-              <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
-            </svg>
-            <span class="button-007__text is--default">Cotiza aquí</span>
-          </span>
-          <span class="button-007__bg"></span>
-        </a>
-      </div>
-    </section>
-
-    <!-- Services transition -->
-    <div class="scroll-draw">
-      <div class="scroll-draw__overlay">
-        <div class="scroll-draw__shape">
+    <!-- ── SCROLL DRAW TRANSITION ── -->
+    <div class="scroll-draw-transition" data-scroll-draw>
+      <div class="scroll-draw-transition__overlay">
+        <div class="scroll-draw-transition__shape">
           <svg viewBox="0 0 3222 3114" fill="none" preserveAspectRatio="none">
             <path d="M299.654 453.865C505.574 319.225 711.494 184.585 836.054 109.945C960.614 35.305 997.574 24.745 944.014 110.385C890.454 196.025 745.254 378.185 571.454 634.385C397.654 890.585 199.654 1215.3 110.854 1382.58C22.054 1549.86 48.454 1549.86 77.894 1540.62C107.334 1531.38 139.014 1512.9 367.854 1319.9C596.694 1126.9 1021.73 759.945 1255.21 555.065C1488.69 350.185 1517.73 318.505 1527.41 306.145C1537.09 293.785 1526.53 301.705 1346.85 618.625C1167.17 935.545 818.694 1561.22 635.214 1896.74C451.734 2232.26 443.814 2258.66 447.654 2268.3C451.494 2277.94 467.334 2270.02 511.134 2236.9C554.934 2203.78 626.214 2145.7 966.534 1817.46C1306.85 1489.22 1914.05 892.585 2263.81 557.505C2613.57 222.425 2687.49 166.985 2741.41 129.185C2795.33 91.385 2827.01 72.905 2843.33 67.345C2859.65 61.785 2859.65 69.705 2849.09 96.225C2838.53 122.745 2817.41 167.625 2584.77 544.505C2352.13 921.385 1370.37 2165.43 1139.25 2537.83C908.134 2910.23 902.854 2926.07 902.774 2939.51C902.694 2952.95 907.974 2963.51 1255.21 2613.87C1602.45 2264.23 2829.73 1017.54 2903.53 1071.46C2977.33 1125.38 2176.12 2817.04 2128 3037C2079.88 3256.96 2911.24 2018.56 3172 1793" stroke="currentColor" stroke-width="0" stroke-linecap="round" stroke-linejoin="round"></path>
           </svg>
@@ -533,75 +454,63 @@
       </div>
     </div>
 
-    <!-- Services -->
-    <section id="services" class="services">
-      <div class="services-head">
-        <p class="services-big">Small details. <span>Big impact.</span></p>
-        <div class="section-head" style="margin-top:0.5rem;">
-          <div class="bracket-heading">
-            <span class="bracket-left">[</span>Services<span class="bracket-right">]</span>
-          </div>
+    <!-- ── SERVICES ── -->
+    <section id="services" class="services" data-theme-section="dark">
+      <div class="services-header__w">
+        <p class="services-big-txt">Pequeños detalles. <span class="services-big-txt__span">Gran impacto.</span></p>
+        <div class="bracket-heading" data-bracket-heading style="margin-top:0.5rem;">
+          <span data-bracket-left class="bracket-left">[</span>Services<span data-bracket-right class="bracket-right">]</span>
         </div>
       </div>
-      <div class="services-sticky">
-        <div class="services-list">
-          <!-- Service 01 -->
-          <div class="service-item">
-            <div class="service-row">
-              <div class="service-num">[01]</div>
-              <h3 class="service-title">Webflow Development</h3>
-            </div>
-            <div class="service-visual">
-              <div class="service-desc">
-                <p>Webflow sites built for design freedom and advanced animations, with simple content structures you can manage yourself — update whenever you want, no developer needed.</p>
+      <div class="services-wrapper">
+        <div class="services-sticky">
+          <div class="services-list">
+            <div class="service-item">
+              <div class="service-row">
+                <div class="service-number">[01]</div>
+                <h3 class="service-title">Desarrollo Webflow</h3>
               </div>
-              <div class="service-image-wrap">
-                <img class="service-image" src="https://picsum.photos/seed/srv-webflow/800/600" alt="Webflow project" loading="lazy">
-              </div>
-            </div>
-          </div>
-          <!-- Service 02 -->
-          <div class="service-item">
-            <div class="service-row">
-              <div class="service-num">[02]</div>
-              <h3 class="service-title">Shopify / Ecommerce</h3>
-            </div>
-            <div class="service-visual">
-              <div class="service-desc">
-                <p>Shopify is the ecommerce platform of choice for brands worldwide — and I customize it deeply to create a shopping experience that never feels generic.</p>
-              </div>
-              <div class="service-image-wrap">
-                <img class="service-image" https://picsum.photos/seed/srv-shopify/800/600" alt="Shopify project" loading="lazy">
+              <div class="service-visual">
+                <p class="service-description">Sitios Webflow construidos para libertad de diseño y animaciones avanzadas, con estructuras de contenido simples que puedes manejar tú mismo — actualiza cuando quieras, sin necesidad de desarrollador.</p>
+                <div class="service-image-wrap">
+                  <img class="service-image" src="https://picsum.photos/seed/srv-webflow/800/600" alt="Proyecto Webflow" loading="lazy">
+                </div>
               </div>
             </div>
-          </div>
-          <!-- Service 03 -->
-          <div class="service-item">
-            <div class="service-row">
-              <div class="service-num">[03]</div>
-              <h3 class="service-title">Animations & Micro-interactions</h3>
-            </div>
-            <div class="service-visual">
-              <div class="service-desc">
-                <p>Motion communicates. I design animations that guide users, reinforce brand identity, and turn every scroll into a memorable experience.</p>
+            <div class="service-item">
+              <div class="service-row">
+                <div class="service-number">[02]</div>
+                <h3 class="service-title">Shopify / Ecommerce</h3>
               </div>
-              <div class="service-image-wrap">
-                <img class="service-image" src="https://picsum.photos/seed/srv-anim/800/600" alt="Animation project" loading="lazy">
+              <div class="service-visual">
+                <p class="service-description">Shopify es la plataforma de ecommerce de elección para marcas en todo el mundo — y yo la personalizo profundamente para crear una experiencia de compras que nunca se sienta genérica.</p>
+                <div class="service-image-wrap">
+                  <img class="service-image" src="https://picsum.photos/seed/srv-shopify/800/600" alt="Proyecto Shopify" loading="lazy">
+                </div>
               </div>
             </div>
-          </div>
-          <!-- Service 04 -->
-          <div class="service-item">
-            <div class="service-row">
-              <div class="service-num">[04]</div>
-              <h3 class="service-title">Custom Code</h3>
-            </div>
-            <div class="service-visual">
-              <div class="service-desc">
-                <p>Webflow and Shopify are powerful platforms, but some projects need to go further. That's where custom code comes in — the detail that separates a good site from one worthy of Awwwards recognition.</p>
+            <div class="service-item">
+              <div class="service-row">
+                <div class="service-number">[03]</div>
+                <h3 class="service-title">Animaciones y Micro-interacciones</h3>
               </div>
-              <div class="service-image-wrap">
-                <img class="service-image" src="https://picsum.photos/seed/srv-code/800/600" alt="Custom code project" loading="lazy">
+              <div class="service-visual">
+                <p class="service-description">El movimiento comunica. Diseño animaciones que guían a los usuarios, refuerzan la identidad de marca y convierten cada scroll en una experiencia memorable.</p>
+                <div class="service-image-wrap">
+                  <img class="service-image" src="https://picsum.photos/seed/srv-anim/800/600" alt="Proyecto de animación" loading="lazy">
+                </div>
+              </div>
+            </div>
+            <div class="service-item">
+              <div class="service-row">
+                <div class="service-number">[04]</div>
+                <h3 class="service-title">Código Personalizado</h3>
+              </div>
+              <div class="service-visual">
+                <p class="service-description">Webflow y Shopify son plataformas potentes, pero algunos proyectos necesitan ir más allá. Ahí es donde entra el código personalizado — el detalle que separa un buen sitio de uno digno de reconocimiento en Awwwards.</p>
+                <div class="service-image-wrap">
+                  <img class="service-image" src="https://picsum.photos/seed/srv-code/800/600" alt="Proyecto de código personalizado" loading="lazy">
+                </div>
               </div>
             </div>
           </div>
@@ -609,196 +518,201 @@
       </div>
     </section>
 
-    <!-- Portfolio -->
-    <section id="portfolio" class="portfolio">
-      <div class="portfolio-head">
-        <div class="section-head">
-          <div class="bracket-heading">
-            <span class="bracket-left">[</span>Projects<span class="bracket-right">]</span>
-          </div>
-          <p class="sub">Transforming ideas into dynamic digital experiences.</p>
+    <!-- ── PORTFOLIO ── -->
+    <section id="portfolio" class="portfolio" data-theme-section="dark">
+      <div class="portfolio-header-w">
+        <div class="bracket-heading" data-bracket-heading>
+          <span data-bracket-left class="bracket-left">[</span>Proyectos<span data-bracket-right class="bracket-right">]</span>
         </div>
+        <p class="portfolio-header__p">Transformando ideas en experiencias digitales dinámicas.</p>
       </div>
       <div class="portfolio-orbit">
-        <div class="portfolio-orbit__info-side">
-          <div class="portfolio-orbit__count">
-            <div class="portfolio-orbit__count-col">
-              <p class="portfolio-orbit__count-txt" id="current-count">01</p>
-            </div>
-            <div class="portfolio-orbit__count-divider"></div>
-            <div class="portfolio-orbit__count-col">
-              <p class="portfolio-orbit__count-txt" id="total-count">05</p>
-            </div>
-          </div>
-          <div class="portfolio-orbit__items" id="portfolio-items">
-            <div class="portfolio-orbit__item active" data-index="0">
-              <h3>Nexus Dashboard</h3>
-              <p>A SaaS analytics dashboard with real-time data visualization, dark mode UI, and interactive charts. Built with React and D3 for a fintech startup.</p>
-            </div>
-            <div class="portfolio-orbit__item" data-index="1">
-              <h3>Vera Brand Site</h3>
-              <p>A minimal brand website for a lifestyle label — clean typography, smooth scroll animations, and a focus on product photography. Webflow-built with custom interactions.</p>
-            </div>
-            <div class="portfolio-orbit__item" data-index="2">
-              <h3>Shopfront Ecommerce</h3>
-              <p>A custom Shopify store for a fashion brand — bespoke theme, animated cart drawer, and a checkout flow designed to convert. Every detail built from scratch.</p>
-            </div>
-            <div class="portfolio-orbit__item" data-index="3">
-              <h3>Motion Reel</h3>
-              <p>An animation showcase piece — GSAP-driven scroll-triggered sequences, morphing shapes, and text reveals. Built to demonstrate craft in motion design.</p>
-            </div>
-            <div class="portfolio-orbit__item" data-index="4">
-              <h3>Portfolio v2</h3>
-              <p>A complete redesign of a creative director's portfolio — dark theme, grid layouts, project case studies with embedded video and image galleries.</p>
-            </div>
-          </div>
-          <div class="portfolio-orbit__nav">
-            <button aria-label="Previous project" class="portfolio-orbit__btn" id="orbit-prev">
-              <svg viewBox="0 0 17 12" fill="none" class="portfolio-orbit__btn-arrow">
-                <path d="M6.28871 12L7.53907 10.9111L3.48697 6.77778H16.5V5.22222H3.48697L7.53907 1.08889L6.28871 0L0.5 6L6.28871 12Z" fill="currentColor"></path>
-              </svg>
-              <div class="portfolio-orbit__btn-overlay">
-                <div class="portfolio-orbit__btn-corner tr"></div>
-                <div class="portfolio-orbit__btn-corner bl"></div>
-                <div class="portfolio-orbit__btn-corner br"></div>
+        <div class="portfolio-orbit__info">
+          <div class="portfolio-orbit__info-side">
+            <div class="portfolio-orbit__count">
+              <div class="portfolio-orbit__count-col">
+                <p class="portfolio-orbit__count-txt" id="current-count">01</p>
               </div>
-            </button>
-            <button aria-label="Next project" class="portfolio-orbit__btn" id="orbit-next">
-              <svg viewBox="0 0 17 12" fill="none" class="portfolio-orbit__btn-arrow next">
-                <path d="M6.28871 12L7.53907 10.9111L3.48697 6.77778H16.5V5.22222H3.48697L7.53907 1.08889L6.28871 0L0.5 6L6.28871 12Z" fill="currentColor"></path>
-              </svg>
-              <div class="portfolio-orbit__btn-overlay">
-                <div class="portfolio-orbit__btn-corner tr"></div>
-                <div class="portfolio-orbit__btn-corner bl"></div>
-                <div class="portfolio-orbit__btn-corner br"></div>
+              <div class="portfolio-orbit__count-divider"></div>
+              <div class="portfolio-orbit__count-col">
+                <p class="portfolio-orbit__count-txt" id="total-count">05</p>
               </div>
-            </button>
+            </div>
+            <div class="portfolio-orbit__items" id="portfolio-items">
+              <div class="portfolio-orbit__item active" data-index="0">
+                <h3>Nexus Dashboard</h3>
+                <p>Un panel de análisis SaaS con visualización de datos en tiempo real, interfaz de modo oscuro y gráficos interactivos. Construido con React y D3 para una startup fintech.</p>
+              </div>
+              <div class="portfolio-orbit__item" data-index="1">
+                <h3>Vera Brand Site</h3>
+                <p>Un sitio web minimalista para una marca de lifestyle — tipografía limpia, animaciones de scroll suaves y enfoque en fotografía de producto. Construido en Webflow con interacciones personalizadas.</p>
+              </div>
+              <div class="portfolio-orbit__item" data-index="2">
+                <h3>Shopfront Ecommerce</h3>
+                <p>Una tienda Shopify personalizada para una marca de moda — tema a medida, carrito animado y un flujo de checkout diseñado para convertir. Cada detalle construido desde cero.</p>
+              </div>
+              <div class="portfolio-orbit__item" data-index="3">
+                <h3>Motion Reel</h3>
+                <p>Una pieza de showcase de animación — secuencias triggeradas por scroll con GSAP, formas morfing y revelados de texto. Construido para demostrar oficio en diseño de movimiento.</p>
+              </div>
+              <div class="portfolio-orbit__item" data-index="4">
+                <h3>Portfolio v2</h3>
+                <p>Un rediseño completo del portfolio de un director creativo — tema oscuro, layouts en grid, estudios de caso con video incrustado y galerías de imágenes.</p>
+              </div>
+            </div>
+            <div class="portfolio-orbit__nav">
+              <button aria-label="Proyecto anterior" class="portfolio-orbit__btn" id="orbit-prev">
+                <svg viewBox="0 0 17 12" fill="none" class="portfolio-orbit__btn-arrow">
+                  <path d="M6.28871 12L7.53907 10.9111L3.48697 6.77778H16.5V5.22222H3.48697L7.53907 1.08889L6.28871 0L0.5 6L6.28871 12Z" fill="currentColor"></path>
+                </svg>
+                <div class="portfolio-orbit__btn-overlay">
+                  <div class="portfolio-orbit__btn-overlay-corner top-right"></div>
+                  <div class="portfolio-orbit__btn-overlay-corner bottom-left"></div>
+                  <div class="portfolio-orbit__btn-overlay-corner bottom-right"></div>
+                </div>
+              </button>
+              <button aria-label="Siguiente proyecto" class="portfolio-orbit__btn" id="orbit-next">
+                <svg viewBox="0 0 17 12" fill="none" class="portfolio-orbit__btn-arrow next">
+                  <path d="M6.28871 12L7.53907 10.9111L3.48697 6.77778H16.5V5.22222H3.48697L7.53907 1.08889L6.28871 0L0.5 6L6.28871 12Z" fill="currentColor"></path>
+                </svg>
+                <div class="portfolio-orbit__btn-overlay">
+                  <div class="portfolio-orbit__btn-overlay-corner top-right"></div>
+                  <div class="portfolio-orbit__btn-overlay-corner bottom-left"></div>
+                  <div class="portfolio-orbit__btn-overlay-corner bottom-right"></div>
+                </div>
+              </button>
+            </div>
           </div>
-        </div>
-        <div class="portfolio-orbit__collection">
-          <div class="portfolio-orbit__list">
-            <!-- Project cards -->
-            <div class="portfolio-orbit__item-card active" data-index="0">
-              <a href="#" target="_blank" class="portfolio-orbit__card-link">
-                <div class="portfolio-orbit__image-mask">
-                  <img class="portfolio-orbit__placeholder" src="https://picsum.photos/seed/proj-dashboard/800/600" alt="Nexus Dashboard" loading="lazy">
-                </div>
-              </a>
-            </div>
-            <div class="portfolio-orbit__item-card" data-index="1">
-              <a href="#" target="_blank" class="portfolio-orbit__card-link">
-                <div class="portfolio-orbit__image-mask">
-                  <img class="portfolio-orbit__placeholder" src="https://picsum.photos/seed/proj-brand/800/600" alt="Vera Brand Site" loading="lazy">
-                </div>
-              </a>
-            </div>
-            <div class="portfolio-orbit__item-card" data-index="2">
-              <a href="#" target="_blank" class="portfolio-orbit__card-link">
-                <div class="portfolio-orbit__image-mask">
-                  <img class="portfolio-orbit__placeholder" src="https://picsum.photos/seed/proj-ecommerce/800/600" alt="Shopfront Ecommerce" loading="lazy">
-                </div>
-              </a>
-            </div>
-            <div class="portfolio-orbit__item-card" data-index="3">
-              <a href="#" target="_blank" class="portfolio-orbit__card-link">
-                <div class="portfolio-orbit__image-mask">
-                  <img class="portfolio-orbit__placeholder" src="https://picsum.photos/seed/proj-motion/800/600" alt="Motion Reel" loading="lazy">
-                </div>
-              </a>
-            </div>
-            <div class="portfolio-orbit__item-card" data-index="4">
-              <a href="#" target="_blank" class="portfolio-orbit__card-link">
-                <div class="portfolio-orbit__image-mask">
-                  <img class="portfolio-orbit__placeholder" src="https://picsum.photos/seed/proj-portfolio/800/600" alt="Portfolio v2" loading="lazy">
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="portfolio-cta">
-        <a href="https://wa.me/2348123456789" target="_blank" class="button-007 w-inline-block">
-          <span class="button-007__inner">
-            <span class="button-007__text is--hover">
-              <svg class="button-007__svg" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
-                <mask id="bm3" maskunits="userSpaceOnUse" style="mask-type:alpha">
-                  <svg viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
-                    <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
-                  </svg>
-                </mask>
-                <foreignObject width="100%" height="100%" mask="url(#bm3)" class="button-007__svg-object">
-                  <div class="button-007__svg-inner">
-                    <div class="button-007__svg-text-wrap"><span class="button-007__svg-text">Cotiza tu proyecto</span></div>
+          <div class="portfolio-orbit__collection">
+            <div class="portfolio-orbit__list">
+              <div class="portfolio-orbit__item-card active" data-index="0">
+                <a href="#" target="_blank" class="portfolio-orbit__card">
+                  <div class="portfolio-orbit__image-mask">
+                    <img class="portfolio-orbit__placeholder" src="https://picsum.photos/seed/proj-dashboard/800/600" alt="Nexus Dashboard" loading="lazy">
                   </div>
-                </foreignObject>
+                </a>
+              </div>
+              <div class="portfolio-orbit__item-card" data-index="1">
+                <a href="#" target="_blank" class="portfolio-orbit__card">
+                  <div class="portfolio-orbit__image-mask">
+                    <img class="portfolio-orbit__placeholder" src="https://picsum.photos/seed/proj-brand/800/600" alt="Vera Brand Site" loading="lazy">
+                  </div>
+                </a>
+              </div>
+              <div class="portfolio-orbit__item-card" data-index="2">
+                <a href="#" target="_blank" class="portfolio-orbit__card">
+                  <div class="portfolio-orbit__image-mask">
+                    <img class="portfolio-orbit__placeholder" src="https://picsum.photos/seed/proj-ecommerce/800/600" alt="Shopfront Ecommerce" loading="lazy">
+                  </div>
+                </a>
+              </div>
+              <div class="portfolio-orbit__item-card" data-index="3">
+                <a href="#" target="_blank" class="portfolio-orbit__card">
+                  <div class="portfolio-orbit__image-mask">
+                    <img class="portfolio-orbit__placeholder" src="https://picsum.photos/seed/proj-motion/800/600" alt="Motion Reel" loading="lazy">
+                  </div>
+                </a>
+              </div>
+              <div class="portfolio-orbit__item-card" data-index="4">
+                <a href="#" target="_blank" class="portfolio-orbit__card">
+                  <div class="portfolio-orbit__image-mask">
+                    <img class="portfolio-orbit__placeholder" src="https://picsum.photos/seed/proj-portfolio/800/600" alt="Portfolio v2" loading="lazy">
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="portfolio-cta">
+          <a href="https://wa.me/2348123456789" target="_blank" class="button-007 w-inline-block" data-button-007>
+            <span class="button-007__inner">
+              <span class="button-007__text is--hover">
+                <svg class="button-007__svg" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+                  <mask id="bm3" maskunits="userSpaceOnUse" style="mask-type:alpha">
+                    <svg viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+                      <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
+                    </svg>
+                  </mask>
+                  <foreignObject width="100%" height="100%" mask="url(#bm3)" class="button-007__svg-object">
+                    <div class="button-007__svg-inner">
+                      <div class="button-007__svg-text-wrap"><span class="button-007__svg-text">Cotiza tu proyecto</span></div>
+                    </div>
+                  </foreignObject>
+                </svg>
+              </span>
+              <svg class="button-007__svg-overlay" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+                <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
               </svg>
+              <span class="button-007__text is--default">Cotiza tu proyecto</span>
             </span>
-            <svg class="button-007__svg-overlay" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
-              <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
-            </svg>
-            <span class="button-007__text is--default">Cotiza tu proyecto</span>
-          </span>
-          <span class="button-007__bg"></span>
-        </a>
+            <span class="button-007__bg"></span>
+          </a>
+        </div>
       </div>
     </section>
 
-    <!-- Certifications -->
-    <section class="certification">
-      <div class="section-head">
-        <div class="bracket-heading">
-          <span class="bracket-left">[</span>Certifications & Partnerships<span class="bracket-right">]</span>
+    <!-- ── CERTIFICATIONS ── -->
+    <section class="certification" data-theme-section="light">
+      <div class="certification-header-w">
+        <div class="bracket-heading" data-bracket-heading>
+          <span data-bracket-left class="bracket-left">[</span>Certificaciones y Asociaciones<span data-bracket-right class="bracket-right">]</span>
         </div>
       </div>
-      <div class="cert-content">
-        <p>I'm an Official Webflow and Shopify Partner, guaranteeing that every project meets the highest standards of quality, performance, and support.</p>
+      <div class="certification-content-w">
+        <p>Soy un Socio Oficial de Webflow y Shopify, lo que garantiza que cada proyecto cumpla con los más altos estándares de calidad, rendimiento y soporte.</p>
       </div>
-      <div class="cert-logos">
-        <div class="cert-logo">
+      <div class="certifications-logos">
+        <div class="certifications-logo">
           <svg viewBox="0 0 400 45" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#c1)">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M71.9788 0L49.0123 45H27.4358L37.0479 26.3527H36.6202C28.6868 36.673 16.8614 43.4675 0 45V26.6099C0 26.6099 10.7883 25.9669 17.1287 19.2903H0V0H19.2457V15.8716H19.6734L27.5427 0H42.0946V15.7645H42.5223L50.691 0H71.9788Z" fill="currentColor"></path>
-              <path d="M98.6448 37.0052C95.9718 37.0052 93.5874 36.3944 91.4918 35.1834C89.3961 33.9509 87.7603 32.2255 86.5841 30.0071C85.408 27.7887 84.8306 25.2488 84.8413 22.3767C84.8306 19.4939 85.408 16.9433 86.5841 14.7249C87.7603 12.4958 89.3961 10.7704 91.4918 9.54868C93.5874 8.31624 95.9718 7.70538 98.6448 7.70538C100.965 7.70538 103.061 8.14477 104.932 9.03427C106.824 9.90233 108.375 11.1669 109.572 12.8173C110.77 14.457 111.539 16.3753 111.86 18.5615H106.257C105.979 17.3184 105.466 16.236 104.739 15.3143C104.023 14.382 103.135 13.6639 102.088 13.1603C101.05 12.6566 99.9171 12.4101 98.6768 12.4101C97.041 12.4101 95.5868 12.8173 94.3252 13.6425C93.0635 14.4463 92.0692 15.6144 91.3528 17.1255C90.6471 18.6258 90.2943 20.3727 90.2943 22.3767C90.2943 24.3808 90.6471 26.1062 91.3528 27.6065C92.0692 29.1069 93.0635 30.2643 94.3252 31.0895C95.5868 31.8933 97.041 32.3005 98.6768 32.3005C99.9706 32.3005 101.147 32.054 102.205 31.5718C103.264 31.0681 104.14 30.3715 104.835 29.4713C105.541 28.5711 106.001 27.5208 106.236 26.2991H111.839C111.539 28.3889 110.812 30.2429 109.636 31.8611C108.46 33.4794 106.92 34.744 105.028 35.6442C103.135 36.5551 101.008 37.0052 98.6448 37.0052ZM125.546 37.0481C123.408 37.0481 121.526 36.5873 119.89 35.6656C118.265 34.744 117.003 33.4365 116.094 31.7432C115.185 30.05 114.736 28.0995 114.736 25.8811C114.736 23.6628 115.196 21.8409 116.116 20.1476C117.035 18.4437 118.307 17.1148 119.911 16.1717C121.536 15.2072 123.365 14.7249 125.396 14.7249C127.556 14.7249 129.47 15.2072 131.138 16.1717C132.806 17.1362 134.067 18.5508 134.934 20.437C135.8 22.3124 136.142 24.5415 135.949 27.1457H116.917V23.7378L132.089 23.6842L130.71 24.2843C130.689 23.2126 130.454 22.2481 130.015 21.4229C129.577 20.587 128.967 19.944 128.176 19.4832C127.396 19.0224 126.498 18.7866 125.492 18.7866C124.434 18.7866 123.482 19.0438 122.638 19.5582C121.793 20.0726 121.13 20.7906 120.638 21.7123C120.168 22.6339 119.933 23.6735 119.943 24.8309V26.7385C119.933 27.9816 120.157 29.3877 120.638 30.5377C121.119 31.6877 121.793 32.3604 122.638 32.8748C123.482 33.3892 124.434 33.62 125.492 33.62C126.498 33.62 127.396 33.3892 128.176 32.9429C128.967 32.4967 129.577 31.8686 130.015 30.8372C130.454 29.8058 130.689 28.8414 130.71 27.7737L132.089 28.3743L132.089 23.6842H116.917V27.1457C117.91 24.7789 119.701 23.8254 121.632 24.6072C123.563 25.389 124.66 28.2121 124.227 31.6441H125.546Z" fill="currentColor"></path>
+              <path d="M98.6448 37.0052C95.9718 37.0052 93.5874 36.3944 91.4918 35.1834C89.3961 33.9509 87.7603 32.2255 86.5841 30.0071C85.408 27.7887 84.8306 25.2488 84.8413 22.3767C84.8306 19.4939 85.408 16.9433 86.5841 14.7249C87.7603 12.4958 89.3961 10.7704 91.4918 9.54868C93.5874 8.31624 95.9718 7.70538 98.6448 7.70538C100.965 7.70538 103.061 8.14477 104.932 9.03427C106.824 9.90233 108.375 11.1669 109.572 12.8173C110.77 14.457 111.539 16.3753 111.86 18.5615H106.257C105.979 17.3184 105.466 16.236 104.739 15.3143C104.023 14.382 103.135 13.6639 102.088 13.1603C101.05 12.6566 99.9171 12.4101 98.6768 12.4101C97.041 12.4101 95.5868 12.8173 94.3252 13.6425C93.0635 14.4463 92.0692 15.6144 91.3528 17.1255C90.6471 18.6258 90.2943 20.3727 90.2943 22.3767C90.2943 24.3808 90.6471 26.1062 91.3528 27.6065C92.0692 29.1069 93.0635 30.2643 94.3252 31.0895C95.5868 31.8933 97.041 32.3005 98.6768 32.3005C99.9706 32.3005 101.147 32.054 102.205 31.5718C103.264 31.0681 104.14 30.3715 104.835 29.4713C105.541 28.5711 106.001 27.5208 106.236 26.2991H111.839C111.539 28.3889 110.812 30.2429 109.636 31.8611C108.46 33.4794 106.92 34.744 105.028 35.6442C103.135 36.5551 101.008 37.0052 98.6448 37.0052ZM125.546 37.0481C123.408 37.0481 121.526 36.5873 119.89 35.6656C118.265 34.744 117.003 33.4365 116.094 31.7432C115.185 30.05 114.736 28.0995 114.736 25.8811C114.736 23.6628 115.196 21.8409 116.116 20.1476C117.035 18.4437 118.307 17.1148 119.911 16.1717C121.536 15.2072 123.365 14.7249 125.396 14.7249C127.556 14.7249 129.47 15.2072 131.138 16.1717C132.806 17.1362 134.067 18.5508 134.934 20.437C135.8 22.3124 136.142 24.5415 135.949 27.1457H116.917V23.7378L132.089 23.6842L130.71 24.2843C130.689 23.2126 130.454 22.2481 130.015 21.4229C129.577 20.587 128.967 19.944 128.176 19.4832C127.396 19.0224 126.498 18.7866 125.492 18.7866C124.434 18.7866 123.482 19.0438 122.638 19.5582C121.793 20.0726 121.13 20.7906 120.638 21.7123C120.168 22.6339 119.933 23.6735 119.943 24.8309V26.7385C119.933 27.9816 120.157 29.622 120.648 31.1253C121.139 32.6286 121.887 33.9926 122.894 34.9839C123.882 35.9753 124.987 36.5479 126.119 36.5479C127.252 36.5479 128.306 36.1289 129.182 35.291C129.221 37.5381 127.447 39.1452 127.366 39.2153C127.255 39.3251 126.363 38.0742 126.216 37.9453C126.35 36.9414 127.813 35.1135 127.96 35.0624V34.8802C127.546 32.2546 125.873 29.4906 125.561 28.4877C125.07 26.8607 123.762 25.5279 121.809 25.446C121.291 25.4155 120.914 25.446 121.024 25.639C121.228 26.0206 121.885 26.6388 122.981 27.3424C123.924 27.9235 124.955 28.4381 125.994 28.4686Z" fill="currentColor"></path>
+              <path d="M150.378 64.4644L142.186 64.6967L149.493 25.6605C151.752 25.3372 154.245 24.8927 156.27 25.7312C156.789 25.9433 156.504 27.4991 156.89 27.5193C157.399 27.5496 158.172 27.3173 158.783 26.8526C162.629 23.943 169.213 23.943 171.462 28.8933C174.464 35.5205 172.337 43.4612 167.931 49.0378C164.268 53.6748 158.691 54.6851 152.728 53.5334L150.388 64.4644H150.378Z" fill="currentColor"></path>
+              <path d="M223.674 47.1487C220.184 54.3518 214.333 64.3735 206.039 66C204.991 63.9189 203.974 61.7368 203.943 59.3728C206.395 57.5341 212.216 55.6853 212.135 51.7655C211.962 42.8349 208.644 34.4801 208.034 25.7616C210.659 25.4383 213.569 25.4282 216.225 25.7818L218.413 42.6732L225.292 25.8323C228.009 25.1655 230.573 25.8323 234.125 25.5797L223.664 47.1487H223.674Z" fill="currentColor"></path>
+              <path d="M141.443 46.8758C137.302 53.7254 128.164 56.2813 121.621 51.8968C117.988 49.4621 117.418 44.8553 117.764 40.8446C118.477 32.6919 123.9 25.812 132.041 24.9331C138.208 24.2663 143.407 27.6002 144.201 33.6617C144.791 38.1472 143.998 42.6429 141.433 46.8758H141.443Z" fill="currentColor"></path>
+              <path d="M199.842 32.0958L195.803 53.2809C193.086 53.5537 190.664 53.5537 187.703 53.2809L191.58 32.1766C190.318 31.328 189.087 31.8736 187.774 31.8938L189.524 25.5797C190.074 25.1453 191.803 25.5898 192.465 25.2362C193.167 24.8523 193.411 23.8319 193.594 22.8116C195.009 15.1336 202.183 10.9209 209.754 13.3253C209.55 15.1336 209.713 18.023 208.054 19.2656C206.803 20.0031 204.34 18.9827 203.455 20.1647C202.366 21.5993 200.392 23.8925 201.878 25.1251C202.936 26.004 204.951 24.822 206.365 25.6706C206.294 27.5598 205.877 29.3479 205.388 31.3381L199.832 32.1059L199.842 32.0958Z" fill="currentColor"></path>
+              <path d="M353.395 49.3813C358.371 53.4122 363.174 47.8154 364.191 49.9975C365.341 52.4524 357.689 54.0789 353.405 52.5838C345.865 49.9571 346.648 35.5206 354.586 27.7012C357.526 24.8017 362.36 23.741 365.86 25.913C368.221 27.3779 368.425 30.2672 367.997 32.6514C366.725 39.6828 355.644 38.8039 351.685 40.3597C349.905 42.1175 351.278 47.6537 353.405 49.3813H353.395Z" fill="currentColor"></path>
+              <path d="M327.671 38.2584L325.076 52.2504C324.852 53.4728 324.048 53.291 322.125 53.786L326.836 27.6103C326.968 26.8627 326.867 26.1757 327.111 25.7211C327.416 25.1352 328.729 25.2059 329.329 25.7211C330.031 26.3172 328.19 30.3582 330.438 28.762C333.196 26.0545 336.829 24.0138 340.808 25.3069C343.83 26.2868 345.203 29.6106 344.654 32.7626L341.276 52.1696C341.072 53.3718 340.156 53.5638 339.312 53.4425C338.467 53.3213 338.569 52.2605 338.732 51.22C339.77 44.9261 341.306 38.9858 341.968 32.6818C342.171 30.7724 341.408 28.863 340.227 28.0447C335.628 24.8523 328.861 31.8736 327.681 38.2685L327.671 38.2584Z" fill="currentColor"></path>
+              <path d="M390.364 29.7924C386.324 36.8238 400.315 37.2885 397.375 47.2395C395.991 51.9372 391.3 53.9577 386.395 52.9171C385.408 52.705 383.943 52.3413 383.495 51.4826C383.159 50.8562 383.281 49.4419 384.075 48.4821C386.1 50.8663 388.379 51.1795 391.025 50.4723C393.019 49.9369 394.698 48.1184 394.912 45.5928C395.472 38.814 383.861 38.1876 387.606 29.5398C390.506 22.8418 399.359 24.7209 399.837 26.0948C401.313 30.3884 393.65 24.0945 390.384 29.7924H390.364Z" fill="currentColor"></path>
+              <path d="M281.961 53.594C282.46 51.7958 283.09 49.8864 282.195 47.9164C279.987 51.0381 277.697 52.9879 274.278 53.5233C270.605 54.0991 267.125 52.0483 266.423 48.1892C265.069 40.6931 268.051 32.8737 274.064 28.0548C278.318 24.6502 283.864 24.0845 289.033 25.6099L285.655 44.138C285.034 47.5729 284.647 50.8057 285.36 53.8668C283.966 53.2101 283.497 53.3819 281.941 53.6041L281.961 53.594Z" fill="currentColor"></path>
+              <path d="M181.088 53.2202C178.29 53.6445 175.868 53.5031 172.866 53.2809L178.117 25.9029C180.692 25.2564 183.286 25.4988 186.227 25.7514L181.099 53.2202H181.088Z" fill="currentColor"></path>
+              <path d="M381.938 28.1458C371.315 33.49 375.822 55.8167 369.564 53.8265L374.265 27.5901C374.398 26.8324 374.316 26.2162 374.479 25.8323C374.784 25.0948 376.087 25.1857 376.698 25.7616C377.247 26.2768 375.782 30.1663 377.817 28.7721C379.791 26.0848 382.661 24.7816 385.51 24.913C384.787 27.8932 383.454 27.3881 381.938 28.1458Z" fill="currentColor"></path>
+              <path d="M183.744 22.3367C186.178 22.3367 188.15 20.3873 188.15 17.9825C188.15 15.5777 186.178 13.6283 183.744 13.6283C181.311 13.6283 179.338 15.5777 179.338 17.9825C179.338 20.3873 181.311 22.3367 183.744 22.3367Z" fill="currentColor"></path>
             </g>
-            <defs><clipPath id="c1"><rect width="400" height="45" fill="currentColor"></rect></clipPath></defs>
-          </svg>
-        </div>
-        <div class="cert-logo">
+            <defs></defs>
+          </svg><div class="certifications-logo">
           <svg viewBox="0 0 400 66" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#c2)">
               <path d="M57.5034 60.2717C50.2073 60.787 43.5625 64.6259 36.9076 64.04C24.4117 62.9489 12.6587 59.4433 0 57.6855L5.19983 18.0026C7.96764 16.8105 10.6235 16.6085 13.0759 15.1537C14.3784 10.0923 16.5051 5.33403 20.321 2.14163C23.6689 -0.666884 26.9658 -0.444627 30.4968 1.33342C33.3053 2.74778 36.1647 3.68732 36.9381 7.54649L41.0084 7.74855C43.013 10.9005 45.8928 12.4058 50.1361 11.6986L57.5034 60.2818V60.2717ZM23.0889 53.6141C27.0371 51.5532 28.0343 47.2697 27.7595 43.5318C27.2304 36.359 18.6522 35.6316 19.1712 31.7421C19.6901 27.8526 25.2767 29.7216 27.6273 29.8125C29.347 28.2466 29.52 25.5189 30.2831 22.8418C24.6254 20.8819 17.9094 22.1043 14.3682 26.8121C10.2775 32.2472 11.7327 38.8644 17.3701 42.1781C18.3673 42.764 18.9168 44.1481 19.1 44.9563C19.3238 45.9463 18.9677 47.1889 17.7873 47.694C15.3756 48.7245 13.3812 46.3302 11.1221 46.0271C9.63647 45.8251 8.35432 50.2702 9.44313 51.3512C12.8825 54.786 18.6319 55.9377 23.0787 53.6141H23.0889Z" fill="currentColor"></path>
-              <path d="M150.378 64.4644L142.186 64.6967L149.493 25.6605C151.752 25.3372 154.245 24.8927 156.27 25.7312C156.789 25.9433 156.504 27.4991 156.89 27.5193C157.399 27.5496 158.172 27.3173 158.783 26.8526C162.629 23.943 169.213 23.943 171.462 28.8933C174.464 35.5205 172.337 43.4612 167.931 49.0378C164.268 53.6748 158.691 54.6851 152.728 53.5334L150.388 64.4644H150.378ZM159.058 47.2395C164.573 43.2793 166.456 32.1968 161.459 31.6816C155.628 31.0855 153.085 46.2394 154.926 47.3405C155.873 47.8962 157.633 48.27 159.058 47.2395Z" fill="currentColor"></path>
-              <path d="M104.149 53.3213L107.314 34.9347C107.517 33.7729 107.059 32.5404 106.459 32.0757C103.406 29.7016 99.7736 35.0458 99.0104 39.0161C98.0742 43.8249 96.9142 48.1993 96.3545 53.7153C94.0141 53.5234 91.4702 52.9476 87.9799 53.8366L95.5405 13.2445L103.681 13.5274L101.605 27.3679C105.503 25.4585 109.095 23.7714 112.748 25.7414C119.403 29.3278 112.687 46.2193 112.137 53.2809C109.43 53.6345 107.059 53.5234 104.149 53.3415V53.3213Z" fill="currentColor"></path>
+              <path d="M150.378 64.4644L142.186 64.6967L149.493 25.6605C151.752 25.3372 154.245 24.8927 156.27 25.7312C156.789 25.9433 156.504 27.4991 156.89 27.5193C157.399 27.5496 158.172 27.3173 158.783 26.8526C162.629 23.943 169.213 23.943 171.462 28.8933C174.464 35.5205 172.337 43.4612 167.931 49.0378C164.268 53.6748 158.691 54.6851 152.728 53.5334L150.388 64.4644H150.378Z" fill="currentColor"></path>
               <path d="M223.674 47.1487C220.184 54.3518 214.333 64.3735 206.039 66C204.991 63.9189 203.974 61.7368 203.943 59.3728C206.395 57.5341 212.216 55.6853 212.135 51.7655C211.962 42.8349 208.644 34.4801 208.034 25.7616C210.659 25.4383 213.569 25.4282 216.225 25.7818L218.413 42.6732L225.292 25.8323C228.009 25.1655 230.573 25.8323 234.125 25.5797L223.664 47.1487H223.674Z" fill="currentColor"></path>
-              <path d="M141.443 46.8758C137.302 53.7254 128.164 56.2813 121.621 51.8968C117.988 49.4621 117.418 44.8553 117.764 40.8446C118.477 32.6919 123.9 25.812 132.041 24.9331C138.208 24.2663 143.407 27.6002 144.201 33.6617C144.791 38.1472 143.998 42.6429 141.433 46.8758H141.443ZM135.928 34.2679C135.745 32.6211 134.361 31.4796 133.099 31.2169C131.838 30.9542 130.24 31.5705 129.253 32.8535C125.651 37.5108 124.277 46.8051 128.876 47.6335C134.025 48.563 136.518 39.4303 135.928 34.2679Z" fill="currentColor"></path>
+              <path d="M141.443 46.8758C137.302 53.7254 128.164 56.2813 121.621 51.8968C117.988 49.4621 117.418 44.8553 117.764 40.8446C118.477 32.6919 123.9 25.812 132.041 24.9331C138.208 24.2663 143.407 27.6002 144.201 33.6617C144.791 38.1472 143.998 42.6429 141.433 46.8758H141.443Z" fill="currentColor"></path>
               <path d="M199.842 32.0958L195.803 53.2809C193.086 53.5537 190.664 53.5537 187.703 53.2809L191.58 32.1766C190.318 31.328 189.087 31.8736 187.774 31.8938L189.524 25.5797C190.074 25.1453 191.803 25.5898 192.465 25.2362C193.167 24.8523 193.411 23.8319 193.594 22.8116C195.009 15.1336 202.183 10.9209 209.754 13.3253C209.55 15.1336 209.713 18.023 208.054 19.2656C206.803 20.0031 204.34 18.9827 203.455 20.1647C202.366 21.5993 200.392 23.8925 201.878 25.1251C202.936 26.004 204.951 24.822 206.365 25.6706C206.294 27.5598 205.877 29.3479 205.388 31.3381L199.832 32.1059L199.842 32.0958Z" fill="currentColor"></path>
-              <path d="M82.0271 52.2505C76.9392 54.7761 70.9456 54.5538 66.3767 51.9676C67.1501 49.6844 68.015 48.0882 67.842 45.896C70.7523 47.4012 74.0391 48.8257 77.1732 47.28C78.3027 46.7244 78.3333 45.0777 77.9669 44.421C76.2981 41.4104 70.2028 40.7234 69.8161 35.0054C69.5923 31.6615 71.3018 28.166 74.6496 26.5092C78.8624 24.428 83.818 24.4886 88.102 26.1253C87.756 27.9538 87.6645 30.8937 86.1279 31.4594C85.1002 31.8332 78.8217 29.3682 78.0178 33.1263C77.336 36.3288 86.1991 37.2684 86.5858 43.4814C86.7995 46.8759 85.5479 50.5027 82.0271 52.2505Z" fill="currentColor"></path>
-              <path d="M243.334 52.7454C241.695 56.1399 242.703 66.3435 238.348 64.7776L245.247 26.9536C245.389 26.1858 245.359 25.5696 245.939 25.4079C246.315 25.2968 247.211 25.216 247.76 25.7716C248.096 26.1151 247.689 26.5697 247.74 27.6507C247.455 28.6912 247.862 29.4994 248.829 28.762C251.729 25.8625 255.687 23.9127 259.747 25.5494C266.392 28.2265 264.947 42.4004 257.193 50.0582C253.438 53.7658 248.564 54.281 243.334 52.7656V52.7454ZM255.361 47.8457C261.599 41.2285 263.461 29.3075 257.62 27.4183C251.973 25.5898 247.027 33.4091 245.806 39.0666C245.053 42.5722 244.249 45.8454 243.965 49.5025C247.689 51.8059 252.237 51.1593 255.361 47.8457Z" fill="currentColor"></path>
-              <path d="M281.961 53.594C282.46 51.7958 283.09 49.8864 282.195 47.9164C279.987 51.0381 277.697 52.9879 274.278 53.5233C270.605 54.0991 267.125 52.0483 266.423 48.1892C265.069 40.6931 268.051 32.8737 274.064 28.0548C278.318 24.6502 283.864 24.0845 289.033 25.6099L285.655 44.138C285.034 47.5729 284.647 50.8057 285.36 53.8668C283.966 53.2101 283.497 53.3819 281.941 53.6041L281.961 53.594ZM285.797 27.5193C282.531 26.5899 279.407 27.196 276.761 29.0448C270.941 33.1363 267.898 40.1879 269.139 47.2092C269.669 50.1794 273.088 51.7756 275.672 50.24C283.66 45.5019 284.546 36.0661 285.787 27.5092L285.797 27.5193Z" fill="currentColor"></path>
-              <path d="M181.088 53.2202C178.29 53.6445 175.868 53.5031 172.866 53.2809L178.117 25.9029C180.692 25.2564 183.286 25.4988 186.227 25.7514L181.099 53.2202H181.088Z" fill="currentColor"></path>
-              <path d="M353.395 49.3813C358.371 53.4122 363.174 47.8154 364.191 49.9975C365.341 52.4524 357.689 54.0789 353.405 52.5838C345.865 49.9571 346.648 35.5206 354.586 27.7012C357.526 24.8017 362.36 23.741 365.86 25.913C368.221 27.3779 368.425 30.2672 367.997 32.6514C366.725 39.6828 355.644 38.8039 351.685 40.3597C349.905 42.1175 351.278 47.6537 353.405 49.3813H353.395ZM363.51 34.7831C365.667 33.3081 365.83 30.5097 364.843 28.8529C363.866 27.2062 361.21 26.6 359.083 27.5698C355.277 29.3075 352.927 33.005 352.021 37.1067C356.193 37.3794 360.101 37.1067 363.51 34.7831Z" fill="currentColor"></path>
+              <path d="M353.395 49.3813C358.371 53.4122 363.174 47.8154 364.191 49.9975C365.341 52.4524 357.689 54.0789 353.405 52.5838C345.865 49.9571 346.648 35.5206 354.586 27.7012C357.526 24.8017 362.36 23.741 365.86 25.913C368.221 27.3779 368.425 30.2672 367.997 32.6514C366.725 39.6828 355.644 38.8039 351.685 40.3597C349.905 42.1175 351.278 47.6537 353.405 49.3813H353.395Z" fill="currentColor"></path>
               <path d="M327.671 38.2584L325.076 52.2504C324.852 53.4728 324.048 53.291 322.125 53.786L326.836 27.6103C326.968 26.8627 326.867 26.1757 327.111 25.7211C327.416 25.1352 328.729 25.2059 329.329 25.7211C330.031 26.3172 328.19 30.3582 330.438 28.762C333.196 26.0545 336.829 24.0138 340.808 25.3069C343.83 26.2868 345.203 29.6106 344.654 32.7626L341.276 52.1696C341.072 53.3718 340.156 53.5638 339.312 53.4425C338.467 53.3213 338.569 52.2605 338.732 51.22C339.77 44.9261 341.306 38.9858 341.968 32.6818C342.171 30.7724 341.408 28.863 340.227 28.0447C335.628 24.8523 328.861 31.8736 327.681 38.2685L327.671 38.2584Z" fill="currentColor"></path>
               <path d="M390.364 29.7924C386.324 36.8238 400.315 37.2885 397.375 47.2395C395.991 51.9372 391.3 53.9577 386.395 52.9171C385.408 52.705 383.943 52.3413 383.495 51.4826C383.159 50.8562 383.281 49.4419 384.075 48.4821C386.1 50.8663 388.379 51.1795 391.025 50.4723C393.019 49.9369 394.698 48.1184 394.912 45.5928C395.472 38.814 383.861 38.1876 387.606 29.5398C390.506 22.8418 399.359 24.7209 399.837 26.0948C401.313 30.3884 393.65 24.0945 390.384 29.7924H390.364Z" fill="currentColor"></path>
-              <path d="M314.045 50.6037C315.744 50.9674 316.559 50.4825 317.383 52.9576C316.263 53.2102 314.615 53.1597 313.017 53.0385C310.046 52.796 309.039 49.9875 309.497 47.3406L312.651 28.9742C312.865 27.7518 310.158 27.9134 309.547 27.4891C309.1 27.1759 309.446 26.196 309.598 25.8828C309.802 25.4787 310.657 25.408 311.562 25.4383C316.131 25.5797 311.46 21.6599 317.281 18.8817L316.569 25.2968C319.235 25.6302 321.28 25.0544 323.315 25.5696C321.942 30.0551 316.335 25.9838 315.683 28.9237C314.289 35.2378 313.251 41.2286 312.203 47.4719C312.01 48.6539 312.407 50.2501 314.045 50.6037Z" fill="currentColor"></path>
-              <path d="M293.429 53.8972C292.32 53.1395 291.811 53.5032 291.404 53.4123C290.997 53.3213 290.804 52.5536 290.946 51.7656L295.729 25.4686C296.522 25.1554 297.866 25.3979 297.805 26.0849C297.754 26.6809 297.855 27.4285 298.425 28.4994C300.756 27.1355 302.465 24.6705 305.538 25.1655C306.149 25.2666 306.016 26.5597 305.813 26.9739C305.579 27.4487 298.69 28.1458 296.41 37.8341C295.098 43.4006 294.202 48.6742 293.439 53.8972H293.429Z" fill="currentColor"></path>
+              <path d="M281.961 53.594C282.46 51.7958 283.09 49.8864 282.195 47.9164C279.987 51.0381 277.697 52.9879 274.278 53.5233C270.605 54.0991 267.125 52.0483 266.423 48.1892C265.069 40.6931 268.051 32.8737 274.064 28.0548C278.318 24.6502 283.864 24.0845 289.033 25.6099L285.655 44.138C285.034 47.5729 284.647 50.8057 285.36 53.8668C283.966 53.2101 283.497 53.3819 281.941 53.6041L281.961 53.594Z" fill="currentColor"></path>
+              <path d="M181.088 53.2202C178.29 53.6445 175.868 53.5031 172.866 53.2809L178.117 25.9029C180.692 25.2564 183.286 25.4988 186.227 25.7514L181.099 53.2202H181.088Z" fill="currentColor"></path>
               <path d="M381.938 28.1458C371.315 33.49 375.822 55.8167 369.564 53.8265L374.265 27.5901C374.398 26.8324 374.316 26.2162 374.479 25.8323C374.784 25.0948 376.087 25.1857 376.698 25.7616C377.247 26.2768 375.782 30.1663 377.817 28.7721C379.791 26.0848 382.661 24.7816 385.51 24.913C384.787 27.8932 383.454 27.3881 381.938 28.1458Z" fill="currentColor"></path>
               <path d="M183.744 22.3367C186.178 22.3367 188.15 20.3873 188.15 17.9825C188.15 15.5777 186.178 13.6283 183.744 13.6283C181.311 13.6283 179.338 15.5777 179.338 17.9825C179.338 20.3873 181.311 22.3367 183.744 22.3367Z" fill="currentColor"></path>
             </g>
             <defs><clipPath id="c2"><rect width="400" height="66" fill="currentColor"></rect></clipPath></defs>
           </svg>
         </div>
+
+        </div>
       </div>
     </section>
 
-    <!-- Contact -->
-    <section id="contact" class="contact">
+    <!-- ── CONTACT ── -->
+    <section id="contact" class="contact" data-theme-section="dark">
       <div class="contact-sticky">
         <div class="contact-words" id="contact-words"></div>
-        <div class="contact-body">
+        <div class="contact-content">
           <h2 class="contact-heading">Contacto</h2>
-          <p class="contact-text">Have a project in mind? I'd love to hear from you. Tell me what you need and I'll get back to you promptly.</p>
+          <p class="contact-text">¿Tienes un proyecto en mente? Me encantaría saber de ti. Dime qué necesitas y te responderé pronto.</p>
           <div class="button-group">
-            <a href="https://wa.me/2348123456789" target="_blank" class="button-007 w-inline-block">
+            <a href="https://cal.com/rabiu/30min" target="_blank" class="button-007 w-inline-block" data-button-007>
               <span class="button-007__inner">
                 <span class="button-007__text is--hover">
                   <svg class="button-007__svg" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
@@ -821,7 +735,7 @@
               </span>
               <span class="button-007__bg"></span>
             </a>
-            <a href="https://wa.me/2348123456789" target="_blank" class="button-007 w-inline-block">
+            <a href="https://wa.me/2348123456789" target="_blank" class="button-007 w-inline-block" data-button-007>
               <span class="button-007__inner">
                 <span class="button-007__text is--hover">
                   <svg class="button-007__svg" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
@@ -849,13 +763,13 @@
       </div>
     </section>
 
-    <!-- Footer -->
-    <div class="footer">
-      <div class="footer-inner">
+    <!-- ── FOOTER ── -->
+    <div class="footer-wrap" data-footer>
+      <div class="footer">
         <div class="footer-top">
           <div class="footer-bracket"></div>
-          <div class="footer-bracket r"></div>
-          <div class="footer-cols">
+          <div class="footer-bracket is--2"></div>
+          <div class="footer-content-w">
             <div>
               <p class="footer-label">[ Socials ]</p>
               <ul class="footer-list">
@@ -883,19 +797,19 @@
           </div>
         </div>
         <div class="footer-copy">
-          <div class="footer-copy-left">
-            <p class="footer-copy-label">Small details, big impact</p>
-            <p class="footer-copy-label">© <strong id="current-year">2026</strong>, Rabiu Farouk</p>
+          <div class="footer-copy__left">
+            <p class="footer-copy__label">Small details, big impact</p>
+            <p class="footer-copy__label">© <strong id="current-year">2026</strong>, Rabiu Farouk</p>
           </div>
           <a href="https://luanstudio.com/" target="_blank" class="w-inline-block">
-            <p class="footer-copy-label" style="opacity:0.5; margin:0;">Design by: Luan Studio</p>
+            <p class="footer-copy__label" style="opacity:0.5; margin:0;">Design by: Luan Studio</p>
           </a>
         </div>
       </div>
     </div>
+
   </main>
 
-  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@barba/core@2.10.3/dist/barba.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.17/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
@@ -910,23 +824,25 @@
       "background: #1d1d1b; color: #ffffff; font-family: monospace; font-size: 15px; font-weight: bold; padding: 10px 16px; border-radius: 4px;"
     );
     console.log(
-      "%cThis site was built by Rabiu Farouk.\\nNeed something like this? Let's talk.",
+      "%cThis site was built by Rabiu Farouk.\nNeed something like this? Let's talk.",
       "color: #888888; font-family: monospace; font-size: 12px; padding: 4px 0; line-height: 1.6;"
     );
 
-    // ── GSAP registration ──
+    // ── Register GSAP plugins ──
     gsap.registerPlugin(DrawSVGPlugin, CustomEase, ScrollTrigger, SplitText);
     history.scrollRestoration = "manual";
 
-    // ── Lenis smooth scroll ──
-    let lenis = null;
+    // ── Feature detection ──
     const hasLenis = typeof window.Lenis !== "undefined";
     const hasScrollTrigger = typeof window.ScrollTrigger !== "undefined";
+    const hasBarba = typeof Barba !== "undefined";
     const rmMQ = window.matchMedia("(prefers-reduced-motion: reduce)");
     let reducedMotion = rmMQ.matches;
-    rmMQ.addEventListener?.("change", e => reducedMotion = e.matches);
-    rmMQ.addListener?.(e => reducedMotion = e.matches);
+    rmMQ.addEventListener?.("change", (e) => reducedMotion = e.matches);
+    rmMQ.addListener?.((e) => reducedMotion = e.matches);
 
+    // ── Lenis smooth scroll ──
+    let lenis = null;
     function initLenis() {
       if (!hasLenis) return;
       lenis = new Lenis({
@@ -941,18 +857,83 @@
       raf();
     }
 
-    // ── Header scroll ──
+    // ── Header scroll + theme switching ──
     function initHeader() {
       const header = document.getElementById("header");
+      const brand = document.getElementById("brand");
+      let lastScrollY = 0;
       let ticking = false;
-      window.addEventListener("scroll", () => {
+      const themeSections = document.querySelectorAll("[data-theme-section]");
+
+      function getThemeForSection() {
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+        for (const section of themeSections) {
+          const rect = section.getBoundingClientRect();
+          const sectionTop = rect.top + scrollY;
+          const sectionBottom = sectionTop + rect.height;
+          if (scrollY >= sectionTop - 100 && scrollY < sectionBottom - 100) {
+            return section.dataset.themeSection || "light";
+          }
+        }
+        return "light";
+      }
+
+      function onScroll() {
         if (!ticking) {
           requestAnimationFrame(() => {
-            header.classList.toggle("scrolled", window.scrollY > 60);
+            const scrollY = window.scrollY || document.documentElement.scrollTop;
+            const theme = getThemeForSection();
+            header.dataset.themeNav = theme;
+            const goingDown = scrollY > lastScrollY;
+            brand.dataset.logoScroll = (goingDown && scrollY > 60) ? "true" : "false";
+            lastScrollY = scrollY;
             ticking = false;
           });
           ticking = true;
         }
+      }
+
+      window.addEventListener("scroll", () => {
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+        const theme = getThemeForSection();
+        header.dataset.themeNav = theme;
+        const goingDown = scrollY > lastScrollY;
+        brand.dataset.logoScroll = (goingDown && scrollY > 60) ? "true" : "false";
+        lastScrollY = scrollY;
+      }, { passive: true, capture: true });
+      window.addEventListener("resize", () => onScroll());
+      onScroll();
+    }
+
+    // ── Progressive blur ──
+    function initProgressiveBlur() {
+      const main = document.getElementById("pblur-main");
+      const blur = document.getElementById("pblur-blur");
+      if (!main || !blur) return;
+      const heroImg = document.querySelector("#hero .hero-bg-wrap img");
+      if (!heroImg) return;
+      const src = heroImg.src;
+      const imgMain = document.createElement("img");
+      imgMain.src = src;
+      imgMain.style.cssText = "position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.15;";
+      main.appendChild(imgMain);
+      const imgBlur = document.createElement("img");
+      imgBlur.src = src;
+      imgBlur.style.cssText = "position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.25;filter:blur(20px);-webkit-filter:blur(20px);";
+      blur.appendChild(imgBlur);
+
+      let ticking = false;
+      function update() {
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+        const opacity = Math.min(0.35, scrollY / 600);
+        main.style.transform = `translateY(${scrollY * 0.08}px)`;
+        blur.style.transform = `translateY(${scrollY * 0.03}px)`;
+        imgMain.style.opacity = opacity;
+        imgBlur.style.opacity = opacity * 0.7;
+        ticking = false;
+      }
+      window.addEventListener("scroll", () => {
+        if (!ticking) { requestAnimationFrame(update); ticking = true; }
       }, { passive: true });
     }
 
@@ -964,9 +945,9 @@
         if (!bg || !inner) return;
         btn.addEventListener("mouseenter", () => {
           if (reducedMotion) return;
-          const rect = btn.getBoundingClientRect();
           bg.style.transition = "transform 0.4s cubic-bezier(0.32, 0.72, 0, 1), background-color 0.3s ease";
-          bg.style.transform = `scale(1.04)`;
+          bg.style.transform = "scale(1.04)";
+          bg.style.backgroundColor = "var(--dark-blue)";
           const svgPath = btn.querySelector(".button-007__svg-overlay path");
           if (svgPath) {
             gsap.to(svgPath, { scale: 1, duration: 0.4, ease: "power2.out", overwrite: true });
@@ -978,6 +959,7 @@
         btn.addEventListener("mouseleave", () => {
           if (reducedMotion) return;
           bg.style.transform = "scale(1)";
+          bg.style.backgroundColor = "";
           const svgPath = btn.querySelector(".button-007__svg-overlay path");
           if (svgPath) {
             gsap.to(svgPath, { scale: 1.25, duration: 0.4, ease: "power2.out", overwrite: true });
@@ -994,22 +976,14 @@
     const orbitItems = document.querySelectorAll("#portfolio-items .portfolio-orbit__item");
     const orbitCards = document.querySelectorAll(".portfolio-orbit__item-card");
     const totalCount = orbitItems.length;
-
     function updateOrbit(idx) {
       orbitIndex = (idx + totalCount) % totalCount;
       document.getElementById("current-count").textContent = String(orbitIndex + 1).padStart(2, "0");
-      orbitItems.forEach((el, i) => {
-        el.classList.toggle("active", i === orbitIndex);
-      });
-      orbitCards.forEach((el, i) => {
-        el.classList.toggle("active", i === orbitIndex);
-      });
+      orbitItems.forEach((el, i) => el.classList.toggle("active", i === orbitIndex));
+      orbitCards.forEach((el, i) => el.classList.toggle("active", i === orbitIndex));
     }
-
     document.getElementById("orbit-next").addEventListener("click", () => updateOrbit(orbitIndex + 1));
     document.getElementById("orbit-prev").addEventListener("click", () => updateOrbit(orbitIndex - 1));
-
-    // Keyboard
     document.addEventListener("keydown", (e) => {
       if (e.key === "ArrowRight") updateOrbit(orbitIndex + 1);
       if (e.key === "ArrowLeft") updateOrbit(orbitIndex - 1);
@@ -1026,10 +1000,7 @@
       const tl = gsap.timeline({ repeat: -1, paused: true });
       tl.to(el, { opacity: 0.15, duration: 0.3, ease: "power1.inOut" })
         .to(el, { opacity: 0, duration: 0.1 }, "+=0.05")
-        .call(() => {
-          i = (i + 1) % words.length;
-          el.textContent = words[i];
-        })
+        .call(() => { i = (i + 1) % words.length; el.textContent = words[i]; })
         .to(el, { opacity: 0.15, duration: 0.3, ease: "power1.inOut" })
         .to(el, { opacity: 0, duration: 0.1 }, "+=0.05")
         .call(() => { i = (i + 1) % words.length; el.textContent = words[i]; })
@@ -1056,21 +1027,14 @@
         el.innerHTML = words.map(w => `<span style="display:inline-block;opacity:0;transform:translateY(8px)">${w}</span>`).join(" ");
         const spans = el.querySelectorAll("span");
         gsap.to(spans, {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          stagger: 0.04,
+          opacity: 1, y: 0, duration: 0.5, stagger: 0.04,
           ease: "power2.out",
-          scrollTrigger: {
-            trigger: el,
-            start: "top 85%",
-            once: true,
-          }
+          scrollTrigger: { trigger: el, start: "top 85%", once: true }
         });
       });
     }
 
-    // ── Bracket heading animation ──
+    // ── Bracket heading scaleX reveal ──
     function initBracketHeading() {
       if (reducedMotion) return;
       document.querySelectorAll("[data-bracket-heading]").forEach(el => {
@@ -1093,11 +1057,11 @@
     // ── Scroll draw transition ──
     function initScrollDraw() {
       if (reducedMotion) return;
-      const shape = document.querySelector("[data-scroll-draw] .scroll-draw__shape path");
+      const shape = document.querySelector("[data-scroll-draw] .scroll-draw-transition__shape path");
       if (!shape) return;
       gsap.fromTo(shape, { drawSVG: "0%" }, {
         drawSVG: "100%", duration: 1.2, ease: "power2.inOut",
-        scrollTrigger: { trigger: ".scroll-draw", start: "top bottom", end: "top 70%", scrub: 1 }
+        scrollTrigger: { trigger: ".scroll-draw-transition", start: "top bottom", end: "top 70%", scrub: 1 }
       });
     }
 
@@ -1116,8 +1080,7 @@
         });
         gsap.from(visual, {
           x: 30, opacity: 0, duration: 0.5, ease: "power2.out",
-          scrollTrigger: { trigger: item, start: "top 90%", once: true,
-            delay: 0.1 }
+          scrollTrigger: { trigger: item, start: "top 90%", once: true, delay: 0.1 }
         });
       });
     }
@@ -1130,10 +1093,66 @@
         el.dataset.portInit = "1";
         gsap.from(el, {
           opacity: 0, y: 20, duration: 0.4, ease: "power2.out",
-          scrollTrigger: { trigger: "#portfolio", start: "top 85%", once: true,
-            delay: i * 0.1 }
+          scrollTrigger: { trigger: "#portfolio", start: "top 85%", once: true, delay: i * 0.1 }
         });
       });
+    }
+
+    // ── Image trail ──
+    function initImageTrail() {
+      const heroBg = document.getElementById("hero-bg");
+      if (!heroBg || reducedMotion) return;
+      let ticking = false;
+      function onScroll() {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            const y = window.scrollY || document.documentElement.scrollTop;
+            heroBg.style.transform = `translateY(${y * 0.12}px) translateX(${y * 0.03}px)`;
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }
+      window.addEventListener("scroll", onScroll, { passive: true });
+    }
+
+    // ── Footer parallax ──
+    function initFooterParallax() {
+      const footer = document.querySelector("[data-footer]");
+      if (!footer || reducedMotion) return;
+      let ticking = false;
+      function onScroll() {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            const y = window.scrollY || document.documentElement.scrollTop;
+            if (y > 0) footer.style.transform = `translateY(${y * 0.02}px)`;
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }
+      window.addEventListener("scroll", onScroll, { passive: true });
+    }
+
+    // ── Global parallax ──
+    function initGlobalParallax() {
+      if (reducedMotion) return;
+      const parallaxElements = document.querySelectorAll("[data-parallax]");
+      let ticking = false;
+      function onScroll() {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            const y = window.scrollY || document.documentElement.scrollTop;
+            parallaxElements.forEach(el => {
+              const speed = parseFloat(el.dataset.parallaxSpeed) || 0.12;
+              el.style.transform = `translateY(${y * speed}px)`;
+            });
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }
+      window.addEventListener("scroll", onScroll, { passive: true });
     }
 
     // ── Init all ──
@@ -1147,25 +1166,26 @@
       initScrollDraw();
       initServices();
       initPortfolio();
+      initProgressiveBlur();
+      initImageTrail();
+      initFooterParallax();
+      initGlobalParallax();
 
-      if (hasLenis) {
-        lenis?.on('scroll', ScrollTrigger.refresh);
-      }
+      if (hasLenis) lenis.on('scroll', ScrollTrigger.refresh);
 
-      if (hasScrollTrigger) {
-        ScrollTrigger.refresh();
-      }
+      setTimeout(() => {
+        if (hasScrollTrigger) ScrollTrigger.refresh();
+      }, 200);
     }
 
-    // Run after everything loads
     if (document.readyState === "complete") {
       init();
     } else {
       window.addEventListener("load", init);
     }
 
-    // Re-init on Barba transitions, if present
-    if (typeof Barba !== "undefined") {
+    // ── Barba re-init ──
+    if (hasBarba) {
       Barba.Dispatcher.on("newPage", () => {
         setTimeout(() => {
           initHeader();
@@ -1177,12 +1197,16 @@
           initScrollDraw();
           initServices();
           initPortfolio();
-          ScrollTrigger.refresh();
+          initProgressiveBlur();
+          initImageTrail();
+          initFooterParallax();
+          initGlobalParallax();
+          if (hasScrollTrigger) ScrollTrigger.refresh();
         }, 100);
       });
     }
 
-    // Resize handler
+    // ── Resize ──
     window.addEventListener("resize", () => {
       if (hasLenis && lenis) lenis.resize();
       if (hasScrollTrigger) ScrollTrigger.refresh();
