@@ -1,931 +1,1192 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rabiu Farouk — Freelance Designer & Developer</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        @property --lg-sheen-angle { syntax: "<angle>"; inherits: false; initial-value: 135deg; }
-        @property --lg-opacity { syntax: "<number>"; inherits: true; initial-value: 0.55; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rabiu Farouk — Freelance Designer & Developer</title>
+  <meta name="description" content="Freelance designer & developer. Build modern, functional sites with animations that make a difference.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site/normalize.css">
+  <link rel="stylesheet" href="site/components.css">
+  <link rel="stylesheet" href="site/lenis.css">
+  <style>
+    :root {
+      --light-silver: #e2e1e1;
+      --ink-black: #080912;
+      --dark-blue: #2a4093;
+      --astronaut: #273879;
+      --white: white;
+      --black: black;
+      --gap-xxs: .5em; --gap-xs: .75em; --gap-s: 1em; --gap-r: 2em;
+      --gap-l: 3em; --gap-xl: 5em;
+      --border-radius-s: .25em; --border-radius: .5em; --border-radius-l: 1em;
+      --cta-font: Arial, "Helvetica Neue", Helvetica, sans-serif;
+      --size-unit: 16;
+      --size-container-ideal: 1440;
+      --size-container-min: 992px;
+      --size-container-max: 1920px;
+      --size-container: clamp(var(--size-container-min), 100vw, var(--size-container-max));
+      --size-font: calc(var(--size-container) / (var(--size-container-ideal) / var(--size-unit)));
+    }
+    *, *:after, *:before { box-sizing: border-box; }
+    html { scroll-behavior: initial; }
+    html, body { -webkit-font-smoothing: antialiased; }
+    body {
+      background-color: var(--ink-black);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      color: var(--light-silver);
+      line-height: 1.5;
+      font-size: var(--size-font);
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { pointer-events: auto; object-fit: cover; width: 100%; height: 100%; display: inline-block; max-width: 100%; }
+    button { all: unset; cursor: pointer; }
+    button:focus-visible { outline: revert; }
+    svg { pointer-events: none; max-width: none; height: auto; }
+    ::selection { background-color: var(--white); color: var(--dark-blue); }
+    ::-moz-selection { background-color: var(--white); color: var(--dark-blue); }
+    ::-webkit-scrollbar { display: none; }
+    body { -ms-overflow-style: none; }
+    html { scrollbar-width: none; }
+    .main-wrapper { width: 100%; max-width: var(--size-container); margin: 0 auto; overflow: clip; }
 
-        :root {
-            --lg-filter: url("#liquid-glass-filter");
-            --lg-filter-heavy: url("#liquid-glass-heavy");
-            --lg-filter-light: url("#liquid-glass-light");
-            --lg-blur: 18px;
-            --lg-saturate: 280%;
-            --lg-opacity: 0.35;
-            --lg-radius: 28px;
-            --lg-border-opacity: 0.6;
-            --lg-tint: 255 255 255;
-            --lg-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.15), inset 0 0 0 1px rgba(255,255,255,0.05);
-            --lg-edge-red: rgba(255,86,116,0.7);
-            --lg-edge-cyan: rgba(54,226,255,0.65);
-            --lg-scene-background: radial-gradient(ellipse 80% 60% at 15% 85%, rgba(255,255,255,0.06) 0%, transparent 65%), radial-gradient(ellipse 60% 70% at 85% 15%, rgba(255,255,255,0.04) 0%, transparent 60%), radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255,255,255,0.015) 0%, transparent 55%), linear-gradient(180deg, #0d0d0d 0%, #0a0a0a 40%, #080808 100%);
-            --bg: #0a0a0a;
-            --text: #f0f0f0;
-            --text-muted: #888888;
-            --text-dim: #555555;
-        }
+    /* Header */
+    .header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.25rem var(--gap-l);
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background-color 0.4s ease, backdrop-filter 0.4s ease;
+    }
+    .header.scrolled {
+      background-color: rgba(8,9,18,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .navbar-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; max-width: 1440px; margin: 0 auto; gap: var(--gap-l);
+    }
+    .brand { display: flex; align-items: center; }
+    .brand svg { width: 140px; height: auto; display: block; }
+    .nav-buttons { display: flex; align-items: center; gap: var(--gap-s); }
 
-        /* ── Background scene (so glass has something to distort) ── */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: -4;
-            background:
-                radial-gradient(ellipse 60% 50% at 20% 80%, rgba(255,255,255,0.04) 0%, transparent 70%),
-                radial-gradient(ellipse 50% 60% at 80% 20%, rgba(255,255,255,0.03) 0%, transparent 60%),
-                radial-gradient(ellipse 40% 40% at 50% 50%, rgba(255,255,255,0.02) 0%, transparent 60%),
-                var(--bg);
-            pointer-events: none;
-        }
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: -3;
-            background-image:
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.008) 2px, rgba(255,255,255,0.008) 4px),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.008) 2px, rgba(255,255,255,0.008) 4px);
-            opacity: 0.4;
-            pointer-events: none;
-            mix-blend-mode: overlay;
-        }
+    /* Button 007 */
+    .button-007 {
+      --button-007-color: var(--white);
+      --button-007-color-background: var(--ink-black);
+      --button-007-hover-color: var(--white);
+      --button-007-hover-color-background: var(--dark-blue);
+      --button-007-border-radius: 2.5em;
+      --button-007-padding: 0.7em 1em;
+      display: inline-grid; position: relative;
+      -webkit-tap-highlight-color: transparent;
+      transition: scale 0.15s cubic-bezier(0.4,0,0.2,1);
+      color: var(--button-007-color); background: transparent; text-decoration: none;
+    }
+    .button-007:active { scale: 0.955 0.925; }
+    .button-007__inner {
+      pointer-events: none; position: relative; display: grid; place-items: center;
+      border-radius: var(--button-007-border-radius); overflow: clip; grid-area: 1/1;
+    }
+    .button-007__bg {
+      pointer-events: none; background: var(--button-007-color-background);
+      border-radius: var(--button-007-border-radius); grid-area: 1/1;
+      place-self: center; width: calc(100% - 1px); height: calc(100% - 1px); padding: 0;
+    }
+    .button-007__text {
+      text-transform: uppercase; width: 100%; height: 100%;
+      padding: var(--button-007-padding); display: block;
+      font-family: var(--cta-font); font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.08em; grid-area: 1/1;
+    }
+    .button-007__svg {
+      position: absolute; width: 100%; height: auto; aspect-ratio: 2;
+      overflow: visible; flex: none; top: 0; left: 0;
+    }
+    .button-007__svg path { transform-box: fill-box; transform-origin: center; transform: scale(1.25); }
+    .button-007__svg-overlay { position: absolute; width: 100%; height: auto; aspect-ratio: 2; overflow: visible; flex: none; top: 0; left: 0; }
+    .button-007__svg-overlay path { transform-box: fill-box; transform-origin: center; transform: scale(1.25); }
+    .button-007__svg-object { width: 100%; }
+    .button-007__svg-inner { display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; }
+    .button-007__svg-text-wrap { width: 100%; height: auto; padding: var(--button-007-padding); display: flex; justify-content: center; align-items: center; }
+    .button-007__svg-text { text-transform: uppercase; white-space: nowrap; line-height: inherit; font-family: var(--cta-font); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
+    /* Hero */
+    .hero { position: relative; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; }
+    .hero-bg img {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      min-width: 100%; min-height: 100%;
+      object-fit: cover;
+      filter: brightness(0.65) saturate(1.05);
+      will-change: transform;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 40%, transparent 25%, rgba(8,9,18,0.7) 70%, var(--ink-black) 100%);
+    }
+    .hero-content { position: relative; z-index: 2; text-align: center; padding: 0 var(--gap-s); }
+    .partner-wrap {
+      display: flex; align-items: center; justify-content: center; gap: var(--gap-xs);
+      margin-bottom: var(--gap-s);
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--light-silver); opacity: 0;
+    }
+    .partner-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--light-silver); opacity: 0.5; }
+    .locate-wrap {
+      display: flex; align-items: center; justify-content: center; gap: var(--gap-s);
+      margin-bottom: var(--gap-l); opacity: 0;
+    }
+    .locate-wrap .hero-label {
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.05em;
+      color: var(--light-silver); opacity: 0.75;
+    }
+    .locate-wrap .block-span { display: block; font-size: 0.85rem; font-family: var(--cta-font); letter-spacing: 0; opacity: 0.9; }
+    .language-switch { position: relative; display: inline-block; }
+    .language-switch__tooltip {
+      position: absolute; bottom: 100%; left: 50%;
+      transform: translateX(-50%) translateY(-8px);
+      padding: 5px 10px; background: var(--ink-black); border-radius: var(--border-radius-s);
+      white-space: nowrap; opacity: 0; pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .language-switch:hover .language-switch__tooltip { opacity: 1; transform: translateX(-50%) translateY(-12px); }
+    .language-switch__tooltip-inner { display: flex; align-items: center; justify-content: center; }
+    .language-switch__tooltip-text { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--light-silver); }
+    .language-switch__tooltip-tip { position: absolute; top: 100%; left: 50%; transform: translateX(-50%); width: 0; height: 0; }
+    .rotating-globe { display: inline-block; }
+    .globe { position: relative; width: 18px; height: 18px; }
+    .globe .circle { position: absolute; border-radius: 50%; border: 1.5px solid var(--light-silver); opacity: 0.25; }
+    .globe .circle:nth-child(1) { width: 100%; height: 100%; top: 0; left: 0; }
+    .globe .circle:nth-child(2) { width: 60%; height: 60%; top: 20%; left: 20%; animation: globe 8s linear infinite; }
+    .globe .circle-hor { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 100%; height: 100%; border-radius: 50%; border-top: 1.5px solid var(--light-silver); border-bottom: 1.5px solid var(--light-silver); }
+    .globe .circle-hor-middle { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 100%; height: 100%; border-radius: 50%; border-left: 1.5px solid var(--light-silver); border-right: 1.5px solid var(--light-silver); }
 
-        /* ── Background scene (Apple-style: rich backdrop for glass to refract) ── */
-        .bg-scene {
-            position: fixed;
-            inset: 0;
-            z-index: -3;
-            background:
-                radial-gradient(ellipse 80% 60% at 15% 85%, rgba(255,180,100,0.12) 0%, transparent 60%),
-                radial-gradient(ellipse 60% 70% at 85% 15%, rgba(100,200,255,0.10) 0%, transparent 55%),
-                radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255,120,180,0.07) 0%, transparent 50%),
-                radial-gradient(ellipse 40% 40% at 30% 30%, rgba(255,255,200,0.05) 0%, transparent 50%),
-                linear-gradient(180deg, #0d0d0d 0%, #0a0a0a 40%, #080808 100%);
-            pointer-events: none;
-        }
-        .bg-scene::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            background-image:
-                repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(255,255,255,0.018) 40px, rgba(255,255,255,0.018) 41px),
-                repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(255,255,255,0.018) 40px, rgba(255,255,255,0.018) 41px);
-            opacity: 0.5;
-            mix-blend-mode: overlay;
-            pointer-events: none;
-        }
-        .bg-scene::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            background:
-                radial-gradient(ellipse 90% 60% at 80% 20%, rgba(255,140,100,0.08) 0%, transparent 55%),
-                radial-gradient(ellipse 60% 80% at 15% 85%, rgba(86,167,255,0.07) 0%, transparent 55%),
-                radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 55%);
-            filter: blur(80px);
-            pointer-events: none;
-            animation: bgPulse 18s ease-in-out infinite alternate;
-        }
-        @keyframes bgPulse {
-            0%   { transform: translate(0, 0) scale(1); opacity: 0.6; }
-            100% { transform: translate(-40px, 30px) scale(1.2); opacity: 1; }
-        }
-        .bg-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(90px);
-            pointer-events: none;
-            opacity: 0.75;
-        }
-        .bg-orb-1 {
-            top: -8%; left: 5%;
-            width: 500px; height: 500px;
-            background: radial-gradient(circle at 30% 35%, rgba(255,80,80,0.4), rgba(200,40,40,0.15) 50%, transparent 70%);
-            box-shadow: 0 0 35rem rgba(255,60,60,0.4), 0 0 12rem rgba(180,30,30,0.2);
-            animation: bg-orb-1-drift 18s ease-in-out infinite alternate;
-        }
-        .bg-orb-2 {
-            bottom: -15%; right: 2%;
-            width: 650px; height: 650px;
-            background: radial-gradient(circle at 55% 60%, rgba(86,167,255,0.4), rgba(40,80,180,0.15) 55%, transparent 70%);
-            box-shadow: 0 0 40rem rgba(54,101,206,0.4), 0 0 14rem rgba(20,50,130,0.2);
-            animation: bg-orb-2-drift 24s ease-in-out infinite alternate;
-        }
-        .bg-orb-3 {
-            top: 42%; left: 58%;
-            width: 400px; height: 400px;
-            background: radial-gradient(circle at 40% 45%, rgba(255,214,0,0.3), rgba(200,160,0,0.1) 55%, transparent 70%);
-            box-shadow: 0 0 18rem rgba(255,180,0,0.3), 0 0 7rem rgba(180,130,0,0.15);
-            animation: bg-orb-3-drift 15s ease-in-out infinite alternate;
-        }
-        @keyframes bg-orb-1-drift {
-            0%   { transform: translate(0, 0) scale(1); }
-            50%  { transform: translate(2rem, -3rem) scale(1.15); }
-            100% { transform: translate(-2rem, 2rem) scale(0.9); }
-        }
-        @keyframes bg-orb-2-drift {
-            0%   { transform: translate(0, 0) scale(1); }
-            50%  { transform: translate(-3rem, 2rem) scale(1.1); }
-            100% { transform: translate(3rem, -2rem) scale(0.92); }
-        }
-        @keyframes bg-orb-3-drift {
-            0%   { transform: translate(0, 0) scale(1); }
-            50%  { transform: translate(2rem, 2rem) scale(1.18); }
-            100% { transform: translate(-2rem, -1rem) scale(0.88); }
-        }
+    /* Sections */
+    section { padding: var(--gap-xl) var(--gap-l); }
+    .section-head { text-align: center; margin-bottom: var(--gap-xl); }
+    .section-head .big-label {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--dark-blue); margin: 0 0 0.75rem;
+    }
+    .section-head h2 {
+      font-size: 3em; font-weight: 700; line-height: 1.1;
+      color: var(--light-silver); margin: 0; letter-spacing: -0.02em;
+    }
+    .section-head .sub {
+      font-size: 1.1em; color: var(--light-silver); opacity: 0.65;
+      margin: 0.75rem auto 0; max-width: 560px; line-height: 1.6;
+    }
+    .bracket-heading { display: inline-block; position: relative; }
+    .bracket-left, .bracket-right { color: var(--dark-blue); font-weight: 700; }
 
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            font-feature-settings: 'liga' 1, 'calt' 1;
-            line-height: 1.6;
-            color: var(--text);
-            background: var(--bg);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-            min-height: 100vh;
-        }
-        a { color: inherit; text-decoration: none; }
-        img { max-width: 100%; display: block; }
+    /* About */
+    .about { background: var(--ink-black); }
+    .about-head { text-align: center; margin-bottom: var(--gap-xl); }
+    .about-head h1 {
+      font-size: 4em; font-weight: 700; line-height: 1.1;
+      color: var(--light-silver); margin: 0; text-transform: uppercase; letter-spacing: -0.02em;
+    }
+    .about-head p {
+      font-size: 1.2em; color: var(--light-silver); opacity: 0.6;
+      margin: 0.75rem auto 0; max-width: 500px; line-height: 1.6;
+    }
+    .about-body {
+      max-width: 680px; margin: 0 auto; text-align: center;
+    }
+    .about-body .bracket-heading { font-size: 2.5em; margin-bottom: 1.5rem; }
+    .about-body p {
+      font-size: 1.1em; color: var(--light-silver); opacity: 0.72;
+      line-height: 1.7; margin-bottom: 1.25rem; max-width: 560px; margin-left: auto; margin-right: auto;
+    }
+    .about-body .button-007 { margin-top: 0.5rem; }
 
-        .liquid-glass {
-            position: relative;
-            isolation: isolate;
-            overflow: hidden;
-            border-radius: var(--lg-radius);
-            background: linear-gradient(
-                var(--lg-sheen-angle),
-                rgba(255,255,255,0.15),
-                rgba(255,255,255,0.03) 40%,
-                rgba(255,255,255,0.08)
-            );
-            border: 1px solid rgba(255,255,255,var(--lg-border-opacity));
-            box-shadow:
-                0 30px 80px rgba(0,0,0,0.7),
-                0 0 0 1px rgba(255,255,255,0.15),
-                inset 0 0 0 1px rgba(255,255,255,0.05),
-                inset 1px 0 rgba(255,86,116,0.25),
-                inset -1px 0 rgba(54,226,255,0.2),
-                inset 0 1px rgba(255,255,255,0.35),
-                inset 0 -3px 6px rgba(0,0,0,0.15);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: default;
-        }
-        /* z: -2 — refraction sprite (displaced background copy). Hidden when backdrop-filter with SVG URL is supported */
-        .liquid-glass__refraction {
-            position: absolute;
-            z-index: -2;
-            inset: -36px;
-            border-radius: inherit;
-            background: var(--lg-scene-background, transparent);
-            background-attachment: fixed;
-            background-position: center;
-            background-size: cover;
-            filter: var(--lg-filter);
-            opacity: 0.82;
-            transform: scale(1.035);
-            pointer-events: none;
-        }
-        /* z: -1 — white tint */
-        .liquid-glass::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            border-radius: inherit;
-            background: rgba(255,255,255,var(--lg-opacity));
-            pointer-events: none;
-            animation: glass-sheen 6s ease-in-out infinite;
-        }
-        /* z: 3 — chromatic edge highlights, mix-blend: screen so they brighten without blocking content */
-        .liquid-glass::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 3;
-            border-radius: inherit;
-            box-shadow:
-                inset  1px 0 var(--lg-edge-red),
-                inset -1px 0 var(--lg-edge-cyan),
-                inset  0  1px rgba(255,255,255,0.52),
-                inset  0 -18px 32px rgba(255,255,255,0.08);
-            mix-blend-mode: screen;
-            pointer-events: none;
-        }
-        .liquid-glass:hover, .liquid-glass:focus-visible {
-            transform: translateY(-5px);
-            box-shadow:
-                0 40px 100px rgba(0,0,0,0.8),
-                0 0 0 1px rgba(255,255,255,0.2),
-                inset 0 0 0 1px rgba(255,255,255,0.08),
-                inset 1px 0 rgba(255,86,116,0.35),
-                inset -1px 0 rgba(54,226,255,0.3),
-                inset 0 1px rgba(255,255,255,0.5),
-                inset 0 -4px 8px rgba(0,0,0,0.12);
-            --lg-opacity: 0.55;
-        }
+    /* Services */
+    .services { background: var(--ink-black); }
+    .services-big { font-size: 2.2em; font-weight: 400; color: var(--light-silver); text-align: center; margin: 0 0 0.5rem; line-height: 1.2; }
+    .services-big span { color: var(--dark-blue); font-weight: 700; }
+    .services-head { text-align: center; margin-bottom: var(--gap-xl); }
+    .services-head .section-head h2 { font-size: 3em; }
+    .services-head .section-head h2.txt-color-blue { color: var(--dark-blue); }
+    .services-sticky { max-width: 1100px; margin: 0 auto; }
+    .services-list { display: flex; flex-direction: column; }
+    .service-item {
+      display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap-l);
+      padding: var(--gap-l) 0; border-bottom: 1px solid rgba(226,225,225,0.08);
+      align-items: center;
+    }
+    .service-item:first-child { border-top: 1px solid rgba(226,225,225,0.08); }
+    .service-row { display: flex; align-items: flex-start; gap: var(--gap-s); }
+    .service-num { font-size: 1.4rem; font-weight: 700; color: var(--dark-blue); letter-spacing: -0.02em; min-width: 2.8rem; line-height: 1; }
+    .service-title { font-size: 1.6rem; font-weight: 700; color: var(--light-silver); margin: 0; line-height: 1.2; }
+    .service-visual { display: flex; flex-direction: column; gap: var(--gap-s); }
+    .service-desc { color: var(--light-silver); opacity: 0.65; font-size: 0.95rem; line-height: 1.6; max-width: 380px; }
+    .service-image-wrap { border-radius: var(--border-radius-l); overflow: hidden; aspect-ratio: 16/9; background: rgba(255,255,255,0.02); }
+    .service-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+    .service-item:hover .service-image { transform: scale(1.04); }
 
-        .lg-btn {
-            position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
-            padding: 0.9rem 2rem; border-radius: 16px; font-family: inherit; font-size: 0.95rem; font-weight: 600;
-            letter-spacing: -0.01em; color: var(--text); overflow: hidden;
-            background: linear-gradient(var(--lg-sheen-angle), rgba(255,255,255,0.15), rgba(255,255,255,0.04) 45%, rgba(255,255,255,0.09));
-            border: 1px solid rgba(255,255,255,0.25);
-            box-shadow:
-                0 4px 16px rgba(0,0,0,0.4),
-                0 0 0 1px rgba(255,255,255,0.1),
-                inset 0 0 0 1px rgba(255,255,255,0.05),
-                inset 1px 0 rgba(255,86,116,0.2),
-                inset -1px 0 rgba(54,226,255,0.15),
-                inset 0 1px rgba(255,255,255,0.4);
-            cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;
-            isolation: isolate;
-        }
-        .lg-btn::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 2;
-            border-radius: inherit;
-            box-shadow:
-                inset 1.5px 0 rgba(255,86,116,0.3),
-                inset -1.5px 0 rgba(54,226,255,0.25),
-                inset 0 1px rgba(255,255,255,0.55),
-                inset 0 -1px 0 rgba(255,255,255,0.15);
-            mix-blend-mode: screen;
-            pointer-events: none;
-            animation: glass-edge-shimmer 3s ease-in-out infinite alternate;
-        }
-        .lg-btn::before {
-            content: '';
-            position: absolute;
-            inset: -12px;
-            z-index: -1;
-            border-radius: 20px;
-            background: var(--lg-scene-background, transparent);
-            background-attachment: fixed;
-            background-position: center;
-            background-size: cover;
-            filter: var(--lg-filter-light);
-            -webkit-filter: var(--lg-filter-light);
-            pointer-events: none;
-            opacity: 0.7;
-        }
-        .lg-btn .btn-shimmer {
-            position: absolute; top: -50%; left: -60%; width: 40%; height: 200%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
-            transform: rotate(25deg); animation: shimmer 5s infinite linear; pointer-events: none;
-        }
-        .lg-btn:hover {
-            transform: translateY(-2px) scale(1.02);
-            box-shadow:
-                0 10px 32px rgba(0,0,0,0.5),
-                0 0 24px rgba(255,255,255,0.08),
-                0 0 0 1px rgba(255,255,255,0.15),
-                inset 0 0 0 1px rgba(255,255,255,0.08),
-                inset 0 1px 0 rgba(255,255,255,0.45),
-                inset 0 -1px 0 rgba(255,255,255,0.12);
-            --lg-sheen-angle: 180deg;
-        }
-        .lg-btn:active { transform: translateY(0px) scale(0.98); }
-        @keyframes glass-edge-shimmer { 0% { opacity: 0.3; } 100% { opacity: 0.7; } }
+    /* Scroll Draw Transition */
+    .scroll-draw { position: relative; overflow: hidden; }
+    .scroll-draw__overlay { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+    .scroll-draw__shape { width: 100%; height: 100%; }
 
-        nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            padding: 0 2.5rem; height: 64px; display: flex; align-items: center; justify-content: space-between;
-            background: rgba(10,10,10,0.75);
-            backdrop-filter: blur(24px) saturate(160%);
-            -webkit-backdrop-filter: blur(24px) saturate(160%);
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-        nav .logo { font-weight: 800; font-size: 1.25rem; letter-spacing: -0.5px; color: var(--text); }
-        nav .logo span { color: rgba(255,255,255,0.4); }
-        nav ul { display: flex; list-style: none; gap: 2.5rem; align-items: center; }
-        nav ul a { font-size: 0.88rem; font-weight: 500; color: var(--text-muted); transition: color 0.2s; position: relative; letter-spacing: -0.2px; }
-        nav ul a:hover { color: var(--text); }
-        nav ul a.active { color: var(--text); }
-        nav ul a.active::after {
-            content: ''; position: absolute; bottom: -3px; left: 0; right: 0; height: 1px;
-            background: var(--text); border-radius: 1px; opacity: 0.4;
-        }
+    /* Portfolio */
+    .portfolio { background: var(--ink-black); }
+    .portfolio-head { text-align: center; margin-bottom: var(--gap-xl); }
+    .portfolio-head .section-head h2 { font-size: 3em; }
+    .portfolio-head .sub { font-size: 1.1em; }
+    .portfolio-orbit { position: relative; max-width: 1100px; margin: 0 auto; }
+    .portfolio-orbit__info-side { padding-right: var(--gap-l); }
+    .portfolio-orbit__count { display: flex; align-items: center; gap: var(--gap-s); margin-bottom: var(--gap-s); }
+    .portfolio-orbit__count-col { display: flex; align-items: center; }
+    .portfolio-orbit__count-txt { font-size: 1.8rem; font-weight: 700; color: var(--dark-blue); letter-spacing: -0.02em; }
+    .portfolio-orbit__count-divider { width: 1px; height: 36px; background: rgba(226,225,225,0.15); }
+    .portfolio-orbit__items { display: flex; flex-direction: column; gap: var(--gap-l); }
+    .portfolio-orbit__item { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .portfolio-orbit__item.active { opacity: 1; transform: translateY(0); }
+    .portfolio-orbit__item h3 { font-size: 1.4rem; font-weight: 700; color: var(--light-silver); margin: 0 0 0.4rem; }
+    .portfolio-orbit__item p { font-size: 0.9rem; color: var(--light-silver); opacity: 0.6; line-height: 1.6; margin: 0; max-width: 380px; }
+    .portfolio-orbit__nav { display: flex; justify-content: center; gap: var(--gap-xs); margin-top: var(--gap-l); }
+    .portfolio-orbit__btn {
+      position: relative; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+      color: var(--light-silver); border-radius: 50%;
+      transition: transform 0.475s cubic-bezier(0.625,0.05,0,1), opacity 0.475s cubic-bezier(0.625,0.05,0,1);
+    }
+    .portfolio-orbit__btn:hover { transform: scale(0.85); opacity: 1 !important; background: rgba(255,255,255,0.04); }
+    .portfolio-orbit__btn-overlay { position: absolute; inset: 0; border-radius: 50%; pointer-events: none; }
+    .portfolio-orbit__btn-corner {
+      position: absolute; width: 10px; height: 10px; border-radius: 2px;
+      background: var(--dark-blue); opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .portfolio-orbit__btn-corner.tr { top: 3px; right: 3px; }
+    .portfolio-orbit__btn-corner.bl { bottom: 3px; left: 3px; }
+    .portfolio-orbit__btn-corner.br { bottom: 3px; right: 3px; }
+    .portfolio-orbit__btn:hover .portfolio-orbit__btn-corner { opacity: 0.4; }
+    .portfolio-orbit__btn:hover .portfolio-orbit__btn-corner.tr { transform: scale(1.4); }
+    .portfolio-orbit__collection {
+      position: relative; overflow: hidden;
+      border-radius: var(--border-radius-l);
+      aspect-ratio: 16/9; background: rgba(255,255,255,0.02);
+    }
+    .portfolio-orbit__list { position: relative; width: 100%; height: 100%; }
+    .portfolio-orbit__item-card {
+      position: absolute; inset: 0; opacity: 0; transition: opacity 0.6s ease;
+    }
+    .portfolio-orbit__item-card.active { opacity: 1; }
+    .portfolio-orbit__card-link { display: block; width: 100%; height: 100%; }
+    .portfolio-orbit__image-mask { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: var(--border-radius-l); }
+    .portfolio-orbit__placeholder { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; filter: brightness(0.75); }
+    .portfolio-orbit__item-card.active .portfolio-orbit__placeholder { transform: scale(1.06); }
+    .portfolio-orbit__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.5s ease; }
+    .portfolio-orbit__item-card.active .portfolio-orbit__video { opacity: 1; }
+    .portfolio-cta { text-align: center; margin-top: var(--gap-xl); }
 
-        .hero {
-            min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            text-align: center; padding: 10rem 2rem 6rem; position: relative; overflow: hidden; background: var(--bg);
-        }
-        .hero::before {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(ellipse 80% 60% at 20% 50%, rgba(255,255,255,0.03) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 80% 30%, rgba(255,255,255,0.02) 0%, transparent 60%);
-            pointer-events: none;
-        }
-        .hero-orb { position: absolute; border-radius: 50%; pointer-events: none; filter: blur(80px); }
-        .hero-orb-1 { top: 10%; left: 5%; width: 500px; height: 500px; background: rgba(255,255,255,0.03); animation: orbFloat 12s ease-in-out infinite alternate; }
-        .hero-orb-2 { bottom: 10%; right: 5%; width: 400px; height: 400px; background: rgba(255,255,255,0.02); animation: orbFloat 15s ease-in-out infinite alternate-reverse; }
-        @keyframes orbFloat { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(40px,-30px) scale(1.1); } }
-        .hero-label {
-            font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.35em;
-            color: var(--text-dim); margin-bottom: 1.5rem; padding: 0.4rem 1rem;
-            border: 1px solid rgba(255,255,255,0.08); border-radius: 100px;
-            backdrop-filter: blur(8px); background: rgba(255,255,255,0.03);
-        }
-        .hero h1 { font-size: clamp(3rem, 9vw, 7rem); font-weight: 900; letter-spacing: -3px; line-height: 1.0; color: var(--text); margin-bottom: 1.75rem; max-width: 900px; }
-        .hero h1 .accent { background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.5) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .hero-sub { font-size: 1.15rem; color: var(--text-muted); max-width: 580px; margin-bottom: 2.5rem; line-height: 1.7; padding: 0 1rem; }
-        .hero-sub strong { color: var(--text); font-weight: 600; }
-        .hero .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 2.5rem; }
-        .hero .tags span {
-            padding: 0.4rem 1rem; border-radius: 100px; font-size: 0.78rem; font-weight: 500;
-            border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); color: var(--text-muted);
-            letter-spacing: -0.2px; backdrop-filter: blur(4px);
-        }
-        .hero .tags span:hover { border-color: rgba(255,255,255,0.2); color: var(--text); background: rgba(255,255,255,0.07); }
-        .btn-group { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+    /* Certifications */
+    .certification { background: var(--ink-black); text-align: center; }
+    .certification .section-head { margin-bottom: var(--gap-l); }
+    .certification .section-head h2 { font-size: 2.8em; }
+    .cert-content { max-width: 580px; margin: 0 auto var(--gap-xl); }
+    .cert-content p { font-size: 1.1em; color: var(--light-silver); opacity: 0.68; line-height: 1.7; margin: 0; }
+    .cert-logos { display: flex; justify-content: center; gap: var(--gap-xl); flex-wrap: wrap; }
+    .cert-logo { width: 180px; max-width: 28vw; color: var(--light-silver); opacity: 0.5; transition: opacity 0.3s ease, transform 0.3s ease; }
+    .cert-logo:hover { opacity: 1; transform: translateY(-3px); }
+    .cert-logo svg { width: 100%; height: auto; display: block; }
 
-        section { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
-        .section-divider { width: 48px; height: 2px; background: var(--text); border-radius: 2px; opacity: 0.3; margin-bottom: 1.5rem; }
-        .section-label { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4em; color: var(--text-dim); margin-bottom: 0.75rem; }
-        .section-title { font-size: 2.5rem; font-weight: 800; letter-spacing: -2px; color: var(--text); margin-bottom: 0.75rem; line-height: 1.1; }
-        .section-title .highlight { opacity: 0.6; }
-        .section-subtitle { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 3.5rem; max-width: 540px; line-height: 1.7; }
+    /* Contact */
+    .contact { background: var(--ink-black); text-align: center; position: relative; overflow: hidden; }
+    .contact-sticky { position: relative; max-width: 660px; margin: 0 auto; }
+    .contact-words {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      font-size: clamp(1.5rem, 3.5vw, 4rem); font-weight: 400; line-height: 1;
+      white-space: nowrap; color: rgba(226,225,225,0.06); opacity: 0;
+      filter: blur(0.65rem); pointer-events: none; user-select: none;
+    }
+    .contact-body { position: relative; z-index: 1; }
+    .contact-heading { font-size: 3em; font-weight: 700; color: var(--light-silver); margin: 0 0 1rem; text-transform: uppercase; letter-spacing: -0.02em; }
+    .contact-text { font-size: 1.1em; color: var(--light-silver); opacity: 0.65; line-height: 1.7; max-width: 480px; margin: 0 auto 2rem; }
+    .button-group { display: flex; justify-content: center; gap: var(--gap-s); flex-wrap: wrap; }
 
-        .skills-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.75rem; }
-        .skill-item {
-            position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
-            padding: 1.5rem 0.75rem; border-radius: 16px; background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: all 0.3s ease; cursor: default; overflow: hidden;
-        }
-        .skill-item::before {
-            content: ''; position: absolute; inset: 0; border-radius: inherit;
-            background: linear-gradient(var(--lg-sheen-angle), rgba(255,255,255,0.06), transparent 60%);
-            z-index: 0; pointer-events: none; transition: transform 0.4s ease;
-        }
-        .skill-item::after {
-            content: ''; position: absolute; inset: 0; border-radius: inherit;
-            box-shadow: inset 1px 0 rgba(255,255,255,0.08), inset -1px 0 rgba(255,255,255,0.04), inset 0 1px rgba(255,255,255,0.1);
-            mix-blend-mode: screen; z-index: 2; pointer-events: none; opacity: 0.5;
-        }
-        .skill-item:hover {
-            transform: translateY(-4px); border-color: rgba(255,255,255,0.12);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08); --lg-opacity: 0.15;
-        }
-        .skill-item:hover::before { transform: scale(1.05); }
-        .skill-item .icon {
-            width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
-            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
-            position: relative; z-index: 1; overflow: hidden; backdrop-filter: blur(4px);
-        }
-        .skill-item .icon svg { width: 22px; height: 22px; stroke: rgba(255,255,255,0.7); stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-        .skill-item h3 { font-size: 0.82rem; font-weight: 700; color: var(--text); text-align: center; letter-spacing: -0.2px; position: relative; z-index: 1; }
-        .skill-item p { font-size: 0.68rem; color: var(--text-dim); text-align: center; line-height: 1.4; max-width: 90px; position: relative; z-index: 1; }
+    /* Footer */
+    .footer { background: var(--ink-black); padding: var(--gap-l) var(--gap-l); }
+    .footer-inner { max-width: var(--size-container); margin: 0 auto; }
+    .footer-top { position: relative; padding: var(--gap-l) 0; border-top: 1px solid rgba(226,225,225,0.08); }
+    .footer-bracket { position: absolute; top: 0; left: 0; width: 50px; height: 1px; background: var(--dark-blue); }
+    .footer-bracket.r { left: auto; right: 0; }
+    .footer-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap-xl); max-width: 1100px; margin: 0 auto; }
+    .footer-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dark-blue); margin: 0 0 var(--gap-s); }
+    .footer-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--gap-xs); }
+    .footer-list li { list-style: none; }
+    .footer-link { font-size: 0.88rem; color: var(--light-silver); opacity: 0.55; transition: opacity 0.3s ease; display: inline-block; position: relative; }
+    .footer-link:hover { opacity: 1; }
+    .footer-link::before {
+      content: ""; position: absolute; left: 0; bottom: -0.0625em;
+      width: 100%; height: 0.0625em; background: currentColor;
+      transform: scaleX(0); transform-origin: right;
+      transition: transform 0.735s cubic-bezier(0.625,0.05,0,1);
+    }
+    .footer-link:hover::before { transform: scaleX(1); transform-origin: left; }
+    .footer-copy { display: flex; justify-content: space-between; align-items: center; padding: var(--gap-s) 0; border-top: 1px solid rgba(226,225,225,0.05); max-width: 1100px; margin: 0 auto; flex-wrap: wrap; gap: var(--gap-s); }
+    .footer-copy-left { display: flex; flex-direction: column; gap: 0.2rem; }
+    .footer-copy-label { font-size: 0.75rem; color: var(--light-silver); opacity: 0.35; margin: 0; }
+    .footer-copy-label strong { font-weight: 600; color: var(--light-silver); opacity: 0.55; }
+    .footer-copy a { display: block; }
 
-        .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
-        .service-item {
-            position: relative; display: flex; align-items: flex-start; gap: 1rem; padding: 1.25rem;
-            border-radius: 16px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2), inset 1px 0 rgba(255,86,116,0.08), inset -1px 0 rgba(54,226,255,0.06), inset 0 1px rgba(255,255,255,0.15);
-            transition: all 0.3s ease; overflow: hidden;
-        }
-        .service-item::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            border-radius: inherit;
-            backdrop-filter: var(--lg-filter) blur(7px) saturate(160%);
-            -webkit-backdrop-filter: var(--lg-filter) blur(7px) saturate(160%);
-            pointer-events: none;
-        }
-        .service-item::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            border-radius: inherit;
-            background: rgba(255,255,255,0.03);
-            pointer-events: none;
-        }
-        .service-item:hover {
-            transform: translateY(-2px); border-color: rgba(255,255,255,0.12);
-            box-shadow: 0 10px 28px rgba(0,0,0,0.4), inset 1px 0 rgba(255,86,116,0.12), inset -1px 0 rgba(54,226,255,0.1), inset 0 1px rgba(255,255,255,0.2); --lg-opacity: 0.12;
-        }
-        .service-item .icon {
-            width: 42px; height: 42px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-            flex-shrink: 0; position: relative; z-index: 1; backdrop-filter: blur(4px);
-        }
-        .service-item h4 { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 0.25rem; letter-spacing: -0.2px; position: relative; z-index: 1; }
-        .service-item p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; position: relative; z-index: 1; }
-
-        .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-        .project-card {
-            position: relative; border-radius: 20px; overflow: hidden; background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.06); box-shadow: 0 4px 16px rgba(0,0,0,0.3), inset 1px 0 rgba(255,86,116,0.1), inset -1px 0 rgba(54,226,255,0.08), inset 0 1px rgba(255,255,255,0.15);
-            transition: all 0.4s ease; isolation: isolate;
-        }
-        .project-card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            border-radius: inherit;
-            backdrop-filter: var(--lg-filter) blur(10px) saturate(180%);
-            -webkit-backdrop-filter: var(--lg-filter) blur(10px) saturate(180%);
-            pointer-events: none;
-        }
-        .project-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            border-radius: inherit;
-            background: rgba(255,255,255,0.04);
-            pointer-events: none;
-            animation: glass-sheen 7s ease-in-out infinite;
-        }
-        .project-card:hover {
-            transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1), inset 1px 0 rgba(255,86,116,0.15), inset -1px 0 rgba(54,226,255,0.12), inset 0 1px rgba(255,255,255,0.25);
-            border-color: rgba(255,255,255,0.12);
-        }
-        .project-card:hover::before { transform: scale(1.03); --lg-opacity: 0.1; }
-        .project-card .preview { position: relative; width: 100%; height: 200px; overflow: hidden; border-radius: 20px 20px 0 0; background: #111; }
-        .project-card .preview img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; filter: brightness(0.85) saturate(1.1); }
-        .project-card:hover .preview img { transform: scale(1.05); filter: brightness(1) saturate(1.2); }
-        .project-card .preview .overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%); z-index: 1; }
-        .project-card .preview .badge {
-            position: absolute; top: 12px; left: 12px; background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: var(--text);
-            padding: 0.25rem 0.7rem; border-radius: 6px; font-size: 0.65rem; font-weight: 600;
-            letter-spacing: 0.5px; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.1); z-index: 2;
-        }
-        .project-card .preview .live-badge {
-            position: absolute; bottom: 12px; right: 12px; font-size: 0.65rem; color: var(--text-muted);
-            display: flex; align-items: center; gap: 0.35rem; background: rgba(255,255,255,0.06);
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 0.2rem 0.5rem;
-            border-radius: 4px; border: 1px solid rgba(255,255,255,0.08); z-index: 2;
-        }
-        .project-card .preview .live-badge::before { content: ''; width: 4px; height: 4px; background: #4ade80; border-radius: 50%; box-shadow: 0 0 6px #4ade80; }
-        .project-card .body { padding: 1.25rem; position: relative; z-index: 4; }
-        .project-card .body .category { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); font-weight: 700; margin-bottom: 0.4rem; }
-        .project-card .body h3 { font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 0.4rem; letter-spacing: -0.3px; line-height: 1.3; }
-        .project-card .body p { font-size: 0.84rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.6; }
-        .project-card .body .tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.85rem; }
-        .project-card .body .tags span { padding: 0.15rem 0.5rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 4px; font-size: 0.65rem; color: var(--text-dim); font-weight: 600; letter-spacing: -0.2px; }
-        .project-card .body .meta { display: flex; gap: 1.25rem; font-size: 0.72rem; color: var(--text-dim); border-top: 1px solid rgba(255,255,255,0.04); padding-top: 0.75rem; }
-        .project-card .body .meta strong { color: var(--text-muted); font-weight: 600; }
-
-        .about-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 4rem; align-items: start; }
-        .about-text p { color: var(--text-muted); margin-bottom: 1rem; font-size: 1.05rem; line-height: 1.7; }
-        .about-text p strong { color: var(--text); }
-        .about-text .highlight { padding: 0.12rem 0.45rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; color: var(--text); font-weight: 600; display: inline-block; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-        .stat-card {
-            position: relative; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 16px; padding: 1.6rem; text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2), inset 1px 0 rgba(255,86,116,0.08), inset -1px 0 rgba(54,226,255,0.06), inset 0 1px rgba(255,255,255,0.12);
-            transition: all 0.3s ease; overflow: hidden;
-        }
-        .stat-card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            border-radius: inherit;
-            backdrop-filter: var(--lg-filter) blur(7px) saturate(160%);
-            -webkit-backdrop-filter: var(--lg-filter) blur(7px) saturate(160%);
-            pointer-events: none;
-        }
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            border-radius: inherit;
-            background: rgba(255,255,255,0.03);
-            pointer-events: none;
-        }
-        .stat-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.12); box-shadow: 0 8px 24px rgba(0,0,0,0.4), inset 1px 0 rgba(255,86,116,0.12), inset -1px 0 rgba(54,226,255,0.1), inset 0 1px rgba(255,255,255,0.2); --lg-opacity: 0.1; }
-        .stat-card .number { font-size: 2.2rem; font-weight: 800; color: var(--text); letter-spacing: -2px; line-height: 1; position: relative; z-index: 1; }
-        .stat-card .label { font-size: 0.72rem; color: var(--text-dim); margin-top: 0.4rem; font-weight: 500; position: relative; z-index: 1; }
-
-        .work-history { display: flex; flex-direction: column; gap: 0.75rem; }
-        .work-item {
-            display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; border-radius: 14px;
-            background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2), inset 1px 0 rgba(255,86,116,0.08), inset -1px 0 rgba(54,226,255,0.06), inset 0 1px rgba(255,255,255,0.12);
-            transition: all 0.3s ease; position: relative; overflow: hidden;
-        }
-        .work-item::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            border-radius: inherit;
-            backdrop-filter: var(--lg-filter) blur(7px) saturate(160%);
-            -webkit-backdrop-filter: var(--lg-filter) blur(7px) saturate(160%);
-            pointer-events: none;
-        }
-        .work-item::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            border-radius: inherit;
-            background: rgba(255,255,255,0.03);
-            pointer-events: none;
-        }
-        .work-item:hover { transform: translateX(4px); border-color: rgba(255,255,255,0.1); box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 1px 0 rgba(255,86,116,0.12), inset -1px 0 rgba(54,226,255,0.1), inset 0 1px rgba(255,255,255,0.2); --lg-opacity: 0.1; }
-        .work-item .year { font-size: 0.72rem; color: var(--text-dim); font-weight: 600; padding: 0.2rem 0.6rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; flex-shrink: 0; letter-spacing: 0.3px; }
-        .work-item .info { position: relative; z-index: 1; }
-        .work-item .info .role { font-size: 0.95rem; font-weight: 700; color: var(--text); letter-spacing: -0.2px; }
-        .work-item .info .company { font-size: 0.82rem; color: var(--text-muted); }
-        .work-item .info .company .badge { color: #888; font-weight: 600; border: 1px solid rgba(255,255,255,0.08); padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.75rem; margin-left: 0.3rem; letter-spacing: 0.3px; }
-
-        .contact-section {
-            position: relative; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 24px; padding: 2.5rem; text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3), inset 1px 0 rgba(255,86,116,0.1), inset -1px 0 rgba(54,226,255,0.08), inset 0 1px rgba(255,255,255,0.15);
-            overflow: hidden;
-        }
-        .contact-section::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            border-radius: inherit;
-            backdrop-filter: var(--lg-filter) blur(10px) saturate(200%);
-            -webkit-backdrop-filter: var(--lg-filter) blur(10px) saturate(200%);
-            pointer-events: none;
-        }
-        .contact-section::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            border-radius: inherit;
-            background: rgba(255,255,255,0.04);
-            pointer-events: none;
-            animation: glass-sheen 8s ease-in-out infinite;
-        }
-        .contact-section h2 { font-size: 1.7rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; letter-spacing: -0.5px; position: relative; z-index: 1; }
-        .contact-section p { color: var(--text-muted); margin-bottom: 2rem; position: relative; z-index: 1; }
-        .contact-links { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-bottom: 2rem; }
-        .contact-link {
-            display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.65rem 1.3rem;
-            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 100px;
-            font-weight: 500; font-size: 0.82rem; color: var(--text-muted); transition: all 0.2s ease;
-            backdrop-filter: blur(4px); position: relative; z-index: 1;
-        }
-        .contact-link:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); color: var(--text); transform: translateY(-1px); }
-        .contact-form { max-width: 480px; margin: 0 auto; text-align: left; position: relative; z-index: 1; }
-        .contact-form input, .contact-form textarea {
-            width: 100%; padding: 0.8rem 1rem; border: 1px solid rgba(255,255,255,0.06); border-radius: 10px;
-            font-family: inherit; font-size: 0.88rem; margin-bottom: 0.65rem; background: rgba(255,255,255,0.02);
-            color: var(--text); transition: all 0.2s ease; backdrop-filter: blur(4px);
-        }
-        .contact-form input::placeholder, .contact-form textarea::placeholder { color: var(--text-dim); }
-        .contact-form input:focus, .contact-form textarea:focus {
-            outline: none; border-color: rgba(255,255,255,0.15); background: rgba(255,255,255,0.04);
-            box-shadow: 0 0 0 3px rgba(255,255,255,0.03);
-        }
-        .contact-form textarea { resize: vertical; min-height: 100px; }
-
-        footer { text-align: center; padding: 2.5rem 2rem; color: var(--text-dim); font-size: 0.75rem; border-top: 1px solid rgba(255,255,255,0.04); margin-top: 1rem; background: var(--bg); }
-
-        .fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22,1,0.36,1); }
-        .fade-up.visible { opacity: 1; transform: translateY(0); }
-
-        .scroll-progress { position: fixed; top: 64px; left: 0; height: 2px; background: rgba(255,255,255,0.15); z-index: 200; transition: width 0.1s linear; border-radius: 2px; }
-
-        @media (max-width: 960px) {
-            .skills-grid { grid-template-columns: repeat(3, 1fr); }
-            .services-grid { grid-template-columns: 1fr; }
-            .projects-grid { grid-template-columns: 1fr; }
-            .about-grid { grid-template-columns: 1fr; gap: 2rem; }
-        }
-        @media (max-width: 640px) {
-            nav { padding: 0 1.25rem; }
-            nav ul { gap: 1.25rem; }
-            nav ul a { font-size: 0.8rem; }
-            .skills-grid { grid-template-columns: repeat(2, 1fr); }
-            section { padding: 4rem 1.25rem; }
-            .contact-section { padding: 1.75rem 1.25rem; }
-            .hero { padding: 8rem 1.25rem 4rem; }
-            .hero h1 { font-size: clamp(2.2rem, 12vw, 3.5rem); letter-spacing: -2px; }
-            .hero-sub { font-size: 0.95rem; }
-            .section-title { font-size: 2rem; }
-        }
-
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
-
-        /* ── Keyframes ── */
-        @keyframes glass-sheen {
-            0%   { --lg-sheen-angle: 135deg; }
-            50%  { --lg-sheen-angle: 225deg; }
-            100% { --lg-sheen-angle: 135deg; }
-        }
-        @keyframes shimmer { 0%,100% { left: -60%; } 50% { left: 130%; } }
-
-        /* ── Hide refraction sprite when backdrop-filter with SVG URL is supported ── */
-        @supports (backdrop-filter: url("#liquid-glass-filter")) or (-webkit-backdrop-filter: url("#liquid-glass-filter")) {
-            .liquid-glass:not(.liquid-glass--simple) .liquid-glass__refraction {
-                display: none;
-            }
-        }
-    </style>
-    <script src="/liquid-glass-real.js" defer></script>
-    <svg class="svg-filters" xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0">
-        <defs>
-            <filter id="liquid-glass-filter" x="-100%" y="-100%" width="300%" height="300%" color-interpolation-filters="sRGB">
-                <feTurbulence type="fractalNoise" baseFrequency="0.012 0.008" numOctaves="2" seed="42" result="noise">
-                    <animate attributeName="seed" from="42" to="87" dur="10s" repeatCount="indefinite"/>
-                </feTurbulence>
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="55" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
-                <feGaussianBlur in="displaced" stdDeviation="0.6" result="blurred"/>
-                <feColorMatrix in="blurred" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.82 0" result="clean"/>
-            </filter>
-            <filter id="liquid-glass-heavy" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
-                <feTurbulence type="fractalNoise" baseFrequency="0.015 0.01" numOctaves="2" seed="55" result="noise">
-                    <animate attributeName="seed" from="55" to="99" dur="8s" repeatCount="indefinite"/>
-                </feTurbulence>
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="65" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
-                <feGaussianBlur in="displaced" stdDeviation="0.7" result="blurred"/>
-                <feColorMatrix in="blurred" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.8 0" result="clean"/>
-                <feComposite in="clean" in2="SourceGraphic" operator="in"/>
-            </filter>
-            <filter id="liquid-glass-light" x="-30%" y="-30%" width="160%" height="160%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.02 0.015" numOctaves="1" seed="71" result="noise">
-                    <animate attributeName="seed" from="71" to="123" dur="6s" repeatCount="indefinite"/>
-                </feTurbulence>
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="30" xChannelSelector="R" yChannelSelector="B" result="displaced"/>
-                <feGaussianBlur in="displaced" stdDeviation="0.4"/>
-            </filter>
-        </defs>
-    </svg>
+    /* Responsive */
+    @media (max-width: 900px) {
+      .service-item { grid-template-columns: 1fr; gap: var(--gap-s); }
+      .service-visual { flex-direction: row; align-items: center; gap: var(--gap-l); }
+      .service-desc { max-width: none; flex: 1; }
+      .service-image-wrap { flex: 1; aspect-ratio: auto; height: 160px; }
+      .portfolio-orbit__info-side { padding-right: 0; margin-bottom: var(--gap-l); }
+      .portfolio-orbit__info-side .portfolio-orbit__items { flex-direction: row; flex-wrap: wrap; }
+      .portfolio-orbit__info-side .portfolio-orbit__item { flex: 1 1 calc(50% - var(--gap-s)); min-width: 200px; }
+      .portfolio-orbit__info-side .portfolio-orbit__item p { max-width: none; }
+      .footer-cols { grid-template-columns: 1fr; gap: var(--gap-l); }
+    }
+    @media (max-width: 600px) {
+      :root { --size-container-ideal: 550; --size-container-min: 320px; --size-container-max: 600px; }
+      .brand svg { width: 100px; }
+      .nav-buttons { gap: var(--gap-xs); }
+      .button-007__text { font-size: 0.65rem; }
+      section { padding: var(--gap-l) var(--gap-s); }
+      .about-head h1 { font-size: 2.5em; }
+      .section-head h2 { font-size: 2rem; }
+      .services-head .section-head h2 { font-size: 2rem; }
+      .certification .section-head h2 { font-size: 2rem; }
+      .contact-heading { font-size: 2rem; }
+      .services-big { font-size: 1.6em; }
+      .portfolio-orbit__info-side .portfolio-orbit__item { flex: 1 1 100%; }
+      .portfolio-orbit__collection { aspect-ratio: 4/3; }
+    }
+    @keyframes globe {
+      from { transform: translate(-50%,-50%) rotate(0deg); }
+      to { transform: translate(-50%,-50%) rotate(360deg); }
+    }
+    @keyframes shimmer {
+      from { background-position: 200% 0%; }
+      to { background-position: -200% 0%; }
+    }
+  </style>
 </head>
 <body>
-<div class="bg-scene">
-    <div class="bg-orb bg-orb-1"></div>
-    <div class="bg-orb bg-orb-2"></div>
-    <div class="bg-orb bg-orb-3"></div>
-</div>
-<div class="scroll-progress" id="scrollProgress"></div>
+  <div class="global-css w-embed"></div>
+  <div class="animations-css w-embed"></div>
+  <div class="buttons-css w-embed"></div>
 
-<nav>
-    <div class="logo">Rabiu<span>.</span></div>
-    <ul>
-        <li><a href="#services">Services</a></li>
-        <li><a href="#works">Work</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
-    </ul>
-</nav>
-
-<section class="hero" id="home">
-    <div class="hero-orb hero-orb-1"></div>
-    <div class="hero-orb hero-orb-2"></div>
-    <p class="hero-label fade-up">Freelance Designer & Developer</p>
-    <h1 class="fade-up" style="transition-delay:0.1s">
-        I build things<br>
-        that <span class="accent">look good</span><br>
-        and <span class="accent">work well</span>
-    </h1>
-    <p class="hero-sub fade-up" style="transition-delay:0.2s">
-        Hi, I'm <strong>Rabiu Farouk</strong> — freelance designer & developer helping businesses stand out with clean websites, eye-catching designs, and polished visuals.
-    </p>
-    <div class="tags fade-up" style="transition-delay:0.3s">
-        <span>Web Development</span><span>Video Editing</span><span>Photo Editing</span>
-        <span>Flyer Design</span><span>Graphic Design</span><span>Brand Identity</span>
+  <!-- Page transition -->
+  <div class="transition">
+    <div class="transition__shape">
+      <svg viewBox="0 0 3222 3114" fill="none" preserveAspectRatio="none" class="transition__svg">
+        <path d="M299.654 453.865C505.574 319.225 711.494 184.585 836.054 109.945C960.614 35.305 997.574 24.745 944.014 110.385C890.454 196.025 745.254 378.185 571.454 634.385C397.654 890.585 199.654 1215.3 110.854 1382.58C22.054 1549.86 48.454 1549.86 77.894 1540.62C107.334 1531.38 139.014 1512.9 367.854 1319.9C596.694 1126.9 1021.73 759.945 1255.21 555.065C1488.69 350.185 1517.73 318.505 1527.41 306.145C1537.09 293.785 1526.53 301.705 1346.85 618.625C1167.17 935.545 818.694 1561.22 635.214 1896.74C451.734 2232.26 443.814 2258.66 447.654 2268.3C451.494 2277.94 467.334 2270.02 511.134 2236.9C554.934 2203.78 626.214 2145.7 966.534 1817.46C1306.85 1489.22 1914.05 892.585 2263.81 557.505C2613.57 222.425 2687.49 166.985 2741.41 129.185C2795.33 91.385 2827.01 72.905 2843.33 67.345C2859.65 61.785 2859.65 69.705 2849.09 96.225C2838.53 122.745 2817.41 167.625 2584.77 544.505C2352.13 921.385 1370.37 2165.43 1139.25 2537.83C908.134 2910.23 902.854 2926.07 902.774 2939.51C902.694 2952.95 907.974 2963.51 1255.21 2613.87C1602.45 2264.23 2829.73 1017.54 2903.53 1071.46C2977.33 1125.38 2176.12 2817.04 2128 3037C2079.88 3256.96 2911.24 2018.56 3172 1793" stroke="currentColor" stroke-width="80%" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
     </div>
-    <div class="fade-up" style="transition-delay:0.4s">
-        <div class="btn-group">
-            <button class="lg-btn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
-                <span class="btn-shimmer"></span>Start a Project
+    <div class="transition__signature">
+      <svg viewBox="0 0 608 313" fill="none">
+        <path d="M177.454 226.203C179.555 207.266 180.112 189.376 178.529 172.591C176.86 154.905 171.645 139.517 165.565 126.277C158.811 111.569 146.753 97.879 132.731 86.733C120.12 76.709 105.355 77.898 92.408 80.906C73.9 85.206 56.573 99.852 42.273 114.551C29.558 127.62 22.052 145.724 14.11 167.906C4.225 195.512 3.446 221.316 4.226 240.883C5.188 265.03 17.707 284.718 31.187 296.924C45.57 309.947 68.064 310.309 96.578 307.419C115.327 305.519 141.898 296.641 195.352 273.15C248.805 249.66 328.114 210.268 379.212 184.332C430.31 158.397 450.794 147.11 466.861 138.531C482.928 129.951 493.958 124.42 505.322 118.721" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M320.698 210.268C323.849 182.961 323.897 161.807 319.409 147.126C309.321 114.129 287.832 102.354 282.802 99.295C280.593 97.951 278.298 98.601 276.953 100.311C273.733 104.405 277.693 116.031 285.357 132.814C294.578 153.008 308.952 172.775 323.507 189.876C330.709 197.507 337.537 203.012 342.105 206.501C346.673 209.99 348.774 211.297 350.938 212.643" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M362.078 180.035C365.755 183.447 369.431 186.859 371.325 184.412C385.538 166.047 370.577 151.954 368.198 149.029C367.117 147.701 365.293 147.688 364.219 149.13C361.313 153.029 362.603 158.799 364.187 163.017C365.105 165.461 366.821 168.293 368.683 170.043C375.327 176.29 384.87 171.283 388.578 169.298C391.968 167.484 392.318 159.909 393.369 153.93C394.028 150.177 400.786 159.58 404.494 158.817C408.713 157.948 408.234 150.898 409.285 148.761C409.748 147.818 412.436 150.834 414.831 151.128C417.227 151.421 419.853 149.839 421.206 144.819C424.718 131.787 420.983 119.586 418.858 116.792C418.466 116.276 418.834 121.059 429.084 145.405C439.334 169.751 459.292 214.401 469.837 238.194C480.381 261.988 480.906 263.572 481.447 265.204" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M468.716 129.104C467.665 120.187 467.124 113.749 467.649 112.007C468.432 109.411 472.408 117.417 476.379 117.944C478.3 118.199 479.825 115.356 479.849 112.709C479.873 110.061 478.297 106.91 478.273 106.202C478.034 99.119 490.982 112.683 494.157 112.419C497.817 112.113 500.006 106.847 501.598 101.16C503.63 93.9 501.614 84.856 499.242 74.419C496.086 60.526 482.594 40.36 469.599 21.257C465.362 15.028 464.482 16.869 477.867 44.867C491.253 72.865 518.564 127.23 533.947 159.564C549.33 191.898 551.956 200.554 553.309 206.983C554.662 213.412 554.662 217.351 554.662 221.41" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M406.643 236.549C405.592 237.045 420.808 228.381 456.236 206.854C476.204 194.721 499.018 178.226 519.852 162.362C540.686 146.498 558.544 131.277 569.844 121.068C581.145 110.859 585.346 106.124 588.561 102.901C591.776 99.678 593.877 98.11 596.042 96.495" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M565.802 133.07C564.751 122.057 562.635 103.253 553.945 72.981C542.157 31.919 519.136 11.073 515.165 6.305C513.347 4.121 511.72 2.594 514.059 5.99C516.399 9.386 522.702 17.798 534.877 37.883C547.053 57.968 564.911 89.471 576.211 110.566C591.713 141.391 598.143 158.233 601.589 170.004C602.934 174.959 603.459 177.848 604 180.824" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+    </div>
+  </div>
+
+  <main class="main-wrapper">
+    <!-- Header -->
+    <header class="header" id="header">
+      <div class="navbar-inner">
+        <div class="brand">
+          <!-- Rabiu Farouk SVG wordmark -->
+          <svg viewBox="0 0 1376 165" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M107.404 138.328H90.057L87.187 123.847L81.641 110.559H24.086L18.379 123.847L15.509 138.328H0L44.593 33.768L41.046 26.511H60.07L107.372 138.328H107.404ZM77.449 100.755L52.88 42.314L28.149 100.755H77.482H77.449Z" fill="currentColor"></path>
+            <path d="M202.652 124.847L200.62 138.328H125.88L128.233 123.008V41.831L125.88 26.511H143.549L141.356 41.831V128.362H187.143L202.62 124.814L202.652 124.847Z" fill="currentColor"></path>
+            <path d="M308.217 125.169L306.186 138.296H224.223L226.576 122.976V41.831L224.223 26.511H305.541L307.572 39.637L292.096 36.09H239.571V76.179H278.972L292.257 74.502V87.306L278.972 85.628H239.571V128.717H292.773L308.25 125.169H308.217Z" fill="currentColor"></path>
+            <path d="M323.663 131.426V115.268L340.171 128.072C343.202 129.265 346.556 129.942 349.587 129.942C362.871 129.942 370.126 122.363 370.126 107.882V41.831L367.772 26.511H385.442L383.249 41.831L383.088 105.979C383.088 127.04 371.319 139.811 350.586 139.811C341.171 139.811 333.4 137.296 323.663 131.394V131.426Z" fill="currentColor"></path>
+            <path d="M507 138.328H489.653L486.783 123.847L481.237 110.559H423.65L417.943 123.847L415.073 138.328H399.596L444.189 33.768L440.643 26.511H459.666L506.968 138.328H507ZM477.013 100.755L452.444 42.314L427.713 100.755H477.046H477.013Z" fill="currentColor"></path>
+            <path d="M625.657 26.511L623.303 41.831V138.328H605.118L539.115 37.122V123.008L541.308 138.328H525.476L527.83 123.008V41.831L525.476 26.511H546.338L611.986 127.362V41.831L609.793 26.511H625.625H625.657Z" fill="currentColor"></path>
+            <path d="M656.964 123.008V41.831L654.611 26.511H696.012C735.059 26.511 754.76 44.185 754.76 82.242C754.76 120.299 735.059 138.328 696.012 138.328H654.611L656.964 123.008ZM696.495 128.556C725.966 128.556 741.088 114.591 741.088 82.242C741.088 49.894 726.095 36.283 696.657 36.283H669.894V128.556H696.495Z" fill="currentColor"></path>
+            <path d="M875.772 138.328H855.071L850.364 126.201L822.924 91.853H795.84V123.008L798.709 138.328H780.363L782.716 123.008V41.831L780.363 26.511H830.179C856.103 26.511 868.742 38.122 868.742 58.827C868.742 76.179 857.457 87.628 836.757 89.982L875.804 138.296L875.772 138.328ZM826.116 81.92C844.302 81.92 855.587 73.824 855.587 58.86C855.587 43.895 846.656 35.8 828.47 35.8H795.485V81.92H826.116Z" fill="currentColor"></path>
+            <path d="M893.763 82.242C893.763 45.378 916.14 23.479 949.319 23.479C982.498 23.479 1004.87 45.378 1004.87 82.242C1004.87 119.106 982.143 141.521 949.319 141.521C916.495 141.521 893.763 119.138 893.763 82.242ZM991.075 82.242C991.075 50.926 973.728 33.574 949.319 33.574C924.911 33.574 907.563 50.926 907.563 82.242C907.563 113.558 924.749 131.232 949.158 131.232C973.566 131.232 991.075 113.72 991.075 82.242Z" fill="currentColor"></path>
+            <path d="M1079.17 156.679C1085.58 158.13 1091.16 156.679 1097.38 157.389C1098.09 159.549 1097.8 162.065 1098.29 164.807L1070.27 164.968L1070.33 0.065H1097.54C1098 2.774 1098.22 5.096 1097.29 7.095L1079.23 7.482V156.679H1079.17Z" fill="currentColor"></path>
+            <path d="M1120.86 123.169V41.863L1118.5 26.511H1136.2L1134.01 41.863V76.114H1200.43V41.863L1198.24 26.511H1215.94L1213.59 41.863V123.169L1215.94 138.521H1198.24L1200.43 123.169V86.048H1134.01V123.169L1136.2 138.521H1118.5L1120.86 123.169Z" fill="currentColor"></path>
+            <path d="M1342.08 138.521H1324.7L1321.83 124.008L1316.25 110.688H1258.57L1252.83 124.008L1249.96 138.521H1234.45L1279.14 33.768L1275.59 26.511H1294.65L1342.05 138.521H1342.08ZM1312.06 100.884L1287.43 42.347L1262.63 100.884H1312.03H1312.06Z" fill="currentColor"></path>
+            <path d="M1349.5 157.518L1367.07 156.937V7.515L1349.27 6.87C1349.11 4.58 1348.53 1.129 1349.98 0.194L1376.03 0L1375.9 164.839L1349.66 165C1348.75 162.71 1348.91 160.42 1349.53 157.55L1349.5 157.518Z" fill="currentColor"></path>
+          </svg>
+        </div>
+        <div class="nav-buttons">
+          <!-- CTA: Quote -->
+          <a href="https://wa.me/2348123456789" target="_blank" class="button-007 w-inline-block">
+            <span class="button-007__inner">
+              <span class="button-007__text is--hover">
+                <svg class="button-007__svg" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+                  <mask id="bm1" maskunits="userSpaceOnUse" style="mask-type:alpha">
+                    <svg viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+                      <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
+                    </svg>
+                  </mask>
+                  <foreignObject width="100%" height="100%" mask="url(#bm1)" class="button-007__svg-object">
+                    <div class="button-007__svg-inner">
+                      <div class="button-007__svg-text-wrap"><span class="button-007__svg-text">Cotiza aquí</span></div>
+                    </div>
+                  </foreignObject>
+                </svg>
+              </span>
+              <svg class="button-007__svg-overlay" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+                <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
+              </svg>
+              <span class="button-007__text is--default">Cotiza aquí</span>
+            </span>
+            <span class="button-007__bg"></span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+      <div class="hero-bg">
+        <img src="https://picsum.photos/seed/rabiu-portrait/1600/900" alt="Portrait" loading="eager" fetchpriority="high">
+      </div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="partner-wrap">
+          <span>Webflow partner</span>
+          <div class="partner-dot"></div>
+          <span>Shopify partner</span>
+        </div>
+        <div class="locate-wrap">
+          <div class="hero-label">Nigeria, <span class="block-span">trabajando globalmente.</span></div>
+          <a href="#" class="language-switch">
+            <div class="language-switch__tooltip">
+              <div class="language-switch__tooltip-inner">
+                <span class="language-switch__tooltip-text">Switch Language</span>
+              </div>
+              <div class="language-switch__tooltip-tip"></div>
+            </div>
+            <div class="rotating-globe">
+              <div class="globe">
+                <div class="globe-wrap">
+                  <div class="circle"></div>
+                  <div class="circle"></div>
+                  <div class="circle-hor"></div>
+                  <div class="circle-hor-middle"></div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="about">
+      <div class="about-head">
+        <div class="big-label">Sobre mí</div>
+        <h1>Creative Web Development</h1>
+        <p>Modern, functional, custom-built sites with animations that make a difference.</p>
+      </div>
+      <div class="about-body">
+        <div class="bracket-heading">
+          <span class="bracket-left">[</span>About<span class="bracket-right">]</span>
+        </div>
+        <p>I'm Rabiu — a freelance web developer specializing in building sites that not only look good but feel right. I focus on Webflow, Shopify, and custom code to create digital experiences that reflect each brand's identity.</p>
+        <p>Every site I build is 100% custom — no generic templates, no prefabricated solutions. I work with clients worldwide, from early-stage startups to established brands, and give every detail the same level of attention regardless of project size.</p>
+        <a href="https://wa.me/2348123456789" target="_blank" class="button-007 w-inline-block">
+          <span class="button-007__inner">
+            <span class="button-007__text is--hover">
+              <svg class="button-007__svg" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+                <mask id="bm2" maskunits="userSpaceOnUse" style="mask-type:alpha">
+                  <svg viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+                    <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
+                  </svg>
+                </mask>
+                <foreignObject width="100%" height="100%" mask="url(#bm2)" class="button-007__svg-object">
+                  <div class="button-007__svg-inner">
+                    <div class="button-007__svg-text-wrap"><span class="button-007__svg-text">Cotiza aquí</span></div>
+                  </div>
+                </foreignObject>
+              </svg>
+            </span>
+            <svg class="button-007__svg-overlay" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+              <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
+            </svg>
+            <span class="button-007__text is--default">Cotiza aquí</span>
+          </span>
+          <span class="button-007__bg"></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Services transition -->
+    <div class="scroll-draw">
+      <div class="scroll-draw__overlay">
+        <div class="scroll-draw__shape">
+          <svg viewBox="0 0 3222 3114" fill="none" preserveAspectRatio="none">
+            <path d="M299.654 453.865C505.574 319.225 711.494 184.585 836.054 109.945C960.614 35.305 997.574 24.745 944.014 110.385C890.454 196.025 745.254 378.185 571.454 634.385C397.654 890.585 199.654 1215.3 110.854 1382.58C22.054 1549.86 48.454 1549.86 77.894 1540.62C107.334 1531.38 139.014 1512.9 367.854 1319.9C596.694 1126.9 1021.73 759.945 1255.21 555.065C1488.69 350.185 1517.73 318.505 1527.41 306.145C1537.09 293.785 1526.53 301.705 1346.85 618.625C1167.17 935.545 818.694 1561.22 635.214 1896.74C451.734 2232.26 443.814 2258.66 447.654 2268.3C451.494 2277.94 467.334 2270.02 511.134 2236.9C554.934 2203.78 626.214 2145.7 966.534 1817.46C1306.85 1489.22 1914.05 892.585 2263.81 557.505C2613.57 222.425 2687.49 166.985 2741.41 129.185C2795.33 91.385 2827.01 72.905 2843.33 67.345C2859.65 61.785 2859.65 69.705 2849.09 96.225C2838.53 122.745 2817.41 167.625 2584.77 544.505C2352.13 921.385 1370.37 2165.43 1139.25 2537.83C908.134 2910.23 902.854 2926.07 902.774 2939.51C902.694 2952.95 907.974 2963.51 1255.21 2613.87C1602.45 2264.23 2829.73 1017.54 2903.53 1071.46C2977.33 1125.38 2176.12 2817.04 2128 3037C2079.88 3256.96 2911.24 2018.56 3172 1793" stroke="currentColor" stroke-width="0" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Services -->
+    <section id="services" class="services">
+      <div class="services-head">
+        <p class="services-big">Small details. <span>Big impact.</span></p>
+        <div class="section-head" style="margin-top:0.5rem;">
+          <div class="bracket-heading">
+            <span class="bracket-left">[</span>Services<span class="bracket-right">]</span>
+          </div>
+        </div>
+      </div>
+      <div class="services-sticky">
+        <div class="services-list">
+          <!-- Service 01 -->
+          <div class="service-item">
+            <div class="service-row">
+              <div class="service-num">[01]</div>
+              <h3 class="service-title">Webflow Development</h3>
+            </div>
+            <div class="service-visual">
+              <div class="service-desc">
+                <p>Webflow sites built for design freedom and advanced animations, with simple content structures you can manage yourself — update whenever you want, no developer needed.</p>
+              </div>
+              <div class="service-image-wrap">
+                <img class="service-image" src="https://picsum.photos/seed/srv-webflow/800/600" alt="Webflow project" loading="lazy">
+              </div>
+            </div>
+          </div>
+          <!-- Service 02 -->
+          <div class="service-item">
+            <div class="service-row">
+              <div class="service-num">[02]</div>
+              <h3 class="service-title">Shopify / Ecommerce</h3>
+            </div>
+            <div class="service-visual">
+              <div class="service-desc">
+                <p>Shopify is the ecommerce platform of choice for brands worldwide — and I customize it deeply to create a shopping experience that never feels generic.</p>
+              </div>
+              <div class="service-image-wrap">
+                <img class="service-image" https://picsum.photos/seed/srv-shopify/800/600" alt="Shopify project" loading="lazy">
+              </div>
+            </div>
+          </div>
+          <!-- Service 03 -->
+          <div class="service-item">
+            <div class="service-row">
+              <div class="service-num">[03]</div>
+              <h3 class="service-title">Animations & Micro-interactions</h3>
+            </div>
+            <div class="service-visual">
+              <div class="service-desc">
+                <p>Motion communicates. I design animations that guide users, reinforce brand identity, and turn every scroll into a memorable experience.</p>
+              </div>
+              <div class="service-image-wrap">
+                <img class="service-image" src="https://picsum.photos/seed/srv-anim/800/600" alt="Animation project" loading="lazy">
+              </div>
+            </div>
+          </div>
+          <!-- Service 04 -->
+          <div class="service-item">
+            <div class="service-row">
+              <div class="service-num">[04]</div>
+              <h3 class="service-title">Custom Code</h3>
+            </div>
+            <div class="service-visual">
+              <div class="service-desc">
+                <p>Webflow and Shopify are powerful platforms, but some projects need to go further. That's where custom code comes in — the detail that separates a good site from one worthy of Awwwards recognition.</p>
+              </div>
+              <div class="service-image-wrap">
+                <img class="service-image" src="https://picsum.photos/seed/srv-code/800/600" alt="Custom code project" loading="lazy">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Portfolio -->
+    <section id="portfolio" class="portfolio">
+      <div class="portfolio-head">
+        <div class="section-head">
+          <div class="bracket-heading">
+            <span class="bracket-left">[</span>Projects<span class="bracket-right">]</span>
+          </div>
+          <p class="sub">Transforming ideas into dynamic digital experiences.</p>
+        </div>
+      </div>
+      <div class="portfolio-orbit">
+        <div class="portfolio-orbit__info-side">
+          <div class="portfolio-orbit__count">
+            <div class="portfolio-orbit__count-col">
+              <p class="portfolio-orbit__count-txt" id="current-count">01</p>
+            </div>
+            <div class="portfolio-orbit__count-divider"></div>
+            <div class="portfolio-orbit__count-col">
+              <p class="portfolio-orbit__count-txt" id="total-count">05</p>
+            </div>
+          </div>
+          <div class="portfolio-orbit__items" id="portfolio-items">
+            <div class="portfolio-orbit__item active" data-index="0">
+              <h3>Nexus Dashboard</h3>
+              <p>A SaaS analytics dashboard with real-time data visualization, dark mode UI, and interactive charts. Built with React and D3 for a fintech startup.</p>
+            </div>
+            <div class="portfolio-orbit__item" data-index="1">
+              <h3>Vera Brand Site</h3>
+              <p>A minimal brand website for a lifestyle label — clean typography, smooth scroll animations, and a focus on product photography. Webflow-built with custom interactions.</p>
+            </div>
+            <div class="portfolio-orbit__item" data-index="2">
+              <h3>Shopfront Ecommerce</h3>
+              <p>A custom Shopify store for a fashion brand — bespoke theme, animated cart drawer, and a checkout flow designed to convert. Every detail built from scratch.</p>
+            </div>
+            <div class="portfolio-orbit__item" data-index="3">
+              <h3>Motion Reel</h3>
+              <p>An animation showcase piece — GSAP-driven scroll-triggered sequences, morphing shapes, and text reveals. Built to demonstrate craft in motion design.</p>
+            </div>
+            <div class="portfolio-orbit__item" data-index="4">
+              <h3>Portfolio v2</h3>
+              <p>A complete redesign of a creative director's portfolio — dark theme, grid layouts, project case studies with embedded video and image galleries.</p>
+            </div>
+          </div>
+          <div class="portfolio-orbit__nav">
+            <button aria-label="Previous project" class="portfolio-orbit__btn" id="orbit-prev">
+              <svg viewBox="0 0 17 12" fill="none" class="portfolio-orbit__btn-arrow">
+                <path d="M6.28871 12L7.53907 10.9111L3.48697 6.77778H16.5V5.22222H3.48697L7.53907 1.08889L6.28871 0L0.5 6L6.28871 12Z" fill="currentColor"></path>
+              </svg>
+              <div class="portfolio-orbit__btn-overlay">
+                <div class="portfolio-orbit__btn-corner tr"></div>
+                <div class="portfolio-orbit__btn-corner bl"></div>
+                <div class="portfolio-orbit__btn-corner br"></div>
+              </div>
             </button>
-            <button class="lg-btn" onclick="document.getElementById('works').scrollIntoView({behavior:'smooth'})">
-                <span class="btn-shimmer"></span>View My Work
+            <button aria-label="Next project" class="portfolio-orbit__btn" id="orbit-next">
+              <svg viewBox="0 0 17 12" fill="none" class="portfolio-orbit__btn-arrow next">
+                <path d="M6.28871 12L7.53907 10.9111L3.48697 6.77778H16.5V5.22222H3.48697L7.53907 1.08889L6.28871 0L0.5 6L6.28871 12Z" fill="currentColor"></path>
+              </svg>
+              <div class="portfolio-orbit__btn-overlay">
+                <div class="portfolio-orbit__btn-corner tr"></div>
+                <div class="portfolio-orbit__btn-corner bl"></div>
+                <div class="portfolio-orbit__btn-corner br"></div>
+              </div>
             </button>
+          </div>
         </div>
+        <div class="portfolio-orbit__collection">
+          <div class="portfolio-orbit__list">
+            <!-- Project cards -->
+            <div class="portfolio-orbit__item-card active" data-index="0">
+              <a href="#" target="_blank" class="portfolio-orbit__card-link">
+                <div class="portfolio-orbit__image-mask">
+                  <img class="portfolio-orbit__placeholder" src="https://picsum.photos/seed/proj-dashboard/800/600" alt="Nexus Dashboard" loading="lazy">
+                </div>
+              </a>
+            </div>
+            <div class="portfolio-orbit__item-card" data-index="1">
+              <a href="#" target="_blank" class="portfolio-orbit__card-link">
+                <div class="portfolio-orbit__image-mask">
+                  <img class="portfolio-orbit__placeholder" src="https://picsum.photos/seed/proj-brand/800/600" alt="Vera Brand Site" loading="lazy">
+                </div>
+              </a>
+            </div>
+            <div class="portfolio-orbit__item-card" data-index="2">
+              <a href="#" target="_blank" class="portfolio-orbit__card-link">
+                <div class="portfolio-orbit__image-mask">
+                  <img class="portfolio-orbit__placeholder" src="https://picsum.photos/seed/proj-ecommerce/800/600" alt="Shopfront Ecommerce" loading="lazy">
+                </div>
+              </a>
+            </div>
+            <div class="portfolio-orbit__item-card" data-index="3">
+              <a href="#" target="_blank" class="portfolio-orbit__card-link">
+                <div class="portfolio-orbit__image-mask">
+                  <img class="portfolio-orbit__placeholder" src="https://picsum.photos/seed/proj-motion/800/600" alt="Motion Reel" loading="lazy">
+                </div>
+              </a>
+            </div>
+            <div class="portfolio-orbit__item-card" data-index="4">
+              <a href="#" target="_blank" class="portfolio-orbit__card-link">
+                <div class="portfolio-orbit__image-mask">
+                  <img class="portfolio-orbit__placeholder" src="https://picsum.photos/seed/proj-portfolio/800/600" alt="Portfolio v2" loading="lazy">
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="portfolio-cta">
+        <a href="https://wa.me/2348123456789" target="_blank" class="button-007 w-inline-block">
+          <span class="button-007__inner">
+            <span class="button-007__text is--hover">
+              <svg class="button-007__svg" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+                <mask id="bm3" maskunits="userSpaceOnUse" style="mask-type:alpha">
+                  <svg viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+                    <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
+                  </svg>
+                </mask>
+                <foreignObject width="100%" height="100%" mask="url(#bm3)" class="button-007__svg-object">
+                  <div class="button-007__svg-inner">
+                    <div class="button-007__svg-text-wrap"><span class="button-007__svg-text">Cotiza tu proyecto</span></div>
+                  </div>
+                </foreignObject>
+              </svg>
+            </span>
+            <svg class="button-007__svg-overlay" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+              <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
+            </svg>
+            <span class="button-007__text is--default">Cotiza tu proyecto</span>
+          </span>
+          <span class="button-007__bg"></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Certifications -->
+    <section class="certification">
+      <div class="section-head">
+        <div class="bracket-heading">
+          <span class="bracket-left">[</span>Certifications & Partnerships<span class="bracket-right">]</span>
+        </div>
+      </div>
+      <div class="cert-content">
+        <p>I'm an Official Webflow and Shopify Partner, guaranteeing that every project meets the highest standards of quality, performance, and support.</p>
+      </div>
+      <div class="cert-logos">
+        <div class="cert-logo">
+          <svg viewBox="0 0 400 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#c1)">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M71.9788 0L49.0123 45H27.4358L37.0479 26.3527H36.6202C28.6868 36.673 16.8614 43.4675 0 45V26.6099C0 26.6099 10.7883 25.9669 17.1287 19.2903H0V0H19.2457V15.8716H19.6734L27.5427 0H42.0946V15.7645H42.5223L50.691 0H71.9788Z" fill="currentColor"></path>
+              <path d="M98.6448 37.0052C95.9718 37.0052 93.5874 36.3944 91.4918 35.1834C89.3961 33.9509 87.7603 32.2255 86.5841 30.0071C85.408 27.7887 84.8306 25.2488 84.8413 22.3767C84.8306 19.4939 85.408 16.9433 86.5841 14.7249C87.7603 12.4958 89.3961 10.7704 91.4918 9.54868C93.5874 8.31624 95.9718 7.70538 98.6448 7.70538C100.965 7.70538 103.061 8.14477 104.932 9.03427C106.824 9.90233 108.375 11.1669 109.572 12.8173C110.77 14.457 111.539 16.3753 111.86 18.5615H106.257C105.979 17.3184 105.466 16.236 104.739 15.3143C104.023 14.382 103.135 13.6639 102.088 13.1603C101.05 12.6566 99.9171 12.4101 98.6768 12.4101C97.041 12.4101 95.5868 12.8173 94.3252 13.6425C93.0635 14.4463 92.0692 15.6144 91.3528 17.1255C90.6471 18.6258 90.2943 20.3727 90.2943 22.3767C90.2943 24.3808 90.6471 26.1062 91.3528 27.6065C92.0692 29.1069 93.0635 30.2643 94.3252 31.0895C95.5868 31.8933 97.041 32.3005 98.6768 32.3005C99.9706 32.3005 101.147 32.054 102.205 31.5718C103.264 31.0681 104.14 30.3715 104.835 29.4713C105.541 28.5711 106.001 27.5208 106.236 26.2991H111.839C111.539 28.3889 110.812 30.2429 109.636 31.8611C108.46 33.4794 106.92 34.744 105.028 35.6442C103.135 36.5551 101.008 37.0052 98.6448 37.0052ZM125.546 37.0481C123.408 37.0481 121.526 36.5873 119.89 35.6656C118.265 34.744 117.003 33.4365 116.094 31.7432C115.185 30.05 114.736 28.0995 114.736 25.8811C114.736 23.6628 115.196 21.8409 116.116 20.1476C117.035 18.4437 118.307 17.1148 119.911 16.1717C121.536 15.2072 123.365 14.7249 125.396 14.7249C127.556 14.7249 129.47 15.2072 131.138 16.1717C132.806 17.1362 134.067 18.5508 134.934 20.437C135.8 22.3124 136.142 24.5415 135.949 27.1457H116.917V23.7378L132.089 23.6842L130.71 24.2843C130.689 23.2126 130.454 22.2481 130.015 21.4229C129.577 20.587 128.967 19.944 128.176 19.4832C127.396 19.0224 126.498 18.7866 125.492 18.7866C124.434 18.7866 123.482 19.0438 122.638 19.5582C121.793 20.0726 121.13 20.7906 120.638 21.7123C120.168 22.6339 119.933 23.6735 119.943 24.8309V26.7385C119.933 27.9816 120.157 29.3877 120.638 30.5377C121.119 31.6877 121.793 32.3604 122.638 32.8748C123.482 33.3892 124.434 33.62 125.492 33.62C126.498 33.62 127.396 33.3892 128.176 32.9429C128.967 32.4967 129.577 31.8686 130.015 30.8372C130.454 29.8058 130.689 28.8414 130.71 27.7737L132.089 28.3743L132.089 23.6842H116.917V27.1457C117.91 24.7789 119.701 23.8254 121.632 24.6072C123.563 25.389 124.66 28.2121 124.227 31.6441H125.546Z" fill="currentColor"></path>
+            </g>
+            <defs><clipPath id="c1"><rect width="400" height="45" fill="currentColor"></rect></clipPath></defs>
+          </svg>
+        </div>
+        <div class="cert-logo">
+          <svg viewBox="0 0 400 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#c2)">
+              <path d="M57.5034 60.2717C50.2073 60.787 43.5625 64.6259 36.9076 64.04C24.4117 62.9489 12.6587 59.4433 0 57.6855L5.19983 18.0026C7.96764 16.8105 10.6235 16.6085 13.0759 15.1537C14.3784 10.0923 16.5051 5.33403 20.321 2.14163C23.6689 -0.666884 26.9658 -0.444627 30.4968 1.33342C33.3053 2.74778 36.1647 3.68732 36.9381 7.54649L41.0084 7.74855C43.013 10.9005 45.8928 12.4058 50.1361 11.6986L57.5034 60.2818V60.2717ZM23.0889 53.6141C27.0371 51.5532 28.0343 47.2697 27.7595 43.5318C27.2304 36.359 18.6522 35.6316 19.1712 31.7421C19.6901 27.8526 25.2767 29.7216 27.6273 29.8125C29.347 28.2466 29.52 25.5189 30.2831 22.8418C24.6254 20.8819 17.9094 22.1043 14.3682 26.8121C10.2775 32.2472 11.7327 38.8644 17.3701 42.1781C18.3673 42.764 18.9168 44.1481 19.1 44.9563C19.3238 45.9463 18.9677 47.1889 17.7873 47.694C15.3756 48.7245 13.3812 46.3302 11.1221 46.0271C9.63647 45.8251 8.35432 50.2702 9.44313 51.3512C12.8825 54.786 18.6319 55.9377 23.0787 53.6141H23.0889Z" fill="currentColor"></path>
+              <path d="M150.378 64.4644L142.186 64.6967L149.493 25.6605C151.752 25.3372 154.245 24.8927 156.27 25.7312C156.789 25.9433 156.504 27.4991 156.89 27.5193C157.399 27.5496 158.172 27.3173 158.783 26.8526C162.629 23.943 169.213 23.943 171.462 28.8933C174.464 35.5205 172.337 43.4612 167.931 49.0378C164.268 53.6748 158.691 54.6851 152.728 53.5334L150.388 64.4644H150.378ZM159.058 47.2395C164.573 43.2793 166.456 32.1968 161.459 31.6816C155.628 31.0855 153.085 46.2394 154.926 47.3405C155.873 47.8962 157.633 48.27 159.058 47.2395Z" fill="currentColor"></path>
+              <path d="M104.149 53.3213L107.314 34.9347C107.517 33.7729 107.059 32.5404 106.459 32.0757C103.406 29.7016 99.7736 35.0458 99.0104 39.0161C98.0742 43.8249 96.9142 48.1993 96.3545 53.7153C94.0141 53.5234 91.4702 52.9476 87.9799 53.8366L95.5405 13.2445L103.681 13.5274L101.605 27.3679C105.503 25.4585 109.095 23.7714 112.748 25.7414C119.403 29.3278 112.687 46.2193 112.137 53.2809C109.43 53.6345 107.059 53.5234 104.149 53.3415V53.3213Z" fill="currentColor"></path>
+              <path d="M223.674 47.1487C220.184 54.3518 214.333 64.3735 206.039 66C204.991 63.9189 203.974 61.7368 203.943 59.3728C206.395 57.5341 212.216 55.6853 212.135 51.7655C211.962 42.8349 208.644 34.4801 208.034 25.7616C210.659 25.4383 213.569 25.4282 216.225 25.7818L218.413 42.6732L225.292 25.8323C228.009 25.1655 230.573 25.8323 234.125 25.5797L223.664 47.1487H223.674Z" fill="currentColor"></path>
+              <path d="M141.443 46.8758C137.302 53.7254 128.164 56.2813 121.621 51.8968C117.988 49.4621 117.418 44.8553 117.764 40.8446C118.477 32.6919 123.9 25.812 132.041 24.9331C138.208 24.2663 143.407 27.6002 144.201 33.6617C144.791 38.1472 143.998 42.6429 141.433 46.8758H141.443ZM135.928 34.2679C135.745 32.6211 134.361 31.4796 133.099 31.2169C131.838 30.9542 130.24 31.5705 129.253 32.8535C125.651 37.5108 124.277 46.8051 128.876 47.6335C134.025 48.563 136.518 39.4303 135.928 34.2679Z" fill="currentColor"></path>
+              <path d="M199.842 32.0958L195.803 53.2809C193.086 53.5537 190.664 53.5537 187.703 53.2809L191.58 32.1766C190.318 31.328 189.087 31.8736 187.774 31.8938L189.524 25.5797C190.074 25.1453 191.803 25.5898 192.465 25.2362C193.167 24.8523 193.411 23.8319 193.594 22.8116C195.009 15.1336 202.183 10.9209 209.754 13.3253C209.55 15.1336 209.713 18.023 208.054 19.2656C206.803 20.0031 204.34 18.9827 203.455 20.1647C202.366 21.5993 200.392 23.8925 201.878 25.1251C202.936 26.004 204.951 24.822 206.365 25.6706C206.294 27.5598 205.877 29.3479 205.388 31.3381L199.832 32.1059L199.842 32.0958Z" fill="currentColor"></path>
+              <path d="M82.0271 52.2505C76.9392 54.7761 70.9456 54.5538 66.3767 51.9676C67.1501 49.6844 68.015 48.0882 67.842 45.896C70.7523 47.4012 74.0391 48.8257 77.1732 47.28C78.3027 46.7244 78.3333 45.0777 77.9669 44.421C76.2981 41.4104 70.2028 40.7234 69.8161 35.0054C69.5923 31.6615 71.3018 28.166 74.6496 26.5092C78.8624 24.428 83.818 24.4886 88.102 26.1253C87.756 27.9538 87.6645 30.8937 86.1279 31.4594C85.1002 31.8332 78.8217 29.3682 78.0178 33.1263C77.336 36.3288 86.1991 37.2684 86.5858 43.4814C86.7995 46.8759 85.5479 50.5027 82.0271 52.2505Z" fill="currentColor"></path>
+              <path d="M243.334 52.7454C241.695 56.1399 242.703 66.3435 238.348 64.7776L245.247 26.9536C245.389 26.1858 245.359 25.5696 245.939 25.4079C246.315 25.2968 247.211 25.216 247.76 25.7716C248.096 26.1151 247.689 26.5697 247.74 27.6507C247.455 28.6912 247.862 29.4994 248.829 28.762C251.729 25.8625 255.687 23.9127 259.747 25.5494C266.392 28.2265 264.947 42.4004 257.193 50.0582C253.438 53.7658 248.564 54.281 243.334 52.7656V52.7454ZM255.361 47.8457C261.599 41.2285 263.461 29.3075 257.62 27.4183C251.973 25.5898 247.027 33.4091 245.806 39.0666C245.053 42.5722 244.249 45.8454 243.965 49.5025C247.689 51.8059 252.237 51.1593 255.361 47.8457Z" fill="currentColor"></path>
+              <path d="M281.961 53.594C282.46 51.7958 283.09 49.8864 282.195 47.9164C279.987 51.0381 277.697 52.9879 274.278 53.5233C270.605 54.0991 267.125 52.0483 266.423 48.1892C265.069 40.6931 268.051 32.8737 274.064 28.0548C278.318 24.6502 283.864 24.0845 289.033 25.6099L285.655 44.138C285.034 47.5729 284.647 50.8057 285.36 53.8668C283.966 53.2101 283.497 53.3819 281.941 53.6041L281.961 53.594ZM285.797 27.5193C282.531 26.5899 279.407 27.196 276.761 29.0448C270.941 33.1363 267.898 40.1879 269.139 47.2092C269.669 50.1794 273.088 51.7756 275.672 50.24C283.66 45.5019 284.546 36.0661 285.787 27.5092L285.797 27.5193Z" fill="currentColor"></path>
+              <path d="M181.088 53.2202C178.29 53.6445 175.868 53.5031 172.866 53.2809L178.117 25.9029C180.692 25.2564 183.286 25.4988 186.227 25.7514L181.099 53.2202H181.088Z" fill="currentColor"></path>
+              <path d="M353.395 49.3813C358.371 53.4122 363.174 47.8154 364.191 49.9975C365.341 52.4524 357.689 54.0789 353.405 52.5838C345.865 49.9571 346.648 35.5206 354.586 27.7012C357.526 24.8017 362.36 23.741 365.86 25.913C368.221 27.3779 368.425 30.2672 367.997 32.6514C366.725 39.6828 355.644 38.8039 351.685 40.3597C349.905 42.1175 351.278 47.6537 353.405 49.3813H353.395ZM363.51 34.7831C365.667 33.3081 365.83 30.5097 364.843 28.8529C363.866 27.2062 361.21 26.6 359.083 27.5698C355.277 29.3075 352.927 33.005 352.021 37.1067C356.193 37.3794 360.101 37.1067 363.51 34.7831Z" fill="currentColor"></path>
+              <path d="M327.671 38.2584L325.076 52.2504C324.852 53.4728 324.048 53.291 322.125 53.786L326.836 27.6103C326.968 26.8627 326.867 26.1757 327.111 25.7211C327.416 25.1352 328.729 25.2059 329.329 25.7211C330.031 26.3172 328.19 30.3582 330.438 28.762C333.196 26.0545 336.829 24.0138 340.808 25.3069C343.83 26.2868 345.203 29.6106 344.654 32.7626L341.276 52.1696C341.072 53.3718 340.156 53.5638 339.312 53.4425C338.467 53.3213 338.569 52.2605 338.732 51.22C339.77 44.9261 341.306 38.9858 341.968 32.6818C342.171 30.7724 341.408 28.863 340.227 28.0447C335.628 24.8523 328.861 31.8736 327.681 38.2685L327.671 38.2584Z" fill="currentColor"></path>
+              <path d="M390.364 29.7924C386.324 36.8238 400.315 37.2885 397.375 47.2395C395.991 51.9372 391.3 53.9577 386.395 52.9171C385.408 52.705 383.943 52.3413 383.495 51.4826C383.159 50.8562 383.281 49.4419 384.075 48.4821C386.1 50.8663 388.379 51.1795 391.025 50.4723C393.019 49.9369 394.698 48.1184 394.912 45.5928C395.472 38.814 383.861 38.1876 387.606 29.5398C390.506 22.8418 399.359 24.7209 399.837 26.0948C401.313 30.3884 393.65 24.0945 390.384 29.7924H390.364Z" fill="currentColor"></path>
+              <path d="M314.045 50.6037C315.744 50.9674 316.559 50.4825 317.383 52.9576C316.263 53.2102 314.615 53.1597 313.017 53.0385C310.046 52.796 309.039 49.9875 309.497 47.3406L312.651 28.9742C312.865 27.7518 310.158 27.9134 309.547 27.4891C309.1 27.1759 309.446 26.196 309.598 25.8828C309.802 25.4787 310.657 25.408 311.562 25.4383C316.131 25.5797 311.46 21.6599 317.281 18.8817L316.569 25.2968C319.235 25.6302 321.28 25.0544 323.315 25.5696C321.942 30.0551 316.335 25.9838 315.683 28.9237C314.289 35.2378 313.251 41.2286 312.203 47.4719C312.01 48.6539 312.407 50.2501 314.045 50.6037Z" fill="currentColor"></path>
+              <path d="M293.429 53.8972C292.32 53.1395 291.811 53.5032 291.404 53.4123C290.997 53.3213 290.804 52.5536 290.946 51.7656L295.729 25.4686C296.522 25.1554 297.866 25.3979 297.805 26.0849C297.754 26.6809 297.855 27.4285 298.425 28.4994C300.756 27.1355 302.465 24.6705 305.538 25.1655C306.149 25.2666 306.016 26.5597 305.813 26.9739C305.579 27.4487 298.69 28.1458 296.41 37.8341C295.098 43.4006 294.202 48.6742 293.439 53.8972H293.429Z" fill="currentColor"></path>
+              <path d="M381.938 28.1458C371.315 33.49 375.822 55.8167 369.564 53.8265L374.265 27.5901C374.398 26.8324 374.316 26.2162 374.479 25.8323C374.784 25.0948 376.087 25.1857 376.698 25.7616C377.247 26.2768 375.782 30.1663 377.817 28.7721C379.791 26.0848 382.661 24.7816 385.51 24.913C384.787 27.8932 383.454 27.3881 381.938 28.1458Z" fill="currentColor"></path>
+              <path d="M183.744 22.3367C186.178 22.3367 188.15 20.3873 188.15 17.9825C188.15 15.5777 186.178 13.6283 183.744 13.6283C181.311 13.6283 179.338 15.5777 179.338 17.9825C179.338 20.3873 181.311 22.3367 183.744 22.3367Z" fill="currentColor"></path>
+            </g>
+            <defs><clipPath id="c2"><rect width="400" height="66" fill="currentColor"></rect></clipPath></defs>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="contact">
+      <div class="contact-sticky">
+        <div class="contact-words" id="contact-words"></div>
+        <div class="contact-body">
+          <h2 class="contact-heading">Contacto</h2>
+          <p class="contact-text">Have a project in mind? I'd love to hear from you. Tell me what you need and I'll get back to you promptly.</p>
+          <div class="button-group">
+            <a href="https://wa.me/2348123456789" target="_blank" class="button-007 w-inline-block">
+              <span class="button-007__inner">
+                <span class="button-007__text is--hover">
+                  <svg class="button-007__svg" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+                    <mask id="bm4" maskunits="userSpaceOnUse" style="mask-type:alpha">
+                      <svg viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+                        <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
+                      </svg>
+                    </mask>
+                    <foreignObject width="100%" height="100%" mask="url(#bm4)" class="button-007__svg-object">
+                      <div class="button-007__svg-inner">
+                        <div class="button-007__svg-text-wrap"><span class="button-007__svg-text">Agenda llamada</span></div>
+                      </div>
+                    </foreignObject>
+                  </svg>
+                </span>
+                <svg class="button-007__svg-overlay" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+                  <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
+                </svg>
+                <span class="button-007__text is--default">Agenda llamada</span>
+              </span>
+              <span class="button-007__bg"></span>
+            </a>
+            <a href="https://wa.me/2348123456789" target="_blank" class="button-007 w-inline-block">
+              <span class="button-007__inner">
+                <span class="button-007__text is--hover">
+                  <svg class="button-007__svg" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+                    <mask id="bm5" maskunits="userSpaceOnUse" style="mask-type:alpha">
+                      <svg viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+                        <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
+                      </svg>
+                    </mask>
+                    <foreignObject width="100%" height="100%" mask="url(#bm5)" class="button-007__svg-object">
+                      <div class="button-007__svg-inner">
+                        <div class="button-007__svg-text-wrap"><span class="button-007__svg-text">Cotiza aquí</span></div>
+                      </div>
+                    </foreignObject>
+                  </svg>
+                </span>
+                <svg class="button-007__svg-overlay" viewBox="0 0 201 100" fill="none" preserveAspectRatio="none">
+                  <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
+                </svg>
+                <span class="button-007__text is--default">Cotiza aquí</span>
+              </span>
+              <span class="button-007__bg"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="footer-inner">
+        <div class="footer-top">
+          <div class="footer-bracket"></div>
+          <div class="footer-bracket r"></div>
+          <div class="footer-cols">
+            <div>
+              <p class="footer-label">[ Socials ]</p>
+              <ul class="footer-list">
+                <li><a href="https://twitter.com/rabiu_farouk" target="_blank" class="footer-link">Twitter</a></li>
+                <li><a href="https://instagram.com/rabiu_farouk" target="_blank" class="footer-link">Instagram</a></li>
+                <li><a href="https://github.com/rabiu_farouk" target="_blank" class="footer-link">GitHub</a></li>
+              </ul>
+            </div>
+            <div>
+              <p class="footer-label">[ Nav ]</p>
+              <ul class="footer-list">
+                <li><a href="#about" class="footer-link">About</a></li>
+                <li><a href="#services" class="footer-link">Services</a></li>
+                <li><a href="#portfolio" class="footer-link">Projects</a></li>
+                <li><a href="#contact" class="footer-link">Contact</a></li>
+              </ul>
+            </div>
+            <div>
+              <p class="footer-label">[ Contact ]</p>
+              <ul class="footer-list">
+                <li><a href="mailto:hello@rabiufarouk.com" class="footer-link">hello@rabiufarouk.com</a></li>
+                <li><a href="https://wa.me/2348123456789" target="_blank" class="footer-link">+234 812 345 6789</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="footer-copy">
+          <div class="footer-copy-left">
+            <p class="footer-copy-label">Small details, big impact</p>
+            <p class="footer-copy-label">© <strong id="current-year">2026</strong>, Rabiu Farouk</p>
+          </div>
+          <a href="https://luanstudio.com/" target="_blank" class="w-inline-block">
+            <p class="footer-copy-label" style="opacity:0.5; margin:0;">Design by: Luan Studio</p>
+          </a>
+        </div>
+      </div>
     </div>
-</section>
+  </main>
 
-<section id="services">
-    <div class="section-divider fade-up"></div>
-    <p class="section-label fade-up" style="transition-delay:0.05s">What I Do</p>
-    <h2 class="section-title fade-up" style="transition-delay:0.1s">Services <span class="highlight">26</span></h2>
-    <p class="section-subtitle fade-up" style="transition-delay:0.15s">Everything from concept to delivery. Fast turnaround, clean results, and zero headache.</p>
-    <div class="services-grid">
-        <div class="service-item liquid-glass fade-up" style="transition-delay:0.2s"><div class="icon">🌐</div><div><h4>Web Development</h4><p>Landing pages, business websites, responsive designs — built clean and deployed fast.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:0.25s"><div class="icon">🎬</div><div><h4>Video Editing</h4><p>YouTube videos, short-form content, product promos — cuts, transitions, captions, color grading.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:0.3s"><div class="icon">📸</div><div><h4>Photo Editing</h4><p>Retouching, background removal, color correction, product photos — make every image pop.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:0.35s"><div class="icon">🎨</div><div><h4>Flyer & Poster Design</h4><p>Event flyers, promotional posters, brochures — grab attention and get the message across.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:0.4s"><div class="icon">✨</div><div><h4>Graphic Design</h4><p>Logos, brand identity, social media graphics, business cards — consistent and professional.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:0.45s"><div class="icon">🚀</div><div><h4>Brand Identity</h4><p>Full branding packages — logo, color palette, typography, and style guide for a cohesive look.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:0.5s"><div class="icon">📱</div><div><h4>Mobile UI Design</h4><p>iOS and Android app interfaces — clean, intuitive, ready for development handoff.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:0.55s"><div class="icon">🎯</div><div><h4>Conversion Optimization</h4><p>A/B testing, layout refinement, copy improvements — turn visitors into customers.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:0.6s"><div class="icon">📊</div><div><h4>Analytics Dashboards</h4><p>Custom data visualizations and admin panels — make your data readable and actionable.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:0.65s"><div class="icon">🔌</div><div><h4>API Integration</h4><p>Connect your tools and services — payment gateways, CRMs, email platforms, webhooks.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:0.7s"><div class="icon">🖼️</div><div><h4>UI Component Libraries</h4><p>Design system creation — reusable components, style tokens, and documentation.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:0.75s"><div class="icon">📝</div><div><h4>Content & Copywriting</h4><p>Website copy, landing page text, product descriptions — clear, persuasive, on-brand.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:0.8s"><div class="icon">🎭</div><div><h4>Social Media Design</h4><p>Posts, stories, banners, highlight covers — cohesive visual identity across platforms.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:0.85s"><div class="icon">📄</div><div><h4>Document Design</h4><p>Reports, pitch decks, presentations — polished documents that convey professionalism.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:0.9s"><div class="icon">🎪</div><div><h4>Event Branding</h4><p>Conference materials, booth designs, signage — create a memorable event experience.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:0.95s"><div class="icon">🏷️</div><div><h4>Packaging Design</h4><p>Product packaging, labels, unboxing experience — stand out on the shelf.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:1s"><div class="icon">🎨</div><div><h4>Illustration</h4><p>Custom illustrations for web, print, and social — unique visuals that tell your story.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:1.05s"><div class="icon">🖌️</div><div><h4>Digital Painting</h4><p>Concept art, character design, environment painting — for games, media, and branding.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:1.1s"><div class="icon">📹</div><div><h4>Motion Graphics</h4><p>Animated logos, explainer videos, UI animations — bring your static designs to life.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:1.15s"><div class="icon">🎥</div><div><h4>Promo Video Production</h4><p>Short-form promotional videos — script, shoot, edit, deliver ready-to-post content.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:1.2s"><div class="icon">🔊</div><div><h4>Audio Post-Production</h4><p>Podcast editing, voiceover cleanup, sound design — crisp audio that engages listeners.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:1.25s"><div class="icon">📸</div><div><h4>Product Photography</h4><p>E-commerce product shots, lifestyle images, 360° views — showcase your products right.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:1.3s"><div class="icon">💻</div><div><h4>Landing Page Optimization</h4><p>Speed audits, UX improvements, conversion tweaks — maximize every visitor's value.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:1.35s"><div class="icon">🔐</div><div><h4>Security Audit & Hardening</h4><p>Basic security reviews for web projects — HTTPS, headers, common vulnerability checks.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:1.4s"><div class="icon">👥</div><div><h4>UX Research & Testing</h4><p>User interviews, usability tests, feedback analysis — design decisions backed by data.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:1.45s"><div class="icon">📈</div><div><h4>SEO Basics</h4><p>On-page optimization, meta tags, structured data — help your site get found.</p></div></div>
-        <div class="service-item liquid-glass fade-up" style="transition-delay:1.5s"><div class="icon">⚡</div><div><h4>Performance Tuning</h4><p>Load time optimization, image compression, code splitting — faster sites rank better.</p></div></div>
-    </div>
-</section>
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@barba/core@2.10.3/dist/barba.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.17/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/CustomEase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/DrawSVGPlugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/SplitText.min.js"></script>
+  <script>
+    // ── Console signature ──
+    console.log(
+      "%c👋 Hey there, curious mind.",
+      "background: #1d1d1b; color: #ffffff; font-family: monospace; font-size: 15px; font-weight: bold; padding: 10px 16px; border-radius: 4px;"
+    );
+    console.log(
+      "%cThis site was built by Rabiu Farouk.\\nNeed something like this? Let's talk.",
+      "color: #888888; font-family: monospace; font-size: 12px; padding: 4px 0; line-height: 1.6;"
+    );
 
-<section id="skills">
-    <div class="section-divider fade-up"></div>
-    <p class="section-label fade-up" style="transition-delay:0.05s">Expertise</p>
-    <h2 class="section-title fade-up" style="transition-delay:0.1s">Core <span class="highlight">Skills</span></h2>
-    <p class="section-subtitle fade-up" style="transition-delay:0.15s">Tools and disciplines I work with daily.</p>
-    <div class="skills-grid">
-        <div class="skill-item liquid-glass fade-up" style="transition-delay:0.2s"><div class="icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><h3>Web Dev</h3><p>HTML, CSS, JS</p></div>
-        <div class="skill-item liquid-glass fade-up" style="transition-delay:0.25s"><div class="icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg></div><h3>Video Editing</h3><p>Cuts, transitions</p></div>
-        <div class="skill-item liquid-glass fade-up" style="transition-delay:0.3s"><div class="icon"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div><h3>Photo Editing</h3><p>Retouching, color</p></div>
-        <div class="skill-item liquid-glass fade-up" style="transition-delay:0.35s"><div class="icon"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-4 4-2-2 7-7-3 3 4 4 2-2-7-7z"/></svg></div><h3>Graphic Design</h3><p>Logos, flyers, branding</p></div>
-        <div class="skill-item liquid-glass fade-up" style="transition-delay:0.4s"><div class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></div><h3>UI Design</h3><p>Interfaces, hierarchy</p></div>
-        <div class="skill-item liquid-glass fade-up" style="transition-delay:0.45s"><div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><h3>Brand Identity</h3><p>Logo, palette, guides</p></div>
-    </div>
-</section>
+    // ── GSAP registration ──
+    gsap.registerPlugin(DrawSVGPlugin, CustomEase, ScrollTrigger, SplitText);
+    history.scrollRestoration = "manual";
 
-<section id="works">
-    <div class="section-divider fade-up"></div>
-    <p class="section-label fade-up" style="transition-delay:0.05s">Portfolio</p>
-    <h2 class="section-title fade-up" style="transition-delay:0.1s">Selected <span class="highlight">Work</span></h2>
-    <p class="section-subtitle fade-up" style="transition-delay:0.15s">Recent projects across web, design, and visual content.</p>
-    <div class="projects-grid">
-        <div class="project-card liquid-glass fade-up" style="transition-delay:0.2s">
-            <div class="preview"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80&auto=format&fit=crop" alt="Restaurant" loading="lazy"><div class="overlay"></div><span class="badge">Flyer Design</span><span class="live-badge">Delivered</span></div>
-            <div class="body"><div class="category">Flyer Design</div><h3>Bistro Royale — Grand Opening Flyer</h3><p>Vibrant A4 flyer for a restaurant grand opening. Bold headline typography, warm color palette, event details clearly laid out — date, time, location, special offers. Print-ready PDF + web PNG.</p><div class="tags"><span>Print Design</span><span>A4</span><span>Event Promo</span></div><div class="meta"><span>Status: <strong>Delivered</strong></span><span>Format: <strong>Print + Digital</strong></span></div></div>
-        </div>
-        <div class="project-card liquid-glass fade-up" style="transition-delay:0.25s">
-            <div class="preview"><img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&q=80&auto=format&fit=crop" alt="Travel vlog" loading="lazy"><div class="overlay"></div><span class="badge">Video Editing</span><span class="live-badge">Published</span></div>
-            <div class="body"><div class="category">Video Editing</div><h3>Explorer Channels — Travel Vlog Series</h3><p>Edited a 10-part travel vlog series for a YouTube channel. Each episode ~8-12 minutes with smooth transitions, B-roll integration, color grading for consistent look, animated captions, custom intro/outro with channel branding.</p><div class="tags"><span>YouTube</span><span>10 Episodes</span><span>Color Grading</span></div><div class="meta"><span>Status: <strong>Published</strong></span><span>Length: <strong>8-12 min each</strong></span></div></div>
-        </div>
-        <div class="project-card liquid-glass fade-up" style="transition-delay:0.3s">
-            <div class="preview"><img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&q=80&auto=format&fit=crop" alt="Tech workspace" loading="lazy"><div class="overlay"></div><span class="badge">Brand Identity</span><span class="live-badge">Delivered</span></div>
-            <div class="body"><div class="category">Graphic Design</div><h3>NovaTech Solutions — Full Brand Identity</h3><p>Complete brand identity for a tech startup. Modern minimalist wordmark logo with negative space detail, professional color palette, clean sans-serif typography, 12-page brand style guide covering logo usage, color codes, typography, and application examples.</p><div class="tags"><span>Logo Design</span><span>Brand Guide</span><span>12 Assets</span></div><div class="meta"><span>Status: <strong>Delivered</strong></span><span>Type: <strong>Full Branding</strong></span></div></div>
-        </div>
-        <div class="project-card liquid-glass fade-up" style="transition-delay:0.35s">
-            <div class="preview"><img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=600&q=80&auto=format&fit=crop" alt="Skincare products" loading="lazy"><div class="overlay"></div><span class="badge">Photo Editing</span><span class="live-badge">Delivered</span></div>
-            <div class="body"><div class="category">Photo Editing</div><h3>GlowCare — E-Commerce Product Catalog</h3><p>Edited 30+ product photos for an online skincare store launch. Background cleanup and replacement with clean white backdrop, color correction, shadow enhancement, skin texture smoothing, consistent visual style across entire catalog. Web-ready JPEG + print-ready TIFF.</p><div class="tags"><span>Product Photography</span><span>30+ Photos</span><span>JPEG + TIFF</span></div><div class="meta"><span>Status: <strong>Delivered</strong></span><span>Count: <strong>30+ photos</strong></span></div></div>
-        </div>
-        <div class="project-card liquid-glass fade-up" style="transition-delay:0.4s">
-            <div class="preview"><img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80&auto=format&fit=crop" alt="Fitness" loading="lazy"><div class="overlay"></div><span class="badge">Graphic Design</span><span class="live-badge">Delivered</span></div>
-            <div class="body"><div class="category">Graphic Design</div><h3>FitLife — Instagram Launch Campaign</h3><p>Complete social media launch kit for a fitness brand entering Instagram. 20 cohesive posts including motivational quotes, product showcase templates, before/after layouts, story templates, and branded highlight covers. Green-and-white color scheme with bold typography.</p><div class="tags"><span>Social Media</span><span>20 Assets</span><span>Instagram</span></div><div class="meta"><span>Status: <strong>Delivered</strong></span><span>Platform: <strong>Instagram</strong></span></div></div>
-        </div>
-        <div class="project-card liquid-glass fade-up" style="transition-delay:0.45s">
-            <div class="preview"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80&auto=format&fit=crop" alt="Dashboard" loading="lazy"><div class="overlay"></div><span class="badge">Web Development</span><span class="live-badge">Live Site</span></div>
-            <div class="body"><div class="category">Web Development</div><h3>TaskFlow App — SaaS Landing Page</h3><p>Conversion-focused landing page for a project management SaaS tool. Hero with animated headline, feature grid, customer testimonials, pricing table with three tiers, FAQ accordion, prominent CTAs. Semantic HTML, CSS Grid/Flexbox, mobile-responsive, Lighthouse 95+.</p><div class="tags"><span>Landing Page</span><span>SaaS</span><span>Lighthouse 95+</span></div><div class="meta"><span>Status: <strong>Live</strong></span><span>Speed: <strong>95+ Lighthouse</strong></span></div></div>
-        </div>
-        <div class="project-card liquid-glass fade-up" style="transition-delay:0.5s">
-            <div class="preview"><img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80&auto=format&fit=crop" alt="Music festival" loading="lazy"><div class="overlay"></div><span class="badge">Flyer Design</span><span class="live-badge">Delivered</span></div>
-            <div class="body"><div class="category">Flyer Design</div><h3>SoundWave Festival — Poster Series</h3><p>Complete poster series for a local music festival. Three poster designs in different sizes (A2, A3, A4) for various distribution channels — outdoor billboards, shop windows, handouts. Bold festival branding, lineup typography, date and venue details. Digital versions for social media.</p><div class="tags"><span>Poster Design</span><span>3 Sizes</span><span>Digital + Print</span></div><div class="meta"><span>Status: <strong>Delivered</strong></span><span>Set: <strong>3 posters + digital</strong></span></div></div>
-        </div>
-        <div class="project-card liquid-glass fade-up" style="transition-delay:0.55s">
-            <div class="preview"><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&q=80&auto=format&fit=crop" alt="Web dev" loading="lazy"><div class="overlay"></div><span class="badge">Web Development</span><span class="live-badge">Live Site</span></div>
-            <div class="body"><div class="category">Web Development</div><h3>CreativeStudio — Agency Portfolio Site</h3><p>Full portfolio website for a creative agency. Homepage with animated project showcase, case study pages with detailed process breakdowns, blog section, contact form with validation. Semantic HTML5, CSS Grid/Flexbox, Intersection Observer animations, fully responsive, Core Web Vitals optimized.</p><div class="tags"><span>Portfolio</span><span>Agency</span><span>Animations</span></div><div class="meta"><span>Status: <strong>Live</strong></span><span>Pages: <strong>12</strong></span></div></div>
-        </div>
-        <div class="project-card liquid-glass fade-up" style="transition-delay:0.6s">
-            <div class="preview"><img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80&auto=format&fit=crop" alt="Restaurant interior" loading="lazy"><div class="overlay"></div><span class="badge">Web Development</span><span class="live-badge">Live Site</span></div>
-            <div class="body"><div class="category">Web Development</div><h3>UrbanEats — Restaurant Website</h3><p>Complete website for a restaurant group. Hero with food photography, menu section with category filtering, reservations integration, events calendar, online ordering preview, location map. Mobile-first design, parallax food galleries, booking form with validation. Optimized for local SEO.</p><div class="tags"><span>Restaurant</span><span>Menu</span><span>Reservations</span></div><div class="meta"><span>Status: <strong>Live</strong></span><span>Locations: <strong>3</strong></span></div></div>
-        </div>
-        <div class="project-card liquid-glass fade-up" style="transition-delay:0.65s">
-            <div class="preview"><img src="https://images.unsplash.com/photo-1517245380384-1685ffc3a499?w=600&q=80&auto=format&fit=crop" alt="Mobile app" loading="lazy"><div class="overlay"></div><span class="badge">UI Design</span><span class="live-badge">Delivered</span></div>
-            <div class="body"><div class="category">UI Design</div><h3>FinTrack — Personal Finance App UI</h3><p>Complete mobile app UI design for a personal finance tracker. 40+ screens including onboarding flow, dashboard with interactive charts, transaction list with search/filter, budget planner, bill reminder system, profile settings. Dark and light mode variants. Figma with auto-layout components and design tokens.</p><div class="tags"><span>Mobile UI</span><span>Figma</span><span>40+ Screens</span></div><div class="meta"><span>Status: <strong>Delivered</strong></span><span>Platform: <strong>iOS + Android</strong></span></div></div>
-        </div>
-        <div class="project-card liquid-glass fade-up" style="transition-delay:0.7s">
-            <div class="preview"><img src="https://images.unsplash.com/photo-1504711434969-e33886168d8c?w=600&q=80&auto=format&fit=crop" alt="Logo design" loading="lazy"><div class="overlay"></div><span class="badge">Logo Design</span><span class="live-badge">Delivered</span></div>
-            <div class="body"><div class="category">Graphic Design</div><h3>Vertex Advisory — Corporate Rebrand</h3><p>Full rebrand for a management consulting firm. New wordmark logo with geometric symbol, refined color palette (deep charcoal, warm gold, slate blue), typography system, business card design, letterhead, presentation template, email signature set. Delivered in AI, EPS, PNG, SVG with usage guidelines.</p><div class="tags"><span>Rebrand</span><span>Corporate</span><span>Full Identity</span></div><div class="meta"><span>Status: <strong>Delivered</strong></span><span>Assets: <strong>15+</strong></span></div></div>
-        </div>
-        <div class="project-card liquid-glass fade-up" style="transition-delay:0.75s">
-            <div class="preview"><img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=80&auto=format&fit=crop" alt="Team" loading="lazy"><div class="overlay"></div><span class="badge">Video Editing</span><span class="live-badge">Published</span></div>
-            <div class="body"><div class="category">Video Editing</div><h3>SpeedCart — Product Launch Promo</h3><p>60-second product launch promo video for an e-commerce startup. Fast-paced editing with motion graphics, product close-ups, animated text overlays, music sync, CTA ending. Designed for Instagram Reels, YouTube Shorts, and TikTok — three aspect ratio versions delivered.</p><div class="tags"><span>Promo Video</span><span>Motion Graphics</span><span>Multi-format</span></div><div class="meta"><span>Status: <strong>Published</strong></span><span>Length: <strong>60 sec</strong></span></div></div>
-        </div>
-    </div>
-</section>
+    // ── Lenis smooth scroll ──
+    let lenis = null;
+    const hasLenis = typeof window.Lenis !== "undefined";
+    const hasScrollTrigger = typeof window.ScrollTrigger !== "undefined";
+    const rmMQ = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let reducedMotion = rmMQ.matches;
+    rmMQ.addEventListener?.("change", e => reducedMotion = e.matches);
+    rmMQ.addListener?.(e => reducedMotion = e.matches);
 
-<section id="about">
-    <div class="section-divider fade-up"></div>
-    <p class="section-label fade-up" style="transition-delay:0.05s">Get to know me</p>
-    <h2 class="section-title fade-up" style="transition-delay:0.1s">About <span class="highlight">Me</span></h2>
-    <div class="about-grid">
-        <div class="about-text fade-up" style="transition-delay:0.2s">
-            <p>I'm a freelance designer and developer who handles the full visual side of projects — from building websites to editing videos, designing flyers, and polishing photos.</p>
-            <p>I <span class="highlight">care about the details</span>. Every project gets my full attention: clean code, sharp designs, smooth edits, and a final result that actually looks professional.</p>
-            <p>I work with small businesses, creators, and brands who need quality work without the agency price tag. Fast communication, clear process, and I deliver on time.</p>
-            <p>My toolkit covers web development, video editing, photo retouching, flyer and poster design, logo design, and full brand identity — so whether you need one thing or a whole package, I can handle it.</p>
-            <button class="lg-btn" style="margin-top:1rem" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})"><span class="btn-shimmer"></span>Let's Work Together</button>
-        </div>
-        <div class="stats-grid fade-up" style="transition-delay:0.3s">
-            <div class="stat-card liquid-glass"><div class="number">30+</div><div class="label">Projects Delivered</div></div>
-            <div class="stat-card liquid-glass"><div class="number">26</div><div class="label">Services Offered</div></div>
-            <div class="stat-card liquid-glass"><div class="number">100%</div><div class="label">Client Satisfaction</div></div>
-            <div class="stat-card liquid-glass"><div class="number">24h</div><div class="label">Response Time</div></div>
-        </div>
-    </div>
-</section>
+    function initLenis() {
+      if (!hasLenis) return;
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.02 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+      });
+      lenis.on("scroll", () => {
+        document.getElementById("header").classList.toggle("scrolled", lenis.scroll.y > 60);
+      });
+      function raf() { lenis.raf(); requestAnimationFrame(raf); }
+      raf();
+    }
 
-<section id="experience" style="max-width:1100px;margin:0 auto;padding:2rem 2rem 0;">
-    <div class="section-divider fade-up" style="margin:0 auto 1.5rem;"></div>
-    <p class="section-label fade-up" style="transition-delay:0.05s">Career</p>
-    <h2 class="section-title fade-up" style="transition-delay:0.1s;text-align:center;">Experience</h2>
-    <div class="work-history" style="margin-top:2rem;max-width:600px;margin-left:auto;margin-right:auto;">
-        <div class="work-item liquid-glass fade-up" style="transition-delay:0.1s">
-            <div class="year">2024 — Present</div>
-            <div class="info"><div class="role">Freelance Designer & Developer</div><div class="company">Self-employed <span class="badge">Apple Design Resources Contributor</span></div></div>
-        </div>
-        <div class="work-item liquid-glass fade-up" style="transition-delay:0.15s">
-            <div class="year">2023 — 2024</div>
-            <div class="info"><div class="role">Full Stack Designer</div><div class="company">Digital First Agency</div></div>
-        </div>
-        <div class="work-item liquid-glass fade-up" style="transition-delay:0.2s">
-            <div class="year">2021 — 2023</div>
-            <div class="info"><div class="role">Junior Designer</div><div class="company">Pixel Perfect Studios</div></div>
-        </div>
-    </div>
-</section>
+    // ── Header scroll ──
+    function initHeader() {
+      const header = document.getElementById("header");
+      let ticking = false;
+      window.addEventListener("scroll", () => {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            header.classList.toggle("scrolled", window.scrollY > 60);
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+    }
 
-<section id="contact">
-    <div class="section-divider fade-up" style="margin:0 auto 1.5rem;"></div>
-    <p class="section-label fade-up" style="transition-delay:0.05s;text-align:center;">Get in touch</p>
-    <h2 class="section-title fade-up" style="transition-delay:0.1s;text-align:center;">Let's Work <span class="highlight">Together</span></h2>
-    <p class="section-subtitle fade-up" style="transition-delay:0.15s;text-align:center;">Got a project in mind? Drop me a message and I'll get back to you within 24 hours.</p>
-    <div class="contact-section liquid-glass fade-up" style="transition-delay:0.2s">
-        <div class="contact-links"><a href="mailto:faroukrabiu123@gmail.com" class="contact-link">✉️ faroukrabiu123@gmail.com</a></div>
-        <form class="contact-form" onsubmit="event.preventDefault(); alert('Thanks!');">
-            <input type="text" placeholder="Your Name" required>
-            <input type="email" placeholder="Your Email" required>
-            <input type="text" placeholder="Project Type (Web / Design / Video / Photo)">
-            <textarea placeholder="Tell me about your project..."></textarea>
-            <button type="submit" class="lg-btn" style="width:100%;margin-top:0.5rem;"><span class="btn-shimmer"></span>Send Message</button>
-        </form>
-    </div>
-</section>
+    // ── Button 007 init ──
+    function initButton007() {
+      document.querySelectorAll("[data-button-007]").forEach(btn => {
+        const bg = btn.querySelector(".button-007__bg");
+        const inner = btn.querySelector(".button-007__inner");
+        if (!bg || !inner) return;
+        btn.addEventListener("mouseenter", () => {
+          if (reducedMotion) return;
+          const rect = btn.getBoundingClientRect();
+          bg.style.transition = "transform 0.4s cubic-bezier(0.32, 0.72, 0, 1), background-color 0.3s ease";
+          bg.style.transform = `scale(1.04)`;
+          const svgPath = btn.querySelector(".button-007__svg-overlay path");
+          if (svgPath) {
+            gsap.to(svgPath, { scale: 1, duration: 0.4, ease: "power2.out", overwrite: true });
+          } else {
+            const svgP = btn.querySelector(".button-007__svg path");
+            if (svgP) gsap.to(svgP, { scale: 1, duration: 0.4, ease: "power2.out", overwrite: true });
+          }
+        });
+        btn.addEventListener("mouseleave", () => {
+          if (reducedMotion) return;
+          bg.style.transform = "scale(1)";
+          const svgPath = btn.querySelector(".button-007__svg-overlay path");
+          if (svgPath) {
+            gsap.to(svgPath, { scale: 1.25, duration: 0.4, ease: "power2.out", overwrite: true });
+          } else {
+            const svgP = btn.querySelector(".button-007__svg path");
+            if (svgP) gsap.to(svgP, { scale: 1.25, duration: 0.4, ease: "power2.out", overwrite: true });
+          }
+        });
+      });
+    }
 
-<footer><p>© 2025 Rabiu Farouk. All rights reserved. Built with care.</p></footer>
+    // ── Portfolio orbit ──
+    let orbitIndex = 0;
+    const orbitItems = document.querySelectorAll("#portfolio-items .portfolio-orbit__item");
+    const orbitCards = document.querySelectorAll(".portfolio-orbit__item-card");
+    const totalCount = orbitItems.length;
 
-<script>
-    const progress = document.getElementById('scrollProgress');
-    window.addEventListener('scroll', () => {
-        const h = document.documentElement;
-        const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
-        progress.style.width = pct + '%';
+    function updateOrbit(idx) {
+      orbitIndex = (idx + totalCount) % totalCount;
+      document.getElementById("current-count").textContent = String(orbitIndex + 1).padStart(2, "0");
+      orbitItems.forEach((el, i) => {
+        el.classList.toggle("active", i === orbitIndex);
+      });
+      orbitCards.forEach((el, i) => {
+        el.classList.toggle("active", i === orbitIndex);
+      });
+    }
+
+    document.getElementById("orbit-next").addEventListener("click", () => updateOrbit(orbitIndex + 1));
+    document.getElementById("orbit-prev").addEventListener("click", () => updateOrbit(orbitIndex - 1));
+
+    // Keyboard
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") updateOrbit(orbitIndex + 1);
+      if (e.key === "ArrowLeft") updateOrbit(orbitIndex - 1);
     });
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+
+    // ── Contact words animation ──
+    function initContact() {
+      const el = document.getElementById("contact-words");
+      if (!el) return;
+      const words = ["proyectos", "sitios", "marcas", "experiencias", "clientes", "detalles", "impacto", "código", "animaciones"];
+      let i = 0;
+      el.textContent = words[0];
+      if (reducedMotion) { el.style.opacity = "0"; return; }
+      const tl = gsap.timeline({ repeat: -1, paused: true });
+      tl.to(el, { opacity: 0.15, duration: 0.3, ease: "power1.inOut" })
+        .to(el, { opacity: 0, duration: 0.1 }, "+=0.05")
+        .call(() => {
+          i = (i + 1) % words.length;
+          el.textContent = words[i];
+        })
+        .to(el, { opacity: 0.15, duration: 0.3, ease: "power1.inOut" })
+        .to(el, { opacity: 0, duration: 0.1 }, "+=0.05")
+        .call(() => { i = (i + 1) % words.length; el.textContent = words[i]; })
+        .to(el, { opacity: 0.15, duration: 0.4, ease: "power1.inOut" })
+        .to(el, { opacity: 0, duration: 0.3, ease: "power1.in" })
+        .to(el, { opacity: 0.12, duration: 0.2 }, "+=0.05")
+        .to(el, { opacity: 0, duration: 0.2, ease: "power1.in" });
+      tl.play();
+    }
+
+    // ── Dynamic year ──
+    function initYear() {
+      const el = document.getElementById("current-year");
+      if (el) el.textContent = new Date().getFullYear();
+    }
+
+    // ── Split lines animation ──
+    function initSplitLines() {
+      if (reducedMotion) return;
+      document.querySelectorAll("[data-split-lines]").forEach(el => {
+        if (el.dataset.splitLinesInit) return;
+        el.dataset.splitLinesInit = "1";
+        const words = el.innerText.trim().split(" ");
+        el.innerHTML = words.map(w => `<span style="display:inline-block;opacity:0;transform:translateY(8px)">${w}</span>`).join(" ");
+        const spans = el.querySelectorAll("span");
+        gsap.to(spans, {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          stagger: 0.04,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 85%",
+            once: true,
+          }
         });
-    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
-    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('nav ul a');
-    window.addEventListener('scroll', () => {
-        let current = '';
-        sections.forEach(section => {
-            const top = section.offsetTop - 80;
-            const bottom = top + section.offsetHeight;
-            if (window.scrollY >= top && window.scrollY < bottom) current = section.getAttribute('id');
+      });
+    }
+
+    // ── Bracket heading animation ──
+    function initBracketHeading() {
+      if (reducedMotion) return;
+      document.querySelectorAll("[data-bracket-heading]").forEach(el => {
+        if (el.dataset.bracketInit) return;
+        el.dataset.bracketInit = "1";
+        const left = el.querySelector("[data-bracket-left]");
+        const right = el.querySelector("[data-bracket-right]");
+        if (!left || !right) return;
+        gsap.fromTo(left, { scaleX: 0, transformOrigin: "left center" }, {
+          scaleX: 1, duration: 0.6, ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 90%", once: true }
         });
-        navLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            if (href === '#' + current) link.classList.add('active');
-            else link.classList.remove('active');
+        gsap.fromTo(right, { scaleX: 0, transformOrigin: "right center" }, {
+          scaleX: 1, duration: 0.6, ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 90%", once: true }
         });
+      });
+    }
+
+    // ── Scroll draw transition ──
+    function initScrollDraw() {
+      if (reducedMotion) return;
+      const shape = document.querySelector("[data-scroll-draw] .scroll-draw__shape path");
+      if (!shape) return;
+      gsap.fromTo(shape, { drawSVG: "0%" }, {
+        drawSVG: "100%", duration: 1.2, ease: "power2.inOut",
+        scrollTrigger: { trigger: ".scroll-draw", start: "top bottom", end: "top 70%", scrub: 1 }
+      });
+    }
+
+    // ── Service item reveal ──
+    function initServices() {
+      if (reducedMotion) return;
+      document.querySelectorAll(".service-item").forEach((item, i) => {
+        if (item.dataset.srvInit) return;
+        item.dataset.srvInit = "1";
+        const row = item.querySelector(".service-row");
+        const visual = item.querySelector(".service-visual");
+        if (!row || !visual) return;
+        gsap.from(row, {
+          x: -30, opacity: 0, duration: 0.5, ease: "power2.out",
+          scrollTrigger: { trigger: item, start: "top 90%", once: true }
+        });
+        gsap.from(visual, {
+          x: 30, opacity: 0, duration: 0.5, ease: "power2.out",
+          scrollTrigger: { trigger: item, start: "top 90%", once: true,
+            delay: 0.1 }
+        });
+      });
+    }
+
+    // ── Portfolio item reveal ──
+    function initPortfolio() {
+      if (reducedMotion) return;
+      document.querySelectorAll(".portfolio-orbit__item").forEach((el, i) => {
+        if (el.dataset.portInit) return;
+        el.dataset.portInit = "1";
+        gsap.from(el, {
+          opacity: 0, y: 20, duration: 0.4, ease: "power2.out",
+          scrollTrigger: { trigger: "#portfolio", start: "top 85%", once: true,
+            delay: i * 0.1 }
+        });
+      });
+    }
+
+    // ── Init all ──
+    function init() {
+      initHeader();
+      initButton007();
+      initYear();
+      initContact();
+      initSplitLines();
+      initBracketHeading();
+      initScrollDraw();
+      initServices();
+      initPortfolio();
+
+      if (hasLenis) {
+        lenis?.on('scroll', ScrollTrigger.refresh);
+      }
+
+      if (hasScrollTrigger) {
+        ScrollTrigger.refresh();
+      }
+    }
+
+    // Run after everything loads
+    if (document.readyState === "complete") {
+      init();
+    } else {
+      window.addEventListener("load", init);
+    }
+
+    // Re-init on Barba transitions, if present
+    if (typeof Barba !== "undefined") {
+      Barba.Dispatcher.on("newPage", () => {
+        setTimeout(() => {
+          initHeader();
+          initButton007();
+          initYear();
+          initContact();
+          initSplitLines();
+          initBracketHeading();
+          initScrollDraw();
+          initServices();
+          initPortfolio();
+          ScrollTrigger.refresh();
+        }, 100);
+      });
+    }
+
+    // Resize handler
+    window.addEventListener("resize", () => {
+      if (hasLenis && lenis) lenis.resize();
+      if (hasScrollTrigger) ScrollTrigger.refresh();
     });
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-    });
-</script>
+  </script>
 </body>
 </html>

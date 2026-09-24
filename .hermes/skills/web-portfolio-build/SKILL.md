@@ -11,7 +11,14 @@ platforms: [linux, macos, windows]
 
 Use when the user wants to build or scaffold a personal/professional portfolio website — developer portfolio, designer folio, creative site, or any personal site meant to showcase work with polish beyond a plain resume page.
 
-## Stack (default, works first try)
+**Stack options:**
+
+| Approach | When | Stack |
+|---|---|---|
+| Next.js + Framer Motion (default) | Full-featured, animated portfolio | Next.js 15/16 + Tailwind + Framer Motion + Lenis |
+| **Static HTML + GSAP** (this session's pattern) | Copying a Webflow/reference site, or when the user wants a single `index.html` with no build step | GSAP + Lenis + Barba from CDN, custom CSS, no framework |
+
+The static HTML approach is the right call when: the user says "copy this website" and points to a Webflow/CMS-built site; or when they want a single deployable file. Extract the design language (colors, fonts, layout patterns, component styles) from the reference, then build clean static HTML that replicates the aesthetic — not the exact content.
 
 | Layer | Choice | Why |
 |---|---|---|
@@ -36,6 +43,20 @@ Install: `npm install framer-motion @studio-freight/lenis gsap @gsap/react`
 | Dark + glow (default in this skill) | Creative/dev portfolios wanting depth | `bg-black text-white`, gradient text, glow cards, backdrop blur |
 | Liquid Glass / iOS 26 style | Clean, premium, product-feel portfolios | Real optical refraction via Canvas displacement maps (archisvaze technique) — see `references/liquid-glass-real.md`. CSS `backdrop-filter: blur()` alone reads as frosted glass, not liquid glass. |
 | Light + minimal | Corporate/consulting portfolios | `#fafafa` or `#fff` background, `#1a1a1a` text, subtle borders, generous whitespace |
+
+### Dark serif portfolio (Alejandro HA style)
+
+When the user wants a dark, editorial, minimal portfolio inspired by sites like alejandroha.com:
+
+- **Background:** `#080912` (near-black, not pure black — warmer)
+- **Text:** `#e2e1e1` (light silver, not pure white — softer)
+- **Font:** Cormorant Garamond (Google Fonts) or ATyp Bl Variable (Typekit) — a serif with personality. Load via `<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">`. CTA text uses Arial/Helvetica.
+- **Accent:** `#2a4093` (dark blue) for brackets, counters, hover states
+- **Sections:** Hero (full-bleed portrait with overlay) → About (bracket headings like "[About]") → Services (2-column list with images) → Projects (orbit carousel) → Certifications → Contact → Footer
+- **Motion:** GSAP (SplitText, DrawSVG, ScrollTrigger) + Lenis smooth scroll + Barba page transitions — all loaded from CDN, no build step needed
+- **CTA button:** SVG mask-morphing button (see `references/component-recipes.md` § SVG CTA Button)
+
+See `references/reference-site-replication.md` for the full workflow when the user says "copy this website."
 
 ### Liquid Glass (two levels)
 
@@ -118,7 +139,7 @@ Three predefined filter strengths: `liquid-glass` (scale=8, subtle), `liquid-gla
 - Animated `seed` values create the subtle shimmer/movement characteristic of real liquid glass — without animation it looks like static distortion.
 - Don't stack multiple SVG filters on the same element — pick one filter ID per element.
 - The `display:none` on the SVG wrapper is critical — the SVG must exist in the DOM for the filter references to resolve, but must not render visually.
-- **Don't clobber real content when adding liquid glass to an existing portfolio.** Re-skin the CSS/HTML element-by-element — preserve the original text, project names, contact info, and section structure. A full file rewrite tends to overwrite real work with template defaults, and the user has explicitly rejected full rewrites in favor of applying only the effect. See `references/refraction-architecture.md` for the full layer model, filter chain, and verification checklist.
+- **When the user says "copy this website":** extract the design language, not the content. Download the reference's CSS/JS/images via curl, identify the color palette, font, layout patterns, and component styles, then build your own clean static HTML that replicates the aesthetic. Replace all text, project names, images, and contact info with the actual portfolio owner's content. The reference site's images are copyright — use them only as visual placeholders during development, swap with the owner's real images before deploying.
 
 **Commit to ONE approach, not two.** When the user provides reference repos (e.g. `dpawlikowski/liquid-glass` for pure-CSS feTurbulence, `archisvaze/liquid-glass` for JS Canvas displacement maps), pick one and execute it fully. Oscillating between a CSS-only approach and a JS-enhanced approach — applying half-measures from each — produces a broken hybrid that satisfies neither. The reference repos are complete, working systems; replicate one end-to-end rather than splicing pieces together.
 
