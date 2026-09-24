@@ -101,16 +101,45 @@
         .bg-orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(80px);
+            filter: blur(90px);
             pointer-events: none;
-            opacity: 0.5;
+            opacity: 0.75;
         }
-        .bg-orb-1 { top: 10%; left: 5%; width: 400px; height: 400px; background: rgba(255,140,80,0.12); animation: orbFloat 14s ease-in-out infinite alternate; }
-        .bg-orb-2 { bottom: 10%; right: 5%; width: 350px; height: 350px; background: rgba(80,180,255,0.10); animation: orbFloat 17s ease-in-out infinite alternate-reverse; }
-        .bg-orb-3 { top: 40%; left: 60%; width: 300px; height: 300px; background: rgba(200,100,255,0.08); animation: orbFloat 20s ease-in-out infinite alternate; }
-        @keyframes orbFloat {
+        .bg-orb-1 {
+            top: -8%; left: 5%;
+            width: 500px; height: 500px;
+            background: radial-gradient(circle at 30% 35%, rgba(255,80,80,0.4), rgba(200,40,40,0.15) 50%, transparent 70%);
+            box-shadow: 0 0 35rem rgba(255,60,60,0.4), 0 0 12rem rgba(180,30,30,0.2);
+            animation: bg-orb-1-drift 18s ease-in-out infinite alternate;
+        }
+        .bg-orb-2 {
+            bottom: -15%; right: 2%;
+            width: 650px; height: 650px;
+            background: radial-gradient(circle at 55% 60%, rgba(86,167,255,0.4), rgba(40,80,180,0.15) 55%, transparent 70%);
+            box-shadow: 0 0 40rem rgba(54,101,206,0.4), 0 0 14rem rgba(20,50,130,0.2);
+            animation: bg-orb-2-drift 24s ease-in-out infinite alternate;
+        }
+        .bg-orb-3 {
+            top: 42%; left: 58%;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle at 40% 45%, rgba(255,214,0,0.3), rgba(200,160,0,0.1) 55%, transparent 70%);
+            box-shadow: 0 0 18rem rgba(255,180,0,0.3), 0 0 7rem rgba(180,130,0,0.15);
+            animation: bg-orb-3-drift 15s ease-in-out infinite alternate;
+        }
+        @keyframes bg-orb-1-drift {
             0%   { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(30px, -40px) scale(1.15); }
+            50%  { transform: translate(2rem, -3rem) scale(1.15); }
+            100% { transform: translate(-2rem, 2rem) scale(0.9); }
+        }
+        @keyframes bg-orb-2-drift {
+            0%   { transform: translate(0, 0) scale(1); }
+            50%  { transform: translate(-3rem, 2rem) scale(1.1); }
+            100% { transform: translate(3rem, -2rem) scale(0.92); }
+        }
+        @keyframes bg-orb-3-drift {
+            0%   { transform: translate(0, 0) scale(1); }
+            50%  { transform: translate(2rem, 2rem) scale(1.18); }
+            100% { transform: translate(-2rem, -1rem) scale(0.88); }
         }
 
         body {
@@ -193,7 +222,7 @@
             pointer-events: none;
         }
         .liquid-glass:hover {
-            transform: translateY(-4px) scale(1.01);
+            transform: translateY(-5px);
             box-shadow:
                 0 40px 100px rgba(0,0,0,0.8),
                 0 0 0 1px rgba(255,255,255,0.2),
@@ -220,23 +249,12 @@
                 inset 0 1px rgba(255,255,255,0.4);
             cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease;
             isolation: isolate;
-            -webkit-backdrop-filter: blur(8px) saturate(160%) var(--lg-filter-light);
-            backdrop-filter: blur(8px) saturate(160%) var(--lg-filter-light);
-        }
-        .lg-btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            background: rgba(255,255,255,0.06);
-            z-index: -1;
-            pointer-events: none;
-            animation: glass-sheen 5s ease-in-out infinite;
         }
         .lg-btn::after {
             content: '';
             position: absolute;
             inset: 0;
+            z-index: 2;
             border-radius: inherit;
             box-shadow:
                 inset 1.5px 0 rgba(255,86,116,0.3),
@@ -244,9 +262,23 @@
                 inset 0 1px rgba(255,255,255,0.55),
                 inset 0 -1px 0 rgba(255,255,255,0.15);
             mix-blend-mode: screen;
-            z-index: 2;
             pointer-events: none;
             animation: glass-edge-shimmer 3s ease-in-out infinite alternate;
+        }
+        .lg-btn::before {
+            content: '';
+            position: absolute;
+            inset: -12px;
+            z-index: -1;
+            border-radius: 20px;
+            background: var(--lg-scene-background, transparent);
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+            filter: var(--lg-filter-light);
+            -webkit-filter: var(--lg-filter-light);
+            pointer-events: none;
+            opacity: 0.7;
         }
         .lg-btn .btn-shimmer {
             position: absolute; top: -50%; left: -60%; width: 40%; height: 200%;
