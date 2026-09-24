@@ -13,6 +13,8 @@
 
         :root {
             --lg-filter: url("#liquid-glass-filter");
+            --lg-filter-heavy: url("#liquid-glass-heavy");
+            --lg-filter-light: url("#liquid-glass-light");
             --lg-blur: 14px;
             --lg-saturate: 220%;
             --lg-opacity: 0.5;
@@ -22,6 +24,7 @@
             --lg-shadow: 0 24px 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.1);
             --lg-edge-red: rgba(255,86,116,0.5);
             --lg-edge-cyan: rgba(54,226,255,0.45);
+            --lg-scene-background: radial-gradient(ellipse 80% 60% at 15% 85%, rgba(255,255,255,0.06) 0%, transparent 65%), radial-gradient(ellipse 60% 70% at 85% 15%, rgba(255,255,255,0.04) 0%, transparent 60%), radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255,255,255,0.015) 0%, transparent 55%), linear-gradient(180deg, #0d0d0d 0%, #0a0a0a 40%, #080808 100%);
             --bg: #0a0a0a;
             --text: #f0f0f0;
             --text-muted: #888888;
@@ -105,52 +108,56 @@
                 rgba(255,255,255,0.06)
             );
             border: 1px solid rgba(255,255,255,var(--lg-border-opacity));
-            box-shadow: var(--lg-shadow);
+            box-shadow: var(--lg-shadow), inset 0 1px 0 rgba(255,255,255,0.42);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             cursor: default;
+            -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-saturate)) var(--lg-filter);
+            backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-saturate)) var(--lg-filter);
         }
-
-        /* ── z: -1 — BACKDROP DISPLACEMENT (the actual liquid glass warp) ── */
-        .liquid-glass::after {
+        /* z: -2 — refraction sprite (displaced background copy). Hidden when backdrop-filter with SVG URL is supported */
+        .liquid-glass__refraction {
+            position: absolute;
+            z-index: -2;
+            inset: -36px;
+            border-radius: inherit;
+            background: var(--lg-scene-background, transparent);
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+            filter: var(--lg-filter);
+            opacity: 0.82;
+            transform: scale(1.035);
+            pointer-events: none;
+        }
+        /* z: -1 — white tint */
+        .liquid-glass::before {
             content: '';
             position: absolute;
             inset: 0;
             z-index: -1;
             border-radius: inherit;
-            backdrop-filter: var(--lg-filter) blur(var(--lg-blur)) saturate(var(--lg-saturate));
-            -webkit-backdrop-filter: var(--lg-filter) blur(var(--lg-blur)) saturate(var(--lg-saturate));
-            pointer-events: none;
-        }
-
-        /* ── z: 0 — tint layer ── */
-        .liquid-glass::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-            border-radius: inherit;
             background: rgba(255,255,255,var(--lg-opacity));
             pointer-events: none;
             animation: glass-sheen 6s ease-in-out infinite;
         }
-
-        /* ── Chromatic edge + specular highlight (on main element, above content) ── */
-        .liquid-glass {
+        /* z: 3 — chromatic edge highlights, mix-blend: screen so they brighten without blocking content */
+        .liquid-glass::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            border-radius: inherit;
             box-shadow:
-                0 24px 70px rgba(0,0,0,0.6),
-                0 0 0 1px rgba(255,255,255,0.08),
-                inset 1px 0 rgba(255,86,116,0.3),
-                inset -1px 0 rgba(54,226,255,0.25),
-                inset 0 1px rgba(255,255,255,0.3);
+                inset  1px 0 var(--lg-edge-red),
+                inset -1px 0 var(--lg-edge-cyan),
+                inset  0  1px rgba(255,255,255,0.52),
+                inset  0 -18px 32px rgba(255,255,255,0.08);
+            mix-blend-mode: screen;
+            pointer-events: none;
         }
         .liquid-glass:hover {
             transform: translateY(-3px);
-            box-shadow:
-                0 32px 80px rgba(0,0,0,0.7),
-                0 0 0 1px rgba(255,255,255,0.12),
-                inset 1px 0 rgba(255,86,116,0.4),
-                inset -1px 0 rgba(54,226,255,0.35),
-                inset 0 1px rgba(255,255,255,0.4);
+            box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.12), inset 0 1px 0 rgba(255,255,255,0.5);
             --lg-opacity: 0.7;
         }
 
@@ -527,6 +534,7 @@
         ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
     </style>
+    <script src="/liquid-glass-real.js" defer></script>
     <svg class="svg-filters" xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0">
         <defs>
             <filter id="liquid-glass-filter" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
@@ -608,33 +616,33 @@
     <h2 class="section-title fade-up" style="transition-delay:0.1s">Services <span class="highlight">26</span></h2>
     <p class="section-subtitle fade-up" style="transition-delay:0.15s">Everything from concept to delivery. Fast turnaround, clean results, and zero headache.</p>
     <div class="services-grid">
-        <div class="service-item fade-up" style="transition-delay:0.2s"><div class="icon">🌐</div><div><h4>Web Development</h4><p>Landing pages, business websites, responsive designs — built clean and deployed fast.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:0.25s"><div class="icon">🎬</div><div><h4>Video Editing</h4><p>YouTube videos, short-form content, product promos — cuts, transitions, captions, color grading.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:0.3s"><div class="icon">📸</div><div><h4>Photo Editing</h4><p>Retouching, background removal, color correction, product photos — make every image pop.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:0.35s"><div class="icon">🎨</div><div><h4>Flyer & Poster Design</h4><p>Event flyers, promotional posters, brochures — grab attention and get the message across.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:0.4s"><div class="icon">✨</div><div><h4>Graphic Design</h4><p>Logos, brand identity, social media graphics, business cards — consistent and professional.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:0.45s"><div class="icon">🚀</div><div><h4>Brand Identity</h4><p>Full branding packages — logo, color palette, typography, and style guide for a cohesive look.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:0.5s"><div class="icon">📱</div><div><h4>Mobile UI Design</h4><p>iOS and Android app interfaces — clean, intuitive, ready for development handoff.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:0.55s"><div class="icon">🎯</div><div><h4>Conversion Optimization</h4><p>A/B testing, layout refinement, copy improvements — turn visitors into customers.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:0.6s"><div class="icon">📊</div><div><h4>Analytics Dashboards</h4><p>Custom data visualizations and admin panels — make your data readable and actionable.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:0.65s"><div class="icon">🔌</div><div><h4>API Integration</h4><p>Connect your tools and services — payment gateways, CRMs, email platforms, webhooks.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:0.7s"><div class="icon">🖼️</div><div><h4>UI Component Libraries</h4><p>Design system creation — reusable components, style tokens, and documentation.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:0.75s"><div class="icon">📝</div><div><h4>Content & Copywriting</h4><p>Website copy, landing page text, product descriptions — clear, persuasive, on-brand.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:0.8s"><div class="icon">🎭</div><div><h4>Social Media Design</h4><p>Posts, stories, banners, highlight covers — cohesive visual identity across platforms.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:0.85s"><div class="icon">📄</div><div><h4>Document Design</h4><p>Reports, pitch decks, presentations — polished documents that convey professionalism.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:0.9s"><div class="icon">🎪</div><div><h4>Event Branding</h4><p>Conference materials, booth designs, signage — create a memorable event experience.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:0.95s"><div class="icon">🏷️</div><div><h4>Packaging Design</h4><p>Product packaging, labels, unboxing experience — stand out on the shelf.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:1s"><div class="icon">🎨</div><div><h4>Illustration</h4><p>Custom illustrations for web, print, and social — unique visuals that tell your story.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:1.05s"><div class="icon">🖌️</div><div><h4>Digital Painting</h4><p>Concept art, character design, environment painting — for games, media, and branding.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:1.1s"><div class="icon">📹</div><div><h4>Motion Graphics</h4><p>Animated logos, explainer videos, UI animations — bring your static designs to life.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:1.15s"><div class="icon">🎥</div><div><h4>Promo Video Production</h4><p>Short-form promotional videos — script, shoot, edit, deliver ready-to-post content.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:1.2s"><div class="icon">🔊</div><div><h4>Audio Post-Production</h4><p>Podcast editing, voiceover cleanup, sound design — crisp audio that engages listeners.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:1.25s"><div class="icon">📸</div><div><h4>Product Photography</h4><p>E-commerce product shots, lifestyle images, 360° views — showcase your products right.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:1.3s"><div class="icon">💻</div><div><h4>Landing Page Optimization</h4><p>Speed audits, UX improvements, conversion tweaks — maximize every visitor's value.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:1.35s"><div class="icon">🔐</div><div><h4>Security Audit & Hardening</h4><p>Basic security reviews for web projects — HTTPS, headers, common vulnerability checks.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:1.4s"><div class="icon">👥</div><div><h4>UX Research & Testing</h4><p>User interviews, usability tests, feedback analysis — design decisions backed by data.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:1.45s"><div class="icon">📈</div><div><h4>SEO Basics</h4><p>On-page optimization, meta tags, structured data — help your site get found.</p></div></div>
-        <div class="service-item fade-up" style="transition-delay:1.5s"><div class="icon">⚡</div><div><h4>Performance Tuning</h4><p>Load time optimization, image compression, code splitting — faster sites rank better.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:0.2s"><div class="icon">🌐</div><div><h4>Web Development</h4><p>Landing pages, business websites, responsive designs — built clean and deployed fast.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:0.25s"><div class="icon">🎬</div><div><h4>Video Editing</h4><p>YouTube videos, short-form content, product promos — cuts, transitions, captions, color grading.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:0.3s"><div class="icon">📸</div><div><h4>Photo Editing</h4><p>Retouching, background removal, color correction, product photos — make every image pop.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:0.35s"><div class="icon">🎨</div><div><h4>Flyer & Poster Design</h4><p>Event flyers, promotional posters, brochures — grab attention and get the message across.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:0.4s"><div class="icon">✨</div><div><h4>Graphic Design</h4><p>Logos, brand identity, social media graphics, business cards — consistent and professional.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:0.45s"><div class="icon">🚀</div><div><h4>Brand Identity</h4><p>Full branding packages — logo, color palette, typography, and style guide for a cohesive look.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:0.5s"><div class="icon">📱</div><div><h4>Mobile UI Design</h4><p>iOS and Android app interfaces — clean, intuitive, ready for development handoff.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:0.55s"><div class="icon">🎯</div><div><h4>Conversion Optimization</h4><p>A/B testing, layout refinement, copy improvements — turn visitors into customers.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:0.6s"><div class="icon">📊</div><div><h4>Analytics Dashboards</h4><p>Custom data visualizations and admin panels — make your data readable and actionable.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:0.65s"><div class="icon">🔌</div><div><h4>API Integration</h4><p>Connect your tools and services — payment gateways, CRMs, email platforms, webhooks.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:0.7s"><div class="icon">🖼️</div><div><h4>UI Component Libraries</h4><p>Design system creation — reusable components, style tokens, and documentation.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:0.75s"><div class="icon">📝</div><div><h4>Content & Copywriting</h4><p>Website copy, landing page text, product descriptions — clear, persuasive, on-brand.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:0.8s"><div class="icon">🎭</div><div><h4>Social Media Design</h4><p>Posts, stories, banners, highlight covers — cohesive visual identity across platforms.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:0.85s"><div class="icon">📄</div><div><h4>Document Design</h4><p>Reports, pitch decks, presentations — polished documents that convey professionalism.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:0.9s"><div class="icon">🎪</div><div><h4>Event Branding</h4><p>Conference materials, booth designs, signage — create a memorable event experience.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:0.95s"><div class="icon">🏷️</div><div><h4>Packaging Design</h4><p>Product packaging, labels, unboxing experience — stand out on the shelf.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:1s"><div class="icon">🎨</div><div><h4>Illustration</h4><p>Custom illustrations for web, print, and social — unique visuals that tell your story.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:1.05s"><div class="icon">🖌️</div><div><h4>Digital Painting</h4><p>Concept art, character design, environment painting — for games, media, and branding.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:1.1s"><div class="icon">📹</div><div><h4>Motion Graphics</h4><p>Animated logos, explainer videos, UI animations — bring your static designs to life.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:1.15s"><div class="icon">🎥</div><div><h4>Promo Video Production</h4><p>Short-form promotional videos — script, shoot, edit, deliver ready-to-post content.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:1.2s"><div class="icon">🔊</div><div><h4>Audio Post-Production</h4><p>Podcast editing, voiceover cleanup, sound design — crisp audio that engages listeners.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:1.25s"><div class="icon">📸</div><div><h4>Product Photography</h4><p>E-commerce product shots, lifestyle images, 360° views — showcase your products right.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:1.3s"><div class="icon">💻</div><div><h4>Landing Page Optimization</h4><p>Speed audits, UX improvements, conversion tweaks — maximize every visitor's value.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:1.35s"><div class="icon">🔐</div><div><h4>Security Audit & Hardening</h4><p>Basic security reviews for web projects — HTTPS, headers, common vulnerability checks.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:1.4s"><div class="icon">👥</div><div><h4>UX Research & Testing</h4><p>User interviews, usability tests, feedback analysis — design decisions backed by data.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:1.45s"><div class="icon">📈</div><div><h4>SEO Basics</h4><p>On-page optimization, meta tags, structured data — help your site get found.</p></div></div>
+        <div class="service-item liquid-glass fade-up" style="transition-delay:1.5s"><div class="icon">⚡</div><div><h4>Performance Tuning</h4><p>Load time optimization, image compression, code splitting — faster sites rank better.</p></div></div>
     </div>
 </section>
 
@@ -644,12 +652,12 @@
     <h2 class="section-title fade-up" style="transition-delay:0.1s">Core <span class="highlight">Skills</span></h2>
     <p class="section-subtitle fade-up" style="transition-delay:0.15s">Tools and disciplines I work with daily.</p>
     <div class="skills-grid">
-        <div class="skill-item fade-up" style="transition-delay:0.2s"><div class="icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><h3>Web Dev</h3><p>HTML, CSS, JS</p></div>
-        <div class="skill-item fade-up" style="transition-delay:0.25s"><div class="icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg></div><h3>Video Editing</h3><p>Cuts, transitions</p></div>
-        <div class="skill-item fade-up" style="transition-delay:0.3s"><div class="icon"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div><h3>Photo Editing</h3><p>Retouching, color</p></div>
-        <div class="skill-item fade-up" style="transition-delay:0.35s"><div class="icon"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-4 4-2-2 7-7-3 3 4 4 2-2-7-7z"/></svg></div><h3>Graphic Design</h3><p>Logos, flyers, branding</p></div>
-        <div class="skill-item fade-up" style="transition-delay:0.4s"><div class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></div><h3>UI Design</h3><p>Interfaces, hierarchy</p></div>
-        <div class="skill-item fade-up" style="transition-delay:0.45s"><div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><h3>Brand Identity</h3><p>Logo, palette, guides</p></div>
+        <div class="skill-item liquid-glass fade-up" style="transition-delay:0.2s"><div class="icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><h3>Web Dev</h3><p>HTML, CSS, JS</p></div>
+        <div class="skill-item liquid-glass fade-up" style="transition-delay:0.25s"><div class="icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg></div><h3>Video Editing</h3><p>Cuts, transitions</p></div>
+        <div class="skill-item liquid-glass fade-up" style="transition-delay:0.3s"><div class="icon"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div><h3>Photo Editing</h3><p>Retouching, color</p></div>
+        <div class="skill-item liquid-glass fade-up" style="transition-delay:0.35s"><div class="icon"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-4 4-2-2 7-7-3 3 4 4 2-2-7-7z"/></svg></div><h3>Graphic Design</h3><p>Logos, flyers, branding</p></div>
+        <div class="skill-item liquid-glass fade-up" style="transition-delay:0.4s"><div class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></div><h3>UI Design</h3><p>Interfaces, hierarchy</p></div>
+        <div class="skill-item liquid-glass fade-up" style="transition-delay:0.45s"><div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><h3>Brand Identity</h3><p>Logo, palette, guides</p></div>
     </div>
 </section>
 
@@ -659,51 +667,51 @@
     <h2 class="section-title fade-up" style="transition-delay:0.1s">Selected <span class="highlight">Work</span></h2>
     <p class="section-subtitle fade-up" style="transition-delay:0.15s">Recent projects across web, design, and visual content.</p>
     <div class="projects-grid">
-        <div class="project-card fade-up" style="transition-delay:0.2s">
+        <div class="project-card liquid-glass fade-up" style="transition-delay:0.2s">
             <div class="preview"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80&auto=format&fit=crop" alt="Restaurant" loading="lazy"><div class="overlay"></div><span class="badge">Flyer Design</span><span class="live-badge">Delivered</span></div>
             <div class="body"><div class="category">Flyer Design</div><h3>Bistro Royale — Grand Opening Flyer</h3><p>Vibrant A4 flyer for a restaurant grand opening. Bold headline typography, warm color palette, event details clearly laid out — date, time, location, special offers. Print-ready PDF + web PNG.</p><div class="tags"><span>Print Design</span><span>A4</span><span>Event Promo</span></div><div class="meta"><span>Status: <strong>Delivered</strong></span><span>Format: <strong>Print + Digital</strong></span></div></div>
         </div>
-        <div class="project-card fade-up" style="transition-delay:0.25s">
+        <div class="project-card liquid-glass fade-up" style="transition-delay:0.25s">
             <div class="preview"><img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=600&q=80&auto=format&fit=crop" alt="Travel vlog" loading="lazy"><div class="overlay"></div><span class="badge">Video Editing</span><span class="live-badge">Published</span></div>
             <div class="body"><div class="category">Video Editing</div><h3>Explorer Channels — Travel Vlog Series</h3><p>Edited a 10-part travel vlog series for a YouTube channel. Each episode ~8-12 minutes with smooth transitions, B-roll integration, color grading for consistent look, animated captions, custom intro/outro with channel branding.</p><div class="tags"><span>YouTube</span><span>10 Episodes</span><span>Color Grading</span></div><div class="meta"><span>Status: <strong>Published</strong></span><span>Length: <strong>8-12 min each</strong></span></div></div>
         </div>
-        <div class="project-card fade-up" style="transition-delay:0.3s">
+        <div class="project-card liquid-glass fade-up" style="transition-delay:0.3s">
             <div class="preview"><img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&q=80&auto=format&fit=crop" alt="Tech workspace" loading="lazy"><div class="overlay"></div><span class="badge">Brand Identity</span><span class="live-badge">Delivered</span></div>
             <div class="body"><div class="category">Graphic Design</div><h3>NovaTech Solutions — Full Brand Identity</h3><p>Complete brand identity for a tech startup. Modern minimalist wordmark logo with negative space detail, professional color palette, clean sans-serif typography, 12-page brand style guide covering logo usage, color codes, typography, and application examples.</p><div class="tags"><span>Logo Design</span><span>Brand Guide</span><span>12 Assets</span></div><div class="meta"><span>Status: <strong>Delivered</strong></span><span>Type: <strong>Full Branding</strong></span></div></div>
         </div>
-        <div class="project-card fade-up" style="transition-delay:0.35s">
+        <div class="project-card liquid-glass fade-up" style="transition-delay:0.35s">
             <div class="preview"><img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=600&q=80&auto=format&fit=crop" alt="Skincare products" loading="lazy"><div class="overlay"></div><span class="badge">Photo Editing</span><span class="live-badge">Delivered</span></div>
             <div class="body"><div class="category">Photo Editing</div><h3>GlowCare — E-Commerce Product Catalog</h3><p>Edited 30+ product photos for an online skincare store launch. Background cleanup and replacement with clean white backdrop, color correction, shadow enhancement, skin texture smoothing, consistent visual style across entire catalog. Web-ready JPEG + print-ready TIFF.</p><div class="tags"><span>Product Photography</span><span>30+ Photos</span><span>JPEG + TIFF</span></div><div class="meta"><span>Status: <strong>Delivered</strong></span><span>Count: <strong>30+ photos</strong></span></div></div>
         </div>
-        <div class="project-card fade-up" style="transition-delay:0.4s">
+        <div class="project-card liquid-glass fade-up" style="transition-delay:0.4s">
             <div class="preview"><img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80&auto=format&fit=crop" alt="Fitness" loading="lazy"><div class="overlay"></div><span class="badge">Graphic Design</span><span class="live-badge">Delivered</span></div>
             <div class="body"><div class="category">Graphic Design</div><h3>FitLife — Instagram Launch Campaign</h3><p>Complete social media launch kit for a fitness brand entering Instagram. 20 cohesive posts including motivational quotes, product showcase templates, before/after layouts, story templates, and branded highlight covers. Green-and-white color scheme with bold typography.</p><div class="tags"><span>Social Media</span><span>20 Assets</span><span>Instagram</span></div><div class="meta"><span>Status: <strong>Delivered</strong></span><span>Platform: <strong>Instagram</strong></span></div></div>
         </div>
-        <div class="project-card fade-up" style="transition-delay:0.45s">
+        <div class="project-card liquid-glass fade-up" style="transition-delay:0.45s">
             <div class="preview"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80&auto=format&fit=crop" alt="Dashboard" loading="lazy"><div class="overlay"></div><span class="badge">Web Development</span><span class="live-badge">Live Site</span></div>
             <div class="body"><div class="category">Web Development</div><h3>TaskFlow App — SaaS Landing Page</h3><p>Conversion-focused landing page for a project management SaaS tool. Hero with animated headline, feature grid, customer testimonials, pricing table with three tiers, FAQ accordion, prominent CTAs. Semantic HTML, CSS Grid/Flexbox, mobile-responsive, Lighthouse 95+.</p><div class="tags"><span>Landing Page</span><span>SaaS</span><span>Lighthouse 95+</span></div><div class="meta"><span>Status: <strong>Live</strong></span><span>Speed: <strong>95+ Lighthouse</strong></span></div></div>
         </div>
-        <div class="project-card fade-up" style="transition-delay:0.5s">
+        <div class="project-card liquid-glass fade-up" style="transition-delay:0.5s">
             <div class="preview"><img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600&q=80&auto=format&fit=crop" alt="Music festival" loading="lazy"><div class="overlay"></div><span class="badge">Flyer Design</span><span class="live-badge">Delivered</span></div>
             <div class="body"><div class="category">Flyer Design</div><h3>SoundWave Festival — Poster Series</h3><p>Complete poster series for a local music festival. Three poster designs in different sizes (A2, A3, A4) for various distribution channels — outdoor billboards, shop windows, handouts. Bold festival branding, lineup typography, date and venue details. Digital versions for social media.</p><div class="tags"><span>Poster Design</span><span>3 Sizes</span><span>Digital + Print</span></div><div class="meta"><span>Status: <strong>Delivered</strong></span><span>Set: <strong>3 posters + digital</strong></span></div></div>
         </div>
-        <div class="project-card fade-up" style="transition-delay:0.55s">
+        <div class="project-card liquid-glass fade-up" style="transition-delay:0.55s">
             <div class="preview"><img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&q=80&auto=format&fit=crop" alt="Web dev" loading="lazy"><div class="overlay"></div><span class="badge">Web Development</span><span class="live-badge">Live Site</span></div>
             <div class="body"><div class="category">Web Development</div><h3>CreativeStudio — Agency Portfolio Site</h3><p>Full portfolio website for a creative agency. Homepage with animated project showcase, case study pages with detailed process breakdowns, blog section, contact form with validation. Semantic HTML5, CSS Grid/Flexbox, Intersection Observer animations, fully responsive, Core Web Vitals optimized.</p><div class="tags"><span>Portfolio</span><span>Agency</span><span>Animations</span></div><div class="meta"><span>Status: <strong>Live</strong></span><span>Pages: <strong>12</strong></span></div></div>
         </div>
-        <div class="project-card fade-up" style="transition-delay:0.6s">
+        <div class="project-card liquid-glass fade-up" style="transition-delay:0.6s">
             <div class="preview"><img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80&auto=format&fit=crop" alt="Restaurant interior" loading="lazy"><div class="overlay"></div><span class="badge">Web Development</span><span class="live-badge">Live Site</span></div>
             <div class="body"><div class="category">Web Development</div><h3>UrbanEats — Restaurant Website</h3><p>Complete website for a restaurant group. Hero with food photography, menu section with category filtering, reservations integration, events calendar, online ordering preview, location map. Mobile-first design, parallax food galleries, booking form with validation. Optimized for local SEO.</p><div class="tags"><span>Restaurant</span><span>Menu</span><span>Reservations</span></div><div class="meta"><span>Status: <strong>Live</strong></span><span>Locations: <strong>3</strong></span></div></div>
         </div>
-        <div class="project-card fade-up" style="transition-delay:0.65s">
+        <div class="project-card liquid-glass fade-up" style="transition-delay:0.65s">
             <div class="preview"><img src="https://images.unsplash.com/photo-1517245380384-1685ffc3a499?w=600&q=80&auto=format&fit=crop" alt="Mobile app" loading="lazy"><div class="overlay"></div><span class="badge">UI Design</span><span class="live-badge">Delivered</span></div>
             <div class="body"><div class="category">UI Design</div><h3>FinTrack — Personal Finance App UI</h3><p>Complete mobile app UI design for a personal finance tracker. 40+ screens including onboarding flow, dashboard with interactive charts, transaction list with search/filter, budget planner, bill reminder system, profile settings. Dark and light mode variants. Figma with auto-layout components and design tokens.</p><div class="tags"><span>Mobile UI</span><span>Figma</span><span>40+ Screens</span></div><div class="meta"><span>Status: <strong>Delivered</strong></span><span>Platform: <strong>iOS + Android</strong></span></div></div>
         </div>
-        <div class="project-card fade-up" style="transition-delay:0.7s">
+        <div class="project-card liquid-glass fade-up" style="transition-delay:0.7s">
             <div class="preview"><img src="https://images.unsplash.com/photo-1504711434969-e33886168d8c?w=600&q=80&auto=format&fit=crop" alt="Logo design" loading="lazy"><div class="overlay"></div><span class="badge">Logo Design</span><span class="live-badge">Delivered</span></div>
             <div class="body"><div class="category">Graphic Design</div><h3>Vertex Advisory — Corporate Rebrand</h3><p>Full rebrand for a management consulting firm. New wordmark logo with geometric symbol, refined color palette (deep charcoal, warm gold, slate blue), typography system, business card design, letterhead, presentation template, email signature set. Delivered in AI, EPS, PNG, SVG with usage guidelines.</p><div class="tags"><span>Rebrand</span><span>Corporate</span><span>Full Identity</span></div><div class="meta"><span>Status: <strong>Delivered</strong></span><span>Assets: <strong>15+</strong></span></div></div>
         </div>
-        <div class="project-card fade-up" style="transition-delay:0.75s">
+        <div class="project-card liquid-glass fade-up" style="transition-delay:0.75s">
             <div class="preview"><img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&q=80&auto=format&fit=crop" alt="Team" loading="lazy"><div class="overlay"></div><span class="badge">Video Editing</span><span class="live-badge">Published</span></div>
             <div class="body"><div class="category">Video Editing</div><h3>SpeedCart — Product Launch Promo</h3><p>60-second product launch promo video for an e-commerce startup. Fast-paced editing with motion graphics, product close-ups, animated text overlays, music sync, CTA ending. Designed for Instagram Reels, YouTube Shorts, and TikTok — three aspect ratio versions delivered.</p><div class="tags"><span>Promo Video</span><span>Motion Graphics</span><span>Multi-format</span></div><div class="meta"><span>Status: <strong>Published</strong></span><span>Length: <strong>60 sec</strong></span></div></div>
         </div>
@@ -723,10 +731,10 @@
             <button class="lg-btn" style="margin-top:1rem" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})"><span class="btn-shimmer"></span>Let's Work Together</button>
         </div>
         <div class="stats-grid fade-up" style="transition-delay:0.3s">
-            <div class="stat-card"><div class="number">30+</div><div class="label">Projects Delivered</div></div>
-            <div class="stat-card"><div class="number">26</div><div class="label">Services Offered</div></div>
-            <div class="stat-card"><div class="number">100%</div><div class="label">Client Satisfaction</div></div>
-            <div class="stat-card"><div class="number">24h</div><div class="label">Response Time</div></div>
+            <div class="stat-card liquid-glass"><div class="number">30+</div><div class="label">Projects Delivered</div></div>
+            <div class="stat-card liquid-glass"><div class="number">26</div><div class="label">Services Offered</div></div>
+            <div class="stat-card liquid-glass"><div class="number">100%</div><div class="label">Client Satisfaction</div></div>
+            <div class="stat-card liquid-glass"><div class="number">24h</div><div class="label">Response Time</div></div>
         </div>
     </div>
 </section>
@@ -736,15 +744,15 @@
     <p class="section-label fade-up" style="transition-delay:0.05s">Career</p>
     <h2 class="section-title fade-up" style="transition-delay:0.1s;text-align:center;">Experience</h2>
     <div class="work-history" style="margin-top:2rem;max-width:600px;margin-left:auto;margin-right:auto;">
-        <div class="work-item fade-up" style="transition-delay:0.1s">
+        <div class="work-item liquid-glass fade-up" style="transition-delay:0.1s">
             <div class="year">2024 — Present</div>
             <div class="info"><div class="role">Freelance Designer & Developer</div><div class="company">Self-employed <span class="badge">Apple Design Resources Contributor</span></div></div>
         </div>
-        <div class="work-item fade-up" style="transition-delay:0.15s">
+        <div class="work-item liquid-glass fade-up" style="transition-delay:0.15s">
             <div class="year">2023 — 2024</div>
             <div class="info"><div class="role">Full Stack Designer</div><div class="company">Digital First Agency</div></div>
         </div>
-        <div class="work-item fade-up" style="transition-delay:0.2s">
+        <div class="work-item liquid-glass fade-up" style="transition-delay:0.2s">
             <div class="year">2021 — 2023</div>
             <div class="info"><div class="role">Junior Designer</div><div class="company">Pixel Perfect Studios</div></div>
         </div>
@@ -756,7 +764,7 @@
     <p class="section-label fade-up" style="transition-delay:0.05s;text-align:center;">Get in touch</p>
     <h2 class="section-title fade-up" style="transition-delay:0.1s;text-align:center;">Let's Work <span class="highlight">Together</span></h2>
     <p class="section-subtitle fade-up" style="transition-delay:0.15s;text-align:center;">Got a project in mind? Drop me a message and I'll get back to you within 24 hours.</p>
-    <div class="contact-section fade-up" style="transition-delay:0.2s">
+    <div class="contact-section liquid-glass fade-up" style="transition-delay:0.2s">
         <div class="contact-links"><a href="mailto:faroukrabiu123@gmail.com" class="contact-link">✉️ faroukrabiu123@gmail.com</a></div>
         <form class="contact-form" onsubmit="event.preventDefault(); alert('Thanks!');">
             <input type="text" placeholder="Your Name" required>
