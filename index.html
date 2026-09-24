@@ -4,59 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rabiu Farouk — Freelance Designer & Developer</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐴</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         /* ── Reset & Base ── */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-feature-settings: 'liga' 1, 'calt' 1;
             line-height: 1.6;
-            color: #e5e5e5;
-            background: #0a0a0f;
+            color: #1a1a1a;
+            background: #fafafa;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         a { color: inherit; text-decoration: none; }
         img { max-width: 100%; display: block; }
 
-        /* ── Scroll Progress Bar ── */
-        #scroll-progress {
-            position: fixed;
-            top: 0; left: 0;
-            height: 3px;
-            width: 0;
-            background: linear-gradient(90deg, #8b5cf6, #ec4899, #06b6d4);
-            z-index: 1000;
-            transition: width 0.1s ease;
+        /* ── Liquid Glass Card ── */
+        .liquid-glass {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.15),
+                0 8px 32px rgba(0, 0, 0, 0.04);
         }
-
-        /* ── Custom Cursor ── */
-        #cursor-dot {
-            position: fixed;
-            width: 8px; height: 8px;
-            background: #fff;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: width 0.15s ease, height 0.15s ease;
-        }
-        #cursor-ring {
-            position: fixed;
-            width: 40px; height: 40px;
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9998;
-            transform: translate(-50%, -50%);
-            transition: width 0.15s ease, height 0.15s ease, border-color 0.15s ease;
-        }
-        body:hover #cursor-dot { width: 6px; height: 6px; }
-        a:hover ~ #cursor-ring,
-        button:hover ~ #cursor-ring,
-        .hover-target:hover ~ #cursor-ring {
-            width: 60px; height: 60px;
-            border-color: rgba(139,92,246,0.5);
+        .liquid-glass:hover {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(255, 255, 255, 0.7);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.95),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.2),
+                0 12px 40px rgba(0, 0, 0, 0.06);
+            transform: translateY(-2px);
         }
 
         /* ── Navigation ── */
@@ -64,52 +51,46 @@
             position: fixed;
             top: 0; left: 0; right: 0;
             z-index: 100;
-            background: rgba(10, 10, 15, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-            padding: 0 2rem;
+            padding: 0 2.5rem;
+            height: 68px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 64px;
+            background: rgba(250, 250, 250, 0.8);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
         }
         nav .logo {
-            font-weight: 700;
-            font-size: 1.2rem;
+            font-weight: 800;
+            font-size: 1.3rem;
             letter-spacing: -0.5px;
-            color: #fff;
+            color: #1a1a1a;
         }
-        nav .logo span { color: #8b5cf6; }
+        nav .logo span { color: #4f46e5; }
         nav ul {
             display: flex;
             list-style: none;
-            gap: 2rem;
+            gap: 2.5rem;
+            align-items: center;
         }
         nav ul a {
             font-size: 0.9rem;
             font-weight: 500;
-            color: rgba(255,255,255,0.5);
+            color: #666;
             transition: color 0.2s;
             position: relative;
+            letter-spacing: -0.2px;
         }
-        nav ul a:hover { color: #fff; }
-        nav ul a.active { color: #fff; }
+        nav ul a:hover { color: #1a1a1a; }
+        nav ul a.active { color: #1a1a1a; }
         nav ul a.active::after {
             content: '';
             position: absolute;
-            bottom: -4px; left: 0; right: 0;
+            bottom: -3px; left: 0; right: 0;
             height: 2px;
-            background: linear-gradient(90deg, #8b5cf6, #ec4899, #06b6d4);
+            background: #4f46e5;
             border-radius: 1px;
-        }
-
-        /* ── Hero Shader (canvas glitch) ── */
-        #hero-shader {
-            position: fixed;
-            inset: 0;
-            z-index: 1;
-            pointer-events: none;
-            opacity: 0.4;
         }
 
         /* ── Hero ── */
@@ -120,102 +101,79 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 6rem 2rem 4rem;
+            padding: 9rem 2rem 5rem;
             position: relative;
             overflow: hidden;
+            background: #fff;
         }
-        .hero-glow {
+        .hero-orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(120px);
             pointer-events: none;
         }
-        .hero-glow-1 {
-            top: -10%; left: 25%;
-            width: 500px; height: 500px;
-            background: rgba(139, 92, 246, 0.15);
-            animation: heroPulse 6s ease-in-out infinite;
+        .hero-orb-1 {
+            top: 5%; right: -8%;
+            width: 700px; height: 700px;
+            background: rgba(79, 70, 229, 0.035);
+            filter: blur(2px);
         }
-        .hero-glow-2 {
-            bottom: -10%; right: 25%;
-            width: 500px; height: 500px;
-            background: rgba(6, 182, 212, 0.12);
-            animation: heroPulse 8s ease-in-out infinite 2s;
+        .hero-orb-2 {
+            bottom: 5%; left: -8%;
+            width: 600px; height: 600px;
+            background: rgba(79, 70, 229, 0.025);
+            filter: blur(2px);
         }
-        .hero-glow-3 {
-            top: 30%; right: 30%;
-            width: 300px; height: 300px;
-            background: rgba(236, 72, 153, 0.08);
-            filter: blur(100px);
-        }
-        @keyframes heroPulse {
-            0%, 100% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.15); opacity: 1; }
-        }
-
-        .hero-divider {
+        .hero-underline {
             position: absolute;
-            left: 0; right: 0; top: 50%;
+            left: 0; right: 0;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-        }
-        .hero-bottom-fade {
-            position: absolute;
-            left: 0; right: 0; bottom: 0;
-            height: 40%;
-            background: linear-gradient(to top, #0a0a0f, transparent);
-            pointer-events: none;
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent);
         }
 
-        .hero h1 {
-            font-size: clamp(2.5rem, 7vw, 5rem);
-            font-weight: 800;
-            letter-spacing: -2px;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            color: #fff;
-            position: relative;
-            z-index: 2;
-        }
-        .hero h1 .gradient-text {
-            background: linear-gradient(90deg, #8b5cf6, #ec4899, #06b6d4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .hero-sub {
-            font-size: 0.85rem;
+        .hero-label {
+            font-size: 0.72rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.25em;
-            color: rgba(255,255,255,0.35);
-            margin-bottom: 1rem;
+            letter-spacing: 0.3em;
+            color: #999;
+            margin-bottom: 1.25rem;
         }
-        .hero p {
-            font-size: 1.15rem;
-            color: rgba(255,255,255,0.5);
-            max-width: 560px;
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6.5rem);
+            font-weight: 900;
+            letter-spacing: -3px;
+            line-height: 1.0;
+            color: #1a1a1a;
+            margin-bottom: 1.75rem;
+            max-width: 900px;
+        }
+        .hero h1 .accent {
+            color: #4f46e5;
+        }
+        .hero-sub {
+            font-size: 1.2rem;
+            color: #555;
+            max-width: 600px;
             margin-bottom: 2.5rem;
-            position: relative;
-            z-index: 2;
+            line-height: 1.6;
         }
+        .hero-sub strong { color: #1a1a1a; }
         .hero .tags {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
             justify-content: center;
-            margin-bottom: 2rem;
-            position: relative;
-            z-index: 2;
+            margin-bottom: 2.5rem;
         }
         .hero .tags span {
-            background: rgba(139, 92, 246, 0.12);
-            color: #8b5cf6;
-            padding: 0.35rem 0.85rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
+            background: rgba(79, 70, 229, 0.07);
+            color: #4f46e5;
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            font-size: 0.82rem;
             font-weight: 500;
-            border: 1px solid rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(79, 70, 229, 0.08);
+            letter-spacing: -0.2px;
         }
 
         /* ── Buttons ── */
@@ -223,409 +181,374 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.75rem 1.75rem;
-            border-radius: 10px;
+            padding: 0.85rem 2rem;
+            border-radius: 100px;
             font-weight: 600;
             font-size: 0.95rem;
             transition: all 0.25s ease;
             cursor: pointer;
             border: none;
             font-family: inherit;
-            position: relative;
-            overflow: hidden;
+            font-feature-settings: 'liga' 1, 'calt' 1;
+            letter-spacing: -0.2px;
         }
         .btn-primary {
-            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            background: #1a1a1a;
             color: #fff;
-            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
         }
         .btn-primary:hover {
+            background: #2d2d2d;
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.45);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
         }
         .btn-outline {
             background: transparent;
-            color: #8b5cf6;
-            border: 1.5px solid rgba(139, 92, 246, 0.4);
+            color: #1a1a1a;
+            border: 1.5px solid rgba(0, 0, 0, 0.15);
         }
         .btn-outline:hover {
-            background: rgba(139, 92, 246, 0.1);
-            border-color: #8b5cf6;
-            color: #fff;
-            transform: translateY(-2px);
-        }
-
-        /* ── Magnetic Hover ── */
-        .magnetic {
-            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        /* ── Scroll indicator ── */
-        .scroll-indicator {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-            color: rgba(255,255,255,0.2);
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            z-index: 2;
-        }
-        .scroll-indicator .mouse {
-            width: 20px; height: 32px;
-            border: 1.5px solid rgba(255,255,255,0.25);
-            border-radius: 10px;
-            position: relative;
-        }
-        .scroll-indicator .mouse::after {
-            content: '';
-            position: absolute;
-            top: 6px; left: 50%;
-            transform: translateX(-50%);
-            width: 3px; height: 8px;
-            background: rgba(255,255,255,0.4);
-            border-radius: 2px;
-            animation: scrollDot 1.5s ease-in-out infinite;
-        }
-        @keyframes scrollDot {
-            0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
-            50% { transform: translateX(-50%) translateY(10px); opacity: 0.3; }
+            background: rgba(0, 0, 0, 0.03);
+            border-color: #1a1a1a;
         }
 
         /* ── Section Shared ── */
-        section { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; position: relative; }
+        section { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
         .section-label {
-            font-size: 0.75rem;
+            font-size: 0.68rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.25em;
-            color: rgba(255,255,255,0.3);
+            letter-spacing: 0.35em;
+            color: #999;
             margin-bottom: 0.75rem;
         }
         .section-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            letter-spacing: -1px;
-            color: #fff;
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+            color: #1a1a1a;
             margin-bottom: 0.75rem;
+            line-height: 1.1;
         }
-        .section-title .gradient-text {
-            background: linear-gradient(90deg, #8b5cf6, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+        .section-title .accent { color: #4f46e5; }
         .section-subtitle {
-            color: rgba(255,255,255,0.4);
+            color: #666;
             font-size: 1.05rem;
-            margin-bottom: 3rem;
-            max-width: 550px;
+            margin-bottom: 3.5rem;
+            max-width: 560px;
+            line-height: 1.6;
         }
         .section-divider {
-            width: 48px;
+            width: 52px;
             height: 3px;
-            background: linear-gradient(90deg, #8b5cf6, #ec4899);
+            background: #4f46e5;
             border-radius: 2px;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
         }
 
-        /* ── Glow Card ── */
-        .glow-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.07);
-            border-radius: 16px;
-            padding: 1.75rem;
-            transition: all 0.35s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .glow-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 16px;
-            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-                rgba(255,255,255,0.06) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-        .glow-card:hover::before { opacity: 1; }
-        .glow-card:hover {
-            border-color: rgba(139, 92, 246, 0.2);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3),
-                        0 0 40px rgba(139, 92, 246, 0.08);
-        }
-
-        /* ── Skills Grid ── */
+        /* ── Skills ── */
         .skills-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(6, 1fr);
             gap: 1rem;
         }
-        .skill-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.07);
-            border-radius: 14px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: default;
-        }
-        .skill-card:hover {
-            border-color: rgba(139, 92, 246, 0.25);
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.25),
-                        0 0 30px rgba(139, 92, 246, 0.06);
-            background: rgba(255,255,255,0.05);
-        }
-        .skill-card .icon {
-            font-size: 2rem;
-            margin-bottom: 0.75rem;
-        }
-        .skill-card h3 {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 0.25rem;
-        }
-        .skill-card p {
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.4);
-        }
-
-        /* ── Services ── */
-        .services-list {
+        .skill-item {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
-        }
-        .service-item {
-            display: flex;
             align-items: center;
-            gap: 1.25rem;
-            padding: 1.25rem 1.5rem;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.07);
-            border-radius: 12px;
-            transition: all 0.3s ease;
+            gap: 0.85rem;
+            padding: 1.75rem 1rem;
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            border-radius: 18px;
+            transition: all 0.25s ease;
+            cursor: default;
         }
-        .service-item:hover {
-            border-color: rgba(139, 92, 246, 0.25);
-            background: rgba(255,255,255,0.05);
-            transform: translateX(4px);
+        .skill-item:hover {
+            background: #fff;
+            border-color: rgba(79, 70, 229, 0.12);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.05);
         }
-        .service-item .check {
-            width: 32px; height: 32px;
-            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-            color: #fff;
-            border-radius: 50%;
+        .skill-item .icon {
+            width: 48px; height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.85rem;
+            background: rgba(79, 70, 229, 0.08);
+            border-radius: 14px;
+            border: 1px solid rgba(79, 70, 229, 0.06);
+        }
+        .skill-item .icon svg {
+            width: 24px; height: 24px;
+            stroke: #4f46e5;
+            stroke-width: 1.5;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .skill-item h3 {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            text-align: center;
+            letter-spacing: -0.2px;
+        }
+        .skill-item p {
+            font-size: 0.72rem;
+            color: #888;
+            text-align: center;
+            line-height: 1.4;
+            max-width: 100px;
+        }
+
+        /* ── Services ── */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        .service-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.25rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            border-radius: 16px;
+            transition: all 0.25s ease;
+        }
+        .service-item:hover {
+            background: #fff;
+            border-color: rgba(79, 70, 229, 0.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            transform: translateY(-2px);
+        }
+        .service-item .icon {
+            width: 44px; height: 44px;
+            background: #1a1a1a;
+            color: #fff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
             flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
         }
         .service-item h4 {
             font-size: 1rem;
-            font-weight: 600;
-            color: #fff;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.3rem;
+            letter-spacing: -0.2px;
         }
         .service-item p {
             font-size: 0.85rem;
-            color: rgba(255,255,255,0.45);
+            color: #666;
+            line-height: 1.5;
         }
 
         /* ── Projects ── */
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 1.25rem;
         }
         .project-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.07);
-            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            border-radius: 20px;
             overflow: hidden;
-            transition: all 0.35s ease;
+            transition: all 0.3s ease;
         }
         .project-card:hover {
-            border-color: rgba(139, 92, 246, 0.2);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3),
-                        0 0 40px rgba(139, 92, 246, 0.06);
+            background: #fff;
+            border-color: rgba(0, 0, 0, 0.08);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.06);
+            transform: translateY(-3px);
         }
         .project-card .preview {
             width: 100%;
-            height: 180px;
+            height: 200px;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
             overflow: hidden;
+            border-radius: 20px 20px 0 0;
         }
         .project-card .preview .badge {
             position: absolute;
-            top: 12px; left: 12px;
-            background: rgba(139, 92, 246, 0.9);
+            top: 14px; left: 14px;
+            background: #1a1a1a;
             color: #fff;
-            padding: 0.2rem 0.65rem;
+            padding: 0.25rem 0.75rem;
             border-radius: 6px;
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             font-weight: 600;
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
         .project-card .preview .live-badge {
             position: absolute;
-            bottom: 12px; right: 12px;
+            bottom: 14px; right: 14px;
             font-size: 0.7rem;
-            color: rgba(255,255,255,0.3);
+            color: #888;
             display: flex;
             align-items: center;
-            gap: 0.3rem;
+            gap: 0.35rem;
+            background: rgba(255,255,255,0.6);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            backdrop-filter: blur(4px);
         }
         .project-card .preview .live-badge::before {
             content: '';
-            width: 6px; height: 6px;
+            width: 5px; height: 5px;
             background: #22c55e;
             border-radius: 50%;
-            box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
         }
         .project-card .body {
             padding: 1.5rem;
         }
         .project-card .body .category {
-            font-size: 0.65rem;
+            font-size: 0.62rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            color: #8b5cf6;
-            font-weight: 600;
+            color: #4f46e5;
+            font-weight: 700;
             margin-bottom: 0.5rem;
         }
         .project-card .body h3 {
-            font-size: 1.15rem;
-            font-weight: 600;
-            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1a1a1a;
             margin-bottom: 0.5rem;
+            letter-spacing: -0.3px;
+            line-height: 1.3;
         }
         .project-card .body p {
-            font-size: 0.875rem;
-            color: rgba(255,255,255,0.45);
+            font-size: 0.87rem;
+            color: #555;
             margin-bottom: 1.25rem;
             line-height: 1.6;
         }
         .project-card .body .tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 0.4rem;
+            margin-bottom: 1rem;
         }
         .project-card .body .tags span {
-            display: inline-block;
-            padding: 0.2rem 0.65rem;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 6px;
-            font-size: 0.7rem;
-            color: rgba(255,255,255,0.4);
-            font-weight: 500;
+            padding: 0.18rem 0.6rem;
+            background: rgba(79, 70, 229, 0.05);
+            border: 1px solid rgba(79, 70, 229, 0.08);
+            border-radius: 4px;
+            font-size: 0.68rem;
+            color: #4f46e5;
+            font-weight: 600;
         }
         .project-card .body .meta {
             display: flex;
-            gap: 1.25rem;
-            font-size: 0.78rem;
-            color: rgba(255,255,255,0.3);
-            border-top: 1px solid rgba(255,255,255,0.06);
+            gap: 1.5rem;
+            font-size: 0.75rem;
+            color: #999;
+            border-top: 1px solid rgba(0, 0, 0, 0.03);
             padding-top: 0.85rem;
-            margin-top: 0.5rem;
         }
-        .project-card .body .meta span strong {
-            color: rgba(255,255,255,0.5);
+        .project-card .body .meta strong {
+            color: #666;
             font-weight: 600;
         }
 
         /* ── About ── */
         .about-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 5rem;
+            align-items: start;
         }
         .about-text p {
-            color: rgba(255,255,255,0.55);
+            color: #444;
             margin-bottom: 1.25rem;
             font-size: 1.05rem;
             line-height: 1.7;
         }
+        .about-text p strong { color: #1a1a1a; }
         .about-text .highlight {
             padding: 0.15rem 0.5rem;
-            background: rgba(139, 92, 246, 0.12);
-            border-radius: 6px;
-            color: #8b5cf6;
+            background: rgba(79, 70, 229, 0.08);
+            border-radius: 4px;
+            color: #4f46e5;
             font-weight: 600;
         }
-        .about-text .btn { margin-top: 0.5rem; }
+        .about-text .btn { margin-top: 0.75rem; }
 
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            gap: 0.75rem;
         }
         .stat-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.07);
-            border-radius: 14px;
-            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            border-radius: 16px;
+            padding: 1.75rem;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
         }
         .stat-card:hover {
-            border-color: rgba(139, 92, 246, 0.2);
+            background: #fff;
+            border-color: rgba(79, 70, 229, 0.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
             transform: translateY(-2px);
         }
         .stat-card .number {
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #8b5cf6, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #1a1a1a;
+            letter-spacing: -2px;
+            line-height: 1;
         }
         .stat-card .label {
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.35);
-            margin-top: 0.3rem;
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 0.5rem;
+            font-weight: 500;
         }
 
         /* ── Contact ── */
         .contact-section {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.07);
-            border-radius: 20px;
-            padding: 3rem;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            border-radius: 24px;
+            padding: 2.5rem;
             text-align: center;
         }
         .contact-section h2 {
             font-size: 1.8rem;
             font-weight: 700;
-            color: #fff;
+            color: #1a1a1a;
             margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
         }
         .contact-section p {
-            color: rgba(255,255,255,0.4);
+            color: #555;
             margin-bottom: 2rem;
         }
         .contact-links {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.75rem;
+            gap: 0.6rem;
             justify-content: center;
             margin-bottom: 2rem;
         }
@@ -634,19 +557,19 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.7rem 1.4rem;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 100px;
             font-weight: 500;
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.6);
-            transition: all 0.25s ease;
+            font-size: 0.85rem;
+            color: #333;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(4px);
         }
         .contact-link:hover {
-            background: rgba(139, 92, 246, 0.12);
-            border-color: rgba(139, 92, 246, 0.3);
+            background: #1a1a1a;
+            border-color: #1a1a1a;
             color: #fff;
-            transform: translateY(-2px);
         }
         .contact-form {
             max-width: 500px;
@@ -656,97 +579,48 @@
         .contact-form input,
         .contact-form textarea {
             width: 100%;
-            padding: 0.8rem 1rem;
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 10px;
+            padding: 0.85rem 1.1rem;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 12px;
             font-family: inherit;
             font-size: 0.9rem;
             margin-bottom: 0.75rem;
-            background: rgba(255,255,255,0.03);
-            color: #e5e5e5;
-            transition: border-color 0.2s, background 0.2s;
+            background: rgba(255, 255, 255, 0.5);
+            color: #1a1a1a;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(4px);
         }
         .contact-form input::placeholder,
         .contact-form textarea::placeholder {
-            color: rgba(255,255,255,0.2);
+            color: #bbb;
         }
         .contact-form input:focus,
         .contact-form textarea:focus {
             outline: none;
-            border-color: rgba(139, 92, 246, 0.4);
-            background: rgba(255,255,255,0.05);
+            border-color: #4f46e5;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.06);
         }
         .contact-form textarea {
             resize: vertical;
-            min-height: 100px;
+            min-height: 110px;
         }
 
         /* ── Footer ── */
         footer {
             text-align: center;
             padding: 2.5rem 2rem;
-            color: rgba(255,255,255,0.2);
-            font-size: 0.8rem;
-            border-top: 1px solid rgba(255,255,255,0.04);
-            margin-top: 2rem;
-        }
-
-        /* ── Marquee ── */
-        .marquee-section {
-            border-top: 1px solid rgba(255,255,255,0.04);
-            border-bottom: 1px solid rgba(255,255,255,0.04);
-            padding: 1.25rem 0;
-            overflow: hidden;
-            background: rgba(255,255,255,0.015);
-        }
-        .marquee-track {
-            display: flex;
-            gap: 2.5rem;
-            animation: marquee 35s linear infinite;
-            width: max-content;
-        }
-        .marquee-track span {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: rgba(255,255,255,0.3);
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        .marquee-track span::after {
-            content: '✦';
-            color: rgba(255,255,255,0.12);
-            font-size: 0.7rem;
-        }
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        /* ── Split Text Reveal ── */
-        .split-reveal {
-            display: inline-block;
-            font-weight: 700;
-            background: linear-gradient(90deg, #8b5cf6, #ec4899, #06b6d4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .split-char {
-            display: inline-block;
-            transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-        .split-char.hidden {
-            opacity: 0;
-            transform: translateY(12px);
+            color: #aaa;
+            font-size: 0.78rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.03);
+            margin-top: 1rem;
         }
 
         /* ── Fade-in on scroll ── */
         .fade-up {
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            transform: translateY(28px);
+            transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .fade-up.visible {
             opacity: 1;
@@ -754,27 +628,25 @@
         }
 
         /* ── Responsive ── */
-        @media (max-width: 768px) {
+        @media (max-width: 960px) {
+            .skills-grid { grid-template-columns: repeat(3, 1fr); }
+            .services-grid { grid-template-columns: 1fr; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+        }
+        @media (max-width: 640px) {
+            nav { padding: 0 1.25rem; }
             nav ul { display: none; }
-            .about-grid { grid-template-columns: 1fr; gap: 2rem; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .skills-grid { grid-template-columns: repeat(2, 1fr); }
             section { padding: 4rem 1.25rem; }
-            .contact-section { padding: 2rem 1.25rem; }
-            .hero h1 { font-size: clamp(2rem, 8vw, 3rem); }
+            .contact-section { padding: 1.75rem 1.25rem; }
+            .hero { padding: 8rem 1.25rem 4rem; }
+            .hero h1 { font-size: clamp(2.2rem, 10vw, 3.5rem); letter-spacing: -2px; }
+            .hero-sub { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
-
-<!-- Scroll Progress Bar -->
-<div id="scroll-progress"></div>
-
-<!-- Custom Cursor -->
-<div id="cursor-dot"></div>
-<div id="cursor-ring"></div>
-
-<!-- Hero Shader Canvas -->
-<canvas id="hero-shader"></canvas>
 
 <!-- Navigation -->
 <nav>
@@ -789,19 +661,17 @@
 
 <!-- Hero -->
 <section class="hero" id="home">
-    <div class="hero-glow hero-glow-1"></div>
-    <div class="hero-glow hero-glow-2"></div>
-    <div class="hero-glow hero-glow-3"></div>
-    <div class="hero-divider"></div>
-    <div class="hero-bottom-fade"></div>
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-underline"></div>
 
-    <p class="hero-sub fade-up">Freelance Designer & Developer</p>
+    <p class="hero-label fade-up">Freelance Designer & Developer</p>
     <h1 class="fade-up" style="transition-delay:0.1s">
         I build things<br>
-        that <span class="gradient-text">look good</span><br>
-        and <span class="gradient-text">work well</span>
+        that <span class="accent">look good</span><br>
+        and <span class="accent">work well</span>
     </h1>
-    <p class="fade-up" style="transition-delay:0.2s">
+    <p class="hero-sub fade-up" style="transition-delay:0.2s">
         Hi, I'm <strong>Rabiu Farouk</strong> — freelance designer & developer helping businesses stand out with clean websites, eye-catching designs, and polished visuals.
     </p>
     <div class="tags fade-up" style="transition-delay:0.3s">
@@ -812,35 +682,10 @@
         <span>Graphic Design</span>
     </div>
     <div class="fade-up" style="transition-delay:0.4s">
-        <a href="#contact" class="btn btn-primary magnetic">Start a Project</a>
-        <a href="#works" class="btn btn-outline magnetic">View My Work</a>
-    </div>
-
-    <div class="scroll-indicator fade-up" style="transition-delay:0.6s">
-        <div class="mouse"></div>
-        <span>Scroll</span>
+        <a href="#contact" class="btn btn-primary">Start a Project</a>
+        <a href="#works" class="btn btn-outline">View My Work</a>
     </div>
 </section>
-
-<!-- Marquee -->
-<div class="marquee-section">
-    <div class="marquee-track">
-        <span>Web Development</span>
-        <span>Video Editing</span>
-        <span>Photo Editing</span>
-        <span>Flyer Design</span>
-        <span>Graphic Design</span>
-        <span>Brand Identity</span>
-        <span>UI / Visual Design</span>
-        <span>Web Development</span>
-        <span>Video Editing</span>
-        <span>Photo Editing</span>
-        <span>Flyer Design</span>
-        <span>Graphic Design</span>
-        <span>Brand Identity</span>
-        <span>UI / Visual Design</span>
-    </div>
-</div>
 
 <!-- Services -->
 <section id="services">
@@ -848,44 +693,44 @@
     <p class="section-label fade-up" style="transition-delay:0.05s">What I Do</p>
     <h2 class="section-title fade-up" style="transition-delay:0.1s">Services</h2>
     <p class="section-subtitle fade-up" style="transition-delay:0.15s">Everything from concept to delivery. Fast turnaround, clean results, and zero headache.</p>
-    <div class="services-list">
-        <div class="service-item glow-card fade-up" style="transition-delay:0.2s">
-            <div class="check">✓</div>
+    <div class="services-grid">
+        <div class="service-item fade-up" style="transition-delay:0.2s">
+            <div class="icon">🌐</div>
             <div>
                 <h4>Web Development</h4>
                 <p>Landing pages, business websites, responsive designs — built clean and deployed fast.</p>
             </div>
         </div>
-        <div class="service-item glow-card fade-up" style="transition-delay:0.25s">
-            <div class="check">✓</div>
+        <div class="service-item fade-up" style="transition-delay:0.25s">
+            <div class="icon">🎬</div>
             <div>
                 <h4>Video Editing</h4>
                 <p>YouTube videos, short-form content, product promos — cuts, transitions, captions, color grading.</p>
             </div>
         </div>
-        <div class="service-item glow-card fade-up" style="transition-delay:0.3s">
-            <div class="check">✓</div>
+        <div class="service-item fade-up" style="transition-delay:0.3s">
+            <div class="icon">📸</div>
             <div>
                 <h4>Photo Editing</h4>
                 <p>Retouching, background removal, color correction, product photos — make every image pop.</p>
             </div>
         </div>
-        <div class="service-item glow-card fade-up" style="transition-delay:0.35s">
-            <div class="check">✓</div>
+        <div class="service-item fade-up" style="transition-delay:0.35s">
+            <div class="icon">🎨</div>
             <div>
                 <h4>Flyer & Poster Design</h4>
                 <p>Event flyers, promotional posters, brochures — grab attention and get the message across.</p>
             </div>
         </div>
-        <div class="service-item glow-card fade-up" style="transition-delay:0.4s">
-            <div class="check">✓</div>
+        <div class="service-item fade-up" style="transition-delay:0.4s">
+            <div class="icon">✨</div>
             <div>
                 <h4>Graphic Design</h4>
                 <p>Logos, brand identity, social media graphics, business cards — consistent and professional.</p>
             </div>
         </div>
-        <div class="service-item glow-card fade-up" style="transition-delay:0.45s">
-            <div class="check">✓</div>
+        <div class="service-item fade-up" style="transition-delay:0.45s">
+            <div class="icon">🚀</div>
             <div>
                 <h4>Brand Identity</h4>
                 <p>Full branding packages — logo, color palette, typography, and style guide for a cohesive look.</p>
@@ -894,78 +739,68 @@
     </div>
 </section>
 
-<!-- Skills -->
+<!-- Core Skills -->
 <section>
     <div class="section-divider fade-up"></div>
     <p class="section-label fade-up" style="transition-delay:0.05s">Expertise</p>
-    <h2 class="section-title fade-up" style="transition-delay:0.1s">Core Skills</h2>
-    <p class="section-subtitle fade-up" style="transition-delay:0.15s">Tools and technologies I work with daily.</p>
+    <h2 class="section-title fade-up" style="transition-delay:0.1s">Core <span class="accent">Skills</span></h2>
+    <p class="section-subtitle fade-up" style="transition-delay:0.15s">Tools and disciplines I work with daily.</p>
     <div class="skills-grid">
-        <div class="skill-card glow-card fade-up" style="transition-delay:0.2s">
-            <div class="icon">🌐</div>
+        <div class="skill-item fade-up" style="transition-delay:0.2s">
+            <div class="icon">
+                <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
             <h3>Web Dev</h3>
-            <p>HTML, CSS, JavaScript, responsive design, deployment</p>
+            <p>HTML, CSS, JS</p>
         </div>
-        <div class="skill-card glow-card fade-up" style="transition-delay:0.25s">
-            <div class="icon">🎬</div>
+        <div class="skill-item fade-up" style="transition-delay:0.25s">
+            <div class="icon">
+                <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+            </div>
             <h3>Video Editing</h3>
-            <p>Cuts, transitions, captions, color grading, short-form</p>
+            <p>Cuts, transitions</p>
         </div>
-        <div class="skill-card glow-card fade-up" style="transition-delay:0.3s">
-            <div class="icon">📸</div>
+        <div class="skill-item fade-up" style="transition-delay:0.3s">
+            <div class="icon">
+                <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </div>
             <h3>Photo Editing</h3>
-            <p>Retouching, backgrounds, color correction, product photos</p>
+            <p>Retouching, color</p>
         </div>
-        <div class="skill-card glow-card fade-up" style="transition-delay:0.35s">
-            <div class="icon">🎨</div>
+        <div class="skill-item fade-up" style="transition-delay:0.35s">
+            <div class="icon">
+                <svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-4 4-2-2 7-7-3 3 4 4 2-2-7-7z"/></svg>
+            </div>
             <h3>Graphic Design</h3>
-            <p>Logos, flyers, posters, social media, branding kits</p>
+            <p>Logos, flyers, branding</p>
         </div>
-        <div class="skill-card glow-card fade-up" style="transition-delay:0.4s">
-            <div class="icon">🖌️</div>
-            <h3>UI / Visual Design</h3>
-            <p>Clean interfaces, visual hierarchy, modern aesthetics</p>
+        <div class="skill-item fade-up" style="transition-delay:0.4s">
+            <div class="icon">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+            </div>
+            <h3>UI Design</h3>
+            <p>Interfaces, hierarchy</p>
         </div>
-        <div class="skill-card glow-card fade-up" style="transition-delay:0.45s">
-            <div class="icon">📦</div>
+        <div class="skill-item fade-up" style="transition-delay:0.45s">
+            <div class="icon">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
             <h3>Brand Identity</h3>
-            <p>Full branding — logo, palette, type, and style guides</p>
+            <p>Logo, palette, guides</p>
         </div>
     </div>
 </section>
 
-<!-- Projects -->
+<!-- Projects (BolaPSD removed) -->
 <section id="works">
     <div class="section-divider fade-up"></div>
     <p class="section-label fade-up" style="transition-delay:0.05s">Portfolio</p>
-    <h2 class="section-title fade-up" style="transition-delay:0.1s">Selected <span class="gradient-text">Work</span></h2>
+    <h2 class="section-title fade-up" style="transition-delay:0.1s">Selected <span class="accent">Work</span></h2>
     <p class="section-subtitle fade-up" style="transition-delay:0.15s">Recent projects across web, design, and visual content.</p>
     <div class="projects-grid">
 
-        <!-- Project 1 -->
-        <div class="project-card glow-card fade-up" style="transition-delay:0.2s">
-            <div class="preview" style="background: linear-gradient(135deg, #1a1a2e, #16213e);">
-                <span class="badge">Web Development</span>
-                <span class="live-badge">Live Site</span>
-            </div>
-            <div class="body">
-                <div class="category">Web Development</div>
-                <h3>BolaPSD — Clothing Brand E-Commerce Site</h3>
-                <p>Full e-commerce website for a clothing brand. Product catalog with filtering, shopping cart, checkout flow, about page, and contact form. Built with HTML, CSS, and JavaScript — fully responsive, fast loading, clean code. Deployed and live.</p>
-                <div class="tags">
-                    <span>HTML/CSS/JS</span>
-                    <span>Responsive</span>
-                    <span>E-Commerce</span>
-                </div>
-                <div class="meta">
-                    <span>Status: <strong>Live</strong></span>
-                    <span>Type: <strong>E-Commerce</strong></span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Project 2 -->
-        <div class="project-card glow-card fade-up" style="transition-delay:0.25s">
+        <!-- Project 1 - Bistro Royale -->
+        <div class="project-card fade-up" style="transition-delay:0.2s">
             <div class="preview" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
                 <span class="badge">Flyer Design</span>
             </div>
@@ -985,8 +820,8 @@
             </div>
         </div>
 
-        <!-- Project 3 -->
-        <div class="project-card glow-card fade-up" style="transition-delay:0.3s">
+        <!-- Project 2 - Travel Vlog -->
+        <div class="project-card fade-up" style="transition-delay:0.25s">
             <div class="preview" style="background: linear-gradient(135deg, #6c5ce7, #a29bfe);">
                 <span class="badge">Video Editing</span>
             </div>
@@ -1006,8 +841,8 @@
             </div>
         </div>
 
-        <!-- Project 4 -->
-        <div class="project-card glow-card fade-up" style="transition-delay:0.35s">
+        <!-- Project 3 - NovaTech -->
+        <div class="project-card fade-up" style="transition-delay:0.3s">
             <div class="preview" style="background: linear-gradient(135deg, #2d3436, #636e72);">
                 <span class="badge">Graphic Design</span>
             </div>
@@ -1027,8 +862,8 @@
             </div>
         </div>
 
-        <!-- Project 5 -->
-        <div class="project-card glow-card fade-up" style="transition-delay:0.4s">
+        <!-- Project 4 - Skincare -->
+        <div class="project-card fade-up" style="transition-delay:0.35s">
             <div class="preview" style="background: linear-gradient(135deg, #fd79a8, #e84393);">
                 <span class="badge">Photo Editing</span>
             </div>
@@ -1048,8 +883,8 @@
             </div>
         </div>
 
-        <!-- Project 6 -->
-        <div class="project-card glow-card fade-up" style="transition-delay:0.45s">
+        <!-- Project 5 - FitLife -->
+        <div class="project-card fade-up" style="transition-delay:0.4s">
             <div class="preview" style="background: linear-gradient(135deg, #00b894, #00cec9);">
                 <span class="badge">Graphic Design</span>
             </div>
@@ -1069,8 +904,8 @@
             </div>
         </div>
 
-        <!-- Project 7 -->
-        <div class="project-card glow-card fade-up" style="transition-delay:0.5s">
+        <!-- Project 6 - TaskFlow -->
+        <div class="project-card fade-up" style="transition-delay:0.45s">
             <div class="preview" style="background: linear-gradient(135deg, #0984e3, #74b9ff);">
                 <span class="badge">Web Development</span>
                 <span class="live-badge">Live Site</span>
@@ -1091,8 +926,8 @@
             </div>
         </div>
 
-        <!-- Project 8 -->
-        <div class="project-card glow-card fade-up" style="transition-delay:0.55s">
+        <!-- Project 7 - SoundWave -->
+        <div class="project-card fade-up" style="transition-delay:0.5s">
             <div class="preview" style="background: linear-gradient(135deg, #fdcb6e, #e17055);">
                 <span class="badge">Flyer Design</span>
             </div>
@@ -1119,29 +954,29 @@
 <section id="about">
     <div class="section-divider fade-up"></div>
     <p class="section-label fade-up" style="transition-delay:0.05s">Get to know me</p>
-    <h2 class="section-title fade-up" style="transition-delay:0.1s">About <span class="gradient-text">Me</span></h2>
+    <h2 class="section-title fade-up" style="transition-delay:0.1s">About <span class="accent">Me</span></h2>
     <div class="about-grid">
         <div class="about-text fade-up" style="transition-delay:0.2s">
             <p>I'm a freelance designer and developer who handles the full visual side of projects — from building websites to editing videos, designing flyers, and polishing photos.</p>
             <p>I <span class="highlight">care about the details</span>. Every project gets my full attention: clean code, sharp designs, smooth edits, and a final result that actually looks professional.</p>
             <p>I work with small businesses, creators, and brands who need quality work without the agency price tag. Fast communication, clear process, and I deliver on time.</p>
             <p>My toolkit covers web development, video editing, photo retouching, flyer and poster design, logo design, and full brand identity — so whether you need one thing or a whole package, I can handle it.</p>
-            <a href="#contact" class="btn btn-primary magnetic">Let's Work Together</a>
+            <a href="#contact" class="btn btn-primary">Let's Work Together</a>
         </div>
         <div class="stats-grid fade-up" style="transition-delay:0.3s">
-            <div class="stat-card glow-card">
+            <div class="stat-card">
                 <div class="number">15+</div>
                 <div class="label">Projects Delivered</div>
             </div>
-            <div class="stat-card glow-card">
+            <div class="stat-card">
                 <div class="number">5</div>
                 <div class="label">Services Offered</div>
             </div>
-            <div class="stat-card glow-card">
+            <div class="stat-card">
                 <div class="number">100%</div>
                 <div class="label">Client Satisfaction</div>
             </div>
-            <div class="stat-card glow-card">
+            <div class="stat-card">
                 <div class="number">24h</div>
                 <div class="label">Response Time</div>
             </div>
@@ -1153,12 +988,12 @@
 <section id="contact">
     <div class="section-divider fade-up" style="margin:0 auto 1.5rem;"></div>
     <p class="section-label fade-up" style="transition-delay:0.05s">Get in touch</p>
-    <h2 class="section-title fade-up" style="transition-delay:0.1s; text-align:center;">Let's Work <span class="gradient-text">Together</span></h2>
+    <h2 class="section-title fade-up" style="transition-delay:0.1s; text-align:center;">Let's Work <span class="accent">Together</span></h2>
     <p class="section-subtitle fade-up" style="transition-delay:0.15s; text-align:center;">Got a project in mind? Drop me a message and I'll get back to you within 24 hours.</p>
 
     <div class="contact-section fade-up" style="transition-delay:0.2s">
         <div class="contact-links">
-            <a href="mailto:faroulrabiu123@gmail.com" class="contact-link magnetic">
+            <a href="mailto:faroulrabiu123@gmail.com" class="contact-link">
                 ✉️ faroulrabiu123@gmail.com
             </a>
         </div>
@@ -1168,7 +1003,7 @@
             <input type="email" placeholder="Your Email" required>
             <input type="text" placeholder="Project Type (Web / Design / Video / Photo)">
             <textarea placeholder="Tell me about your project..."></textarea>
-            <button type="submit" class="btn btn-primary magnetic" style="width:100%; margin-top:0.5rem;">Send Message</button>
+            <button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem;">Send Message</button>
         </form>
     </div>
 </section>
@@ -1180,165 +1015,6 @@
 
 <!-- ── Scripts ── -->
 <script>
-    /* ── Hero Shader (glitch/scanline canvas) ── */
-    (function() {
-        const canvas = document.getElementById('hero-shader');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        let animId;
-        let hPixels = null, vPixels = null;
-
-        const resize = () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        };
-
-        const drawScanlines = () => {
-            if (!ctx || !canvas) return;
-            const w = canvas.width, h = canvas.height;
-            if (!hPixels || hPixels.width !== w) {
-                hPixels = ctx.createImageData(w, Math.ceil(h / 4) * 4);
-                for (let y = 0; y < h; y += 4) {
-                    for (let x = 0; x < w; x++) {
-                        const idx = (y * w + x) * 4;
-                        hPixels.data[idx] = 0;
-                        hPixels.data[idx+1] = 0;
-                        hPixels.data[idx+2] = 0;
-                        hPixels.data[idx+3] = 20 + Math.random() * 15;
-                    }
-                }
-            }
-            // Only draw the scanline portion
-            const temp = ctx.getImageData(0, 0, w, h);
-            for (let y = 0; y < h; y += 4) {
-                for (let x = 0; x < w; x++) {
-                    const idx = (y * w + x) * 4;
-                    temp.data[idx] = 0;
-                    temp.data[idx+1] = 0;
-                    temp.data[idx+2] = 0;
-                    temp.data[idx+3] = Math.min(30 + Math.random() * 15, temp.data[idx+3]);
-                }
-            }
-            ctx.putImageData(temp, 0, 0);
-        };
-
-        const drawStatic = () => {
-            if (!ctx || !canvas) return;
-            if (Math.random() > 0.985) {
-                const w = canvas.width, h = canvas.height;
-                const sliceH = Math.floor(Math.random() * 8) + 2;
-                const y = Math.floor(Math.random() * (h - sliceH));
-                const imageData = ctx.getImageData(0, y, w, sliceH);
-                for (let i = 0; i < imageData.data.length; i += 4) {
-                    const noise = Math.random() * 200;
-                    imageData.data[i] = noise;
-                    imageData.data[i+1] = noise;
-                    imageData.data[i+2] = noise;
-                }
-                ctx.putImageData(imageData, 0, y);
-            }
-        };
-
-        const drawGlitch = () => {
-            if (!ctx || !canvas) return;
-            if (Math.random() > 0.997) {
-                const w = canvas.width, h = canvas.height;
-                const shiftX = (Math.random() - 0.5) * 15;
-                const shiftY = Math.floor(Math.random() * 20);
-                const copyH = Math.floor(Math.random() * 8) + 2;
-                try {
-                    const imageData = ctx.getImageData(0, shiftY, w, copyH);
-                    ctx.putImageData(imageData, shiftX, shiftY + (Math.random() > 0.5 ? 3 : -3));
-                } catch(e) {}
-            }
-        };
-
-        const loop = () => {
-            drawScanlines();
-            drawStatic();
-            drawGlitch();
-            animId = requestAnimationFrame(loop);
-        };
-
-        resize();
-        window.addEventListener('resize', resize);
-        loop();
-
-        return () => {
-            cancelAnimationFrame(animId);
-            window.removeEventListener('resize', resize);
-        };
-    })();
-
-    /* ── Scroll Progress Bar ── */
-    const progressBar = document.getElementById('scroll-progress');
-    window.addEventListener('scroll', () => {
-        const h = document.documentElement.scrollHeight - window.innerHeight;
-        const p = h > 0 ? (window.scrollY / h) * 100 : 0;
-        progressBar.style.width = p + '%';
-    });
-
-    /* ── Custom Cursor ── */
-    const dot = document.getElementById('cursor-dot');
-    const ring = document.getElementById('cursor-ring');
-    let mouseX = 0, mouseY = 0;
-    let ringX = 0, ringY = 0;
-
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        dot.style.left = mouseX + 'px';
-        dot.style.top = mouseY + 'px';
-    });
-
-    document.addEventListener('mousemove', (e) => {
-        // Ring lags behind dot with smooth interpolation
-        ringX += (e.clientX - ringX) * 0.12;
-        ringY += (e.clientY - ringY) * 0.12;
-        ring.style.left = ringX + 'px';
-        ring.style.top = ringY + 'px';
-    });
-
-    document.addEventListener('mouseleave', () => {
-        dot.style.opacity = '0';
-        ring.style.opacity = '0';
-    });
-    document.addEventListener('mouseenter', () => {
-        dot.style.opacity = '1';
-        ring.style.opacity = '1';
-    });
-
-    /* ── Magnetic Hover Effect ── */
-    document.querySelectorAll('.magnetic').forEach(el => {
-        el.addEventListener('mousemove', (e) => {
-            const rect = el.getBoundingClientRect();
-            const cx = rect.left + rect.width / 2;
-            const cy = rect.top + rect.height / 2;
-            const dx = e.clientX - cx;
-            const dy = e.clientY - cy;
-            const dist = Math.max(rect.width, rect.height) / 2;
-            const norm = Math.min(Math.abs(dx) / dist, 1);
-            const strength = 0.25 * (1 - norm * 0.5);
-            const moveX = dx * strength;
-            const moveY = dy * strength;
-            el.style.transform = `translate(${moveX}px, ${moveY}px)`;
-        });
-        el.addEventListener('mouseleave', () => {
-            el.style.transform = 'translate(0, 0)';
-        });
-    });
-
-    /* ── Glow Card Mouse Tracking ── */
-    document.querySelectorAll('.glow-card').forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = ((e.clientX - rect.left) / rect.width) * 100;
-            const y = ((e.clientY - rect.top) / rect.height) * 100;
-            card.style.setProperty('--mouse-x', x + '%');
-            card.style.setProperty('--mouse-y', y + '%');
-        });
-    });
-
     /* ── Fade-in on Scroll (Intersection Observer) ── */
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -1357,7 +1033,7 @@
     window.addEventListener('scroll', () => {
         let current = '';
         sections.forEach(section => {
-            const top = section.offsetTop - 120;
+            const top = section.offsetTop - 100;
             const bottom = top + section.offsetHeight;
             if (window.scrollY >= top && window.scrollY < bottom) {
                 current = section.getAttribute('id');
