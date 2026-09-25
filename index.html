@@ -543,6 +543,52 @@ main.main-wrapper {
       <div class="progressive-blur__layer is--4"></div>
       <div class="progressive-blur__layer is--5"></div>
     </div>
+    .about-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4em;
+      padding: 4em 2em;
+      min-height: 400px;
+    }
+    .about-image-wrap {
+      flex: 0 0 200px;
+    }
+    .about-image {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid var(--dark-blue, #2d4a77);
+    }
+    .about-text {
+      flex: 1;
+    }
+    .about-name {
+      font-size: 3em;
+      font-weight: 700;
+      color: var(--ink-black, #080912);
+      margin: 0 0 0.5em 0;
+    }
+    .about-tagline {
+      font-size: 1.2em;
+      color: var(--dark-blue, #2d4a77);
+      margin: 0;
+    }
+    @media (max-width: 768px) {
+      .about-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 2em;
+      }
+      .about-image {
+        width: 150px;
+        height: 150px;
+      }
+      .about-name {
+        font-size: 2em;
+      }
+    }
     <section data-theme-section="dark" data-logo-scroll-trigger="" class="hero">
       <div data-parallax-disable="tablet" data-parallax="trigger" data-parallax-scroll-start="top top" data-parallax-start="0" data-parallax-end="40" class="hero-bg-wrap"><img src="images/aha-img__01.png" alt="Portrait of a professional web developer." draggable="false" sizes="100vw" loading="eager" fetchpriority="high" srcset="images/aha-img__01-p-500.png 500w, images/aha-img__01-p-800.png 800w, images/aha-img__01-p-1080.png 1080w, images/aha-img__01-p-1600.png 1600w, images/aha-img__01.png 1920w"></div>
       <div class="hero-content-wrap">
