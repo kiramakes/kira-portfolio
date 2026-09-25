@@ -502,6 +502,18 @@ textarea {
 html, body {
   overflow-y: auto !important;
   height: auto !important;
+  min-height: auto !important;
+  max-height: none !important;
+}
+html {
+  height: auto !important;
+  overflow-y: scroll !important;
+  position: static !important;
+}
+body {
+  position: static !important;
+  overflow: visible !important;
+  min-height: 0 !important;
 }
 main.main-wrapper {
   position: relative !important;
