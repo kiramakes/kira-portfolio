@@ -380,7 +380,7 @@ textarea {
   --button-007-border-radius: 2.5em;
   --button-007-padding: 0.75em 1em;
   --button-007-focus-inset: -0.125em;
-  --button-007-overflow: clip;
+  --button-007-overflow: auto;
   --button-007-click-scale: 0.955 0.925;
   --button-007-ease-click: cubic-bezier(0.4, 0, 0.2, 1);
   --button-007-ease-focus: cubic-bezier(0.32, 0.72, 0, 1);
@@ -464,6 +464,22 @@ textarea {
   transform-origin: center;
   transform: scale(1.25);
 }
+
+/* Fallback scroll - enables native scrolling if Lenis fails to initialize */
+html, body {
+  overflow-y: auto !important;
+  height: auto !important;
+}
+main.main-wrapper {
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  min-height: 100vh !important;
+  overflow-y: auto !important;
+  height: auto !important;
+}
+
 </style>
     </div>
   </div>
