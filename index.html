@@ -22,7 +22,7 @@
   <link rel="alternate" hreflang="x-default" href="https://kiramakes.github.io/kira-portfolio/">
   <link href="site/css/normalize.css" rel="stylesheet">
   <link href="site/css/components.css" rel="stylesheet">
-  <link href="site/css/alejandroha.css" rel="stylesheet">
+  <link href="site/css/farouk.css" rel="stylesheet">
   <script src="site/js/pwx3oor.js" type="text/javascript"></script>
   <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
   <link href="site/images/favicon.png" rel="icon" type="image/png" sizes="32x32" media="(prefers-color-scheme: light)">
@@ -193,7 +193,154 @@ svg {
 textarea {
   resize: vertical;
 }
-</style>
+<style>
+/*---------------------------------------- Scaling System ----------------------------------------*/
+/* Desktop */
+:root {
+  --size-unit: 16; /* body font-size in design - no px */
+  --size-container-ideal: 1440; /* screen-size in design - no px */
+  --size-container-min: 992px;
+  --size-container-max: 1920px;
+  --size-container: clamp(var(--size-container-min), 100vw, var(--size-container-max));
+  --size-font: calc(var(--size-container) / (var(--size-container-ideal) / var(--size-unit)));
+}
+/* Tablet */
+@media screen and (max-width: 991px) {
+  :root {
+    --size-container-ideal: 834; /* screen-size in design - no px */
+    --size-container-min: 768px;
+    --size-container-max: 991px;
+  }
+}
+/* Mobile Landscape */
+@media screen and (max-width: 767px) {
+  :root {
+    --size-container-ideal: 550; /* screen-size in design - no px */
+    --size-container-min: 480px;
+    --size-container-max: 767px;
+  }
+}
+/* Mobile Portrait */
+@media screen and (max-width: 479px) {
+  :root {
+    --size-container-ideal: 402; /* screen-size in design - no px */
+    --size-container-min: 320px;
+    --size-container-max: 479px;
+  }
+}
+/*---------------------------------------- Hide Scrollbar ----------------------------------------*/
+::-webkit-scrollbar{display: none;} /* Chrome, Safari, Opera */
+body {-ms-overflow-style: none;} /* IE & Edge */
+html {scrollbar-width: none;} /* Firefox */
+/*---------------------------------------- body --------------------------------------*/
+*, *:after, *:before { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;}
+html {scroll-behavior: initial;}
+html, body {-webkit-font-smoothing: antialiased;}
+svg {max-width: none; height: auto; box-sizing: border-box; vertical-align: middle;}
+/* Browser Font Smoothing */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* Selection */
+::selection {
+background-color: var(--white);
+color: var(--dark-blue);
+text-shadow: none;
+}
+::-moz-selection {
+background-color: var(--white);
+color: var(--dark-blue);
+text-shadow: none;
+}
+/* Links */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+/* Images */
+img {
+  -webkit-user-select: none;
+  user-select: none;
+}
+/* Buttons */
+button {
+  all: unset;
+  cursor: pointer;
+}
+button:focus-visible {
+  outline: revert;
+}
+/* SVG */
+svg {
+  pointer-events: none;
+}
+/* Inputs */
+textarea {
+  resize: vertical;
+}
+
+
+        /* Scroll-down indicator */
+        .scroll-down-wrap {
+          position: absolute;
+          bottom: 40px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 10;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          animation: scroll-down-float 2s ease-in-out infinite;
+        }
+        .scroll-down {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-decoration: none;
+          color: var(--ink-black);
+        }
+        .scroll-down__inner {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+        }
+        .scroll-down__text {
+          font-family: var(--body-font);
+          font-size: 13px;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
+          color: var(--ink-black);
+          opacity: 0.7;
+        }
+        .scroll-down__mouse {
+          width: 26px;
+          height: 40px;
+          border: 2px solid var(--ink-black);
+          border-radius: 13px;
+          position: relative;
+          display: flex;
+          justify-content: center;
+        }
+        .scroll-down__wheel {
+          width: 4px;
+          height: 8px;
+          background: var(--ink-black);
+          border-radius: 2px;
+          margin-top: 8px;
+          animation: scroll-down-wheel 2s ease-in-out infinite;
+        }
+        @keyframes scroll-down-float {
+          0%, 100% { transform: translateX(-50%) translateY(0); }
+          50% { transform: translateX(-50%) translateY(6px); }
+        }
+        @keyframes scroll-down-wheel {
+          0%, 100% { transform: translateY(0); opacity: 1; }
+          50% { transform: translateY(6px); opacity: 0.4; }
+        }
+
     </div>
     <div class="animations-css w-embed">
       <style>
@@ -484,19 +631,19 @@ textarea {
               <path d="M1342.08 138.521H1324.7L1321.83 124.008L1316.25 110.688H1258.57L1252.83 124.008L1249.96 138.521H1234.45L1279.14 33.7676L1275.59 26.5109H1294.65L1342.05 138.521H1342.08ZM1312.06 100.884L1287.43 42.3466L1262.63 100.884H1312.03H1312.06Z" fill="currentColor"></path>
               <path d="M1349.5 157.518L1367.07 156.937V7.51466L1349.27 6.86963C1349.11 4.57975 1348.53 1.12881 1349.98 0.193511L1376.03 0L1375.9 164.839L1349.66 165C1348.75 162.71 1348.91 160.42 1349.53 157.55L1349.5 157.518Z" fill="currentColor"></path>
             </svg></button></div>
-        <div class="nav-button"><a data-wf--button--variant="ink-black" href="https://wa.me/2348074548025" target="_blank" class="button-007 w-inline-block"><span class="button-007__inner"><span class="button-007__text is--hover"><svg aria-hidden="true" class="button-007__svg">
+        <div class="nav-button"><a data-wf--button--variant="ink-black" href="javascript:openCalSchedule()" target="_blank" class="button-007 w-inline-block"><span class="button-007__inner"><span class="button-007__text is--hover"><svg aria-hidden="true" class="button-007__svg">
                   <mask maskunits="userSpaceOnUse" style="mask-type:alpha" data-button-007-mask=""><svg aria-hidden="true" data-button-007-svg="" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 201 100" preserveaspectratio="none">
                       <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
                     </svg></mask>
                   <foreignobject width="100%" height="100%" data-button-007-mask-object="" class="button-007__svg-object">
                     <div class="button-007__svg-inner">
-                      <div class="button-007__svg-text-wrap"><span class="button-007__svg-text">Schedule Call</span></div>
+                      <div class="button-007__svg-text-wrap"><span class="button-007__svg-text">Schedule a Call</span></div>
                     </div>
                   </foreignobject>
                 </svg></span><svg aria-hidden="true" data-button-007-svg="" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewbox="0 0 201 100" preserveaspectratio="none" class="button-007__svg-overlay">
                 <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
-              </svg><span class="button-007__text is--default">Schedule Call</span></span><span class="button-007__bg"></span></button>
-          <a data-button-007="" data-wf--button-link--variant="dark-blue" href="https://wa.me/2348074548025" target="_blank" class="button-007 w-inline-block"><span class="button-007__inner"><span class="button-007__text is--hover"><svg aria-hidden="true" class="button-007__svg">
+              </svg><span class="button-007__text is--default">Schedule a Call</span></span><span class="button-007__bg"></span></button>
+          <a data-button-007="" data-wf--button-link--variant="dark-blue" href="javascript:openCalSchedule()" class="button-007 w-inline-block"><span class="button-007__inner"><span class="button-007__text is--hover"><svg aria-hidden="true" class="button-007__svg">
                   <mask maskunits="userSpaceOnUse" style="mask-type:alpha" data-button-007-mask=""><svg aria-hidden="true" data-button-007-svg="" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 201 100" preserveaspectratio="none">
                       <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
                     </svg></mask>
@@ -510,6 +657,71 @@ textarea {
               </svg><span class="button-007__text is--default">Get a Quote</span></span><span class="button-007__bg"></span></a>
         </div>
       </div>
+    <!-- Cal.com Scheduling -->
+    <script>
+      let calModal = null;
+      function openCalSchedule() {
+        if (!calModal) {
+          calModal = document.createElement('div');
+          calModal.className = 'cal-modal-overlay';
+          calModal.innerHTML = '<div class="cal-modal"><button class="cal-modal__close" onclick="closeCalSchedule()">&times;</button><div class="cal-modal__frame"><iframe src="https://cal.com/embed/farouk/15min" frameborder="0" scrolling="no" allow="calendar"></iframe></div></div>';
+          document.body.appendChild(calModal);
+          document.body.style.overflow = 'hidden';
+        }
+        calModal.style.display = 'flex';
+      }
+      function closeCalSchedule() {
+        if (calModal) {
+          calModal.style.display = 'none';
+          document.body.style.overflow = '';
+        }
+      }
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && calModal && calModal.style.display === 'flex') {
+          closeCalSchedule();
+        }
+      });
+    </script>
+    <style>
+      .cal-modal-overlay {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(8, 9, 18, 0.85);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        backdrop-filter: blur(4px);
+      }
+      .cal-modal {
+        background: #fff;
+        border-radius: 12px;
+        width: 600px;
+        max-width: 90vw;
+        max-height: 85vh;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      }
+      .cal-modal__close {
+        position: absolute;
+        top: 12px; right: 12px;
+        background: none; border: none;
+        font-size: 24px; color: #080912;
+        cursor: pointer; z-index: 10;
+        line-height: 1;
+      }
+      .cal-modal__frame {
+        width: 100%;
+        height: 700px;
+        max-height: 80vh;
+      }
+      .cal-modal__frame iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+    </style>
     </header>
     <div class="progressive-blur">
       <div class="progressive-blur__layer is--1"></div>
@@ -546,16 +758,27 @@ textarea {
         </div>
       </div>
     </section>
+      <!-- Scroll-down indicator -->
+      <div class="scroll-down-wrap">
+        <a href="#about" class="scroll-down w-inline-block">
+          <div class="scroll-down__inner">
+            <span class="scroll-down__text">Farouk</span>
+            <div class="scroll-down__mouse">
+              <div class="scroll-down__wheel"></div>
+            </div>
+          </div>
+        </a>
+      </div>
     <section id="about" data-theme-section="dark" class="about">
       <div class="about-header-wrap">
-        <h1 data-split-rolling="" class="about-header__h">Web. Video. Design.</h1>
+        <h1 data-split-rolling="" class="about-header__h">Farouk</h1>
         <p data-split-lines="" class="about-header__p">Custom websites, Shopify stores, video editing, and print design — one developer who handles the full stack of digital creativity.</p>
       </div>
       <div class="about-content-wrap">
         <h2 data-bracket-heading="" class="heading-h2"><span data-bracket-left="" class="heading-bracket is--left">[</span>About Me<span data-bracket-right="" class="heading-bracket is--right">]</span></h2>
         <p data-split-lines="">I'm Farouk, a web developer and digital creator specializing in custom web development, Shopify ecommerce solutions, video editing, and graphic design for flyers and posters. I build digital experiences that blend clean code with compelling visuals.</p>
         <p data-split-lines="">Every site I build is 100% custom-made — no generic templates, no prefabricated solutions. I work with clients from all over the world, from startups just getting started to established brands, and I put the same attention to every detail regardless of project size.</p>
-        <a data-button-007="" data-wf--button-link--variant="dark-blue" href="https://wa.me/2348074548025" target="_blank" class="button-007 w-inline-block"><span class="button-007__inner"><span class="button-007__text is--hover"><svg aria-hidden="true" class="button-007__svg">
+        <a data-button-007="" data-wf--button-link--variant="dark-blue" href="javascript:openCalSchedule()" target="_blank" class="button-007 w-inline-block"><span class="button-007__inner"><span class="button-007__text is--hover"><svg aria-hidden="true" class="button-007__svg">
                 <mask maskunits="userSpaceOnUse" style="mask-type:alpha" data-button-007-mask=""><svg aria-hidden="true" data-button-007-svg="" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 201 100" preserveaspectratio="none">
                     <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
                   </svg></mask>
@@ -660,41 +883,7 @@ textarea {
                   <h3 data-portfolio-content-reveal="">Cinetica Studio</h3>
                   <p data-portfolio-content-reveal="">A full digital experience — website, video content, and promotional materials — all designed and built to showcase Cinética Studio's brand across every platform.</p>
                 </div>
-                <div data-portfolio-content="" class="portfolio-orbit__content-item">
-                  <h3 data-portfolio-content-reveal="">Luan Studio</h3>
-                  <p data-portfolio-content-reveal="">A complete brand package for Luan Studio: custom website, promotional video, and a set of flyers and posters that bring their identity to life offline and online.</p>
                 </div>
-                <div data-portfolio-content="" class="portfolio-orbit__content-item">
-                  <h3 data-portfolio-content-reveal="">Casa Aranzazu</h3>
-                  <p data-portfolio-content-reveal="">A landing page with integrated booking system, plus a promotional video and event flyers — everything needed to drive registrations from first click to confirmed spot.</p>
-                </div>
-                <div data-portfolio-content="" class="portfolio-orbit__content-item">
-                  <h3 data-portfolio-content-reveal="">Contraste</h3>
-                  <p data-portfolio-content-reveal="">A full brand overhaul for a 35-year marketing and events company — new website, product videos, and a complete flyer and poster series that modernized their visual identity.</p>
-                </div>
-                <div data-portfolio-content="" class="portfolio-orbit__content-item">
-                  <h3 data-portfolio-content-reveal="">Altapets</h3>
-                  <p data-portfolio-content-reveal="">A Shopify store built from the ground up for Altapets — custom theme, product videos, and promotional materials that made the launch a success.</p>
-                </div>
-              </div>
-              <div class="portfolio-orbit__overlay-nav"><button aria-label="proyecto anterior" data-portfolio-button="prev" class="portfolio-orbit__btn"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewbox="0 0 17 12" fill="none" class="portfolio-orbit__btn-arrow">
-                    <path d="M6.28871 12L7.53907 10.9111L3.48697 6.77778H16.5V5.22222H3.48697L7.53907 1.08889L6.28871 0L0.5 6L6.28871 12Z" fill="currentColor"></path>
-                  </svg>
-                  <div class="portfolio-orbit__btn-overlay">
-                    <div class="portfolio-orbit__btn-overlay-corner"></div>
-                    <div class="portfolio-orbit__btn-overlay-corner top-right"></div>
-                    <div class="portfolio-orbit__btn-overlay-corner bottom-left"></div>
-                    <div class="portfolio-orbit__btn-overlay-corner bottom-right"></div>
-                  </div>
-                </button><button aria-label="proyecto siguiente" data-portfolio-button="next" class="portfolio-orbit__btn"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewbox="0 0 17 12" fill="none" class="portfolio-orbit__btn-arrow next">
-                    <path d="M6.28871 12L7.53907 10.9111L3.48697 6.77778H16.5V5.22222H3.48697L7.53907 1.08889L6.28871 0L0.5 6L6.28871 12Z" fill="currentColor"></path>
-                  </svg>
-                  <div class="portfolio-orbit__btn-overlay">
-                    <div class="portfolio-orbit__btn-overlay-corner"></div>
-                    <div class="portfolio-orbit__btn-overlay-corner top-right"></div>
-                    <div class="portfolio-orbit__btn-overlay-corner bottom-left"></div>
-                    <div class="portfolio-orbit__btn-overlay-corner bottom-right"></div>
-                  </div>
                 </button></div>
             </div>
           </div>
@@ -707,13 +896,7 @@ textarea {
                     </video></div>
                 </a>
               </div>
-              <div data-orbit-tiles-item="" class="portfolio-orbit__item">
-                <a aria-label="Luan Studio" data-orbit-card="" href="https://www.luanstudio.com/" target="_blank" class="portfolio-orbit__card w-inline-block">
-                  <div data-orbit-tiles-mask="" class="portfolio-orbit__image-mask"><img class="portfolio-orbit__placeholder" src="site/images/luanstudio-placeholder.avif" alt="Ver video: LUAN STUDIO" draggable="false" sizes="100vw" loading="lazy" srcset="images/luanstudio-placeholder.avif 500w, images/luanstudio-placeholder.avif 800w, images/luanstudio-placeholder.avif 1080w, images/luanstudio-placeholder.avif 1440w"><video data-orbit-video="" playsinline="" webkit-playsinline="" preload="metadata" class="portfolio-orbit__video">
-                      <source src="site/videos/luanstudio-video.mp4" type="video/mp4">
-                    </video></div>
-                </a>
-              </div>
+              
               <div data-orbit-tiles-item="" class="portfolio-orbit__item">
                 <a aria-label="Casa Aranzazu" data-orbit-card="" href="https://www.casaranzazuslp.com/" target="_blank" class="portfolio-orbit__card w-inline-block">
                   <div data-orbit-tiles-mask="" class="portfolio-orbit__image-mask"><img class="portfolio-orbit__placeholder" src="site/images/aranzazu-placeholder.avif" alt="Ver video: CASA ARANZAZU" draggable="false" sizes="100vw" loading="lazy" srcset="images/aranzazu-placeholder.avif 500w, images/aranzazu-placeholder.avif 800w, images/aranzazu-placeholder.avif 1080w, images/aranzazu-placeholder.avif 1440w"><video data-orbit-video="" playsinline="" webkit-playsinline="" preload="metadata" class="portfolio-orbit__video">
@@ -740,7 +923,7 @@ textarea {
         </div>
       </div>
       <div class="portfolio-cta">
-        <a data-button-007="" data-wf--button-link--variant="ink-black" href="https://wa.me/2348074548025" target="_blank" class="button-007 w-inline-block"><span class="button-007__inner"><span class="button-007__text is--hover"><svg aria-hidden="true" class="button-007__svg">
+        <a data-button-007="" data-wf--button-link--variant="ink-black" href="javascript:openCalSchedule()" class="button-007 w-inline-block"><span class="button-007__inner"><span class="button-007__text is--hover"><svg aria-hidden="true" class="button-007__svg">
                 <mask maskunits="userSpaceOnUse" style="mask-type:alpha" data-button-007-mask=""><svg aria-hidden="true" data-button-007-svg="" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 201 100" preserveaspectratio="none">
                     <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
                   </svg></mask>
@@ -807,18 +990,18 @@ textarea {
         <div data-contact-content="" class="contact-content">
           <h2 class="contact-heading">Contact</h2>
           <p class="contact-text">Have a project in mind? I'd love to hear from you. Tell me what you need and I'll get back to you shortly.</p>
-          <div class="button-group"><a data-wf--button--variant="light-silver" href="https://wa.me/2348074548025" target="_blank" class="button-007 w-inline-block"><span class="button-007__inner"><span class="button-007__text is--hover"><svg aria-hidden="true" class="button-007__svg">
+          <div class="button-group"><a data-wf--button--variant="light-silver" href="javascript:openCalSchedule()" class="button-007 w-inline-block"><span class="button-007__inner"><span class="button-007__text is--hover"><svg aria-hidden="true" class="button-007__svg">
                     <mask maskunits="userSpaceOnUse" style="mask-type:alpha" data-button-007-mask=""><svg aria-hidden="true" data-button-007-svg="" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 201 100" preserveaspectratio="none">
                         <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
                       </svg></mask>
                     <foreignobject width="100%" height="100%" data-button-007-mask-object="" class="button-007__svg-object">
                       <div class="button-007__svg-inner">
-                        <div class="button-007__svg-text-wrap"><span class="button-007__svg-text">Schedule Call</span></div>
+                        <div class="button-007__svg-text-wrap"><span class="button-007__svg-text">Schedule a Call</span></div>
                       </div>
                     </foreignobject>
                   </svg></span><svg aria-hidden="true" data-button-007-svg="" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewbox="0 0 201 100" preserveaspectratio="none" class="button-007__svg-overlay">
                   <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
-                </svg><span class="button-007__text is--default">Schedule Call</span></span><span class="button-007__bg"></span></button>
+                </svg><span class="button-007__text is--default">Schedule a Call</span></span><span class="button-007__bg"></span></button>
             <a data-button-007="" data-wf--button-link--variant="dark-blue" href="https://wa.me/2348074548025" class="button-007 w-inline-block"><span class="button-007__inner"><span class="button-007__text is--hover"><svg aria-hidden="true" class="button-007__svg">
                     <mask maskunits="userSpaceOnUse" style="mask-type:alpha" data-button-007-mask=""><svg aria-hidden="true" data-button-007-svg="" xmlns="http://www.w3.org/2000/svg" fill="none" viewbox="0 0 201 100" preserveaspectratio="none">
                         <path d="M16.332 39.1765C25.6381 35.2853 34.9441 31.3941 40.6554 29.173C50.662 25.2814 21.2379 53.1954 17.526 58.4408C14.8321 62.2478 16.2337 62.0854 17.6851 61.7242C19.1364 61.363 20.5951 60.8079 30.413 55.6381C40.231 50.4684 58.3639 40.7009 68.2847 35.2711C78.2055 29.8412 79.3646 29.0451 79.7292 28.7446C80.0938 28.4441 79.6289 28.6635 73.9175 35.9463C68.2062 43.2292 57.2628 57.5688 51.5744 65.2375C45.886 72.9063 45.7844 73.4697 46.1047 73.6339C46.6385 73.9077 67.9122 61.8313 68.2066 61.6541C82.3093 53.1624 107.339 37.7974 121.861 29.1143C136.382 20.4312 139.637 18.8959 142.043 17.8274C142.799 17.4917 148.024 14.9173 147.361 16.5225C147.121 17.1044 146.542 18.1091 138.743 26.8865C130.945 35.6639 93.8491 65.9527 86.0769 74.6334C78.305 83.3141 78.216 83.6554 78.3741 83.9179C78.5321 84.1803 78.94 84.3537 93.1516 75.4023C107.363 66.451 157.462 34.6003 162.031 35.1974C166.6 35.7944 144.497 73.6977 144.599 78.2813C144.701 82.8649 173.88 53.6113 184.999 47.6105" stroke="currentColor" stroke-width="0" stroke-linecap="round"></path>
@@ -890,7 +1073,7 @@ textarea {
             <p class="footer-copy__label">© <span data-current-year="">20??</span>, Farouk</p>
           </div>
           <a href="https://www.luanstudio.com/" target="_blank" class="w-inline-block">
-            <p data-underline-link="" class="footer-copy__label">Design by: Luan Studio</p>
+            <p data-underline-link="" class="footer-copy__label">Design by: Farouk</p>
           </a>
         </div>
       </footer>
